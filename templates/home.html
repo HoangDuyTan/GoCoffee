@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Trang chủ - CoffeeSpot{% endblock %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+{% endblock %}
+
+{% block content %}
+    <section class="hero-section" style="background-image: url('{% static 'images/hero-bg.jpg' %}')">
+        <div class="hero-overlay">
+            <h1>Khám phá quán cà phê tuyệt vời</h1>
+            <p>Tìm kiếm và khám phá những quán cà phê tốt nhất tại TP.HCM với hệ thống đề xuất thông minh</p>
+            <form action="{% url 'shop_list' %}" method="GET" class="search-form">
+                <input type="text" name="search" placeholder="Tìm tên quán, địa điểm...">
+                <select name="district">
+                    <option value="">Tất cả khu vực</option>
+                    <option value="Quận 1">Quận 1</option>
+                    <option value="Quận 2">Quận 2</option>
+                    <option value="Quận 3">Quận 3</option>
+                    <option value="Bình Thạnh">Bình Thạnh</option>
+                </select>
+                <button type="submit" class="btn-primary">Tìm kiếm</button>
+            </form>
+        </div>
+    </section>
+
+    <section class="section-divider">
+        <h2 class="section-title">Đang thịnh hành</h2>
+        <p class="section-subtitle">Những quán cà phê được đánh giá cao nhất</p>
+        <div class="shop-grid">
+            {% for shop in hot_shops %}
+                <div class="shop-card">
+                    {% if shop.cover_image %}
+                        <img src="{{ shop.cover_image.url }}" alt="{{ shop.name }}" class="shop-image">
+                    {% else %}
+                        <img src="{% static 'images/placeholder.png' %}" alt="Ảnh trống" class="shop-image">
+                    {% endif %}
+                    <div class="shop-rating">⭐ 4.5</div>
+                    <div class="shop-info">
+                        <h3><a href="{% url 'shop_detail' shop.id %}">{{ shop.name }}</a></h3>
+                        <p class="shop-location">📍 {{ shop.district }}</p>
+                        <p class="shop-price">$ {{ shop.price_range }}</p>
+                        <div class="shop-tags">
+                            {% for tag in shop.tags.split|slice:":2" %}
+                                <span>{{ tag }}</span>
+                            {% endfor %}
+                        </div>
+                        <p class="shop-description">{{ shop.description|truncatewords:20 }}</p>
+                    </div>
+                </div>
+            {% empty %}
+                <p>Chưa có quán nào thịnh hành. Hãy thêm vào /admin để xem demo.</p>
+            {% endfor %}
+        </div>
+    </section>
+
+    <section class="section-divider">
+        <h2 class="section-title">Quán mới</h2>
+        <p class="section-subtitle">Khám phá những quán cà phê mới được thêm vào</p>
+        <div class="shop-grid">
+            {% for shop in new_shops %}
+                 <div class="shop-card">
+                    {% if shop.cover_image %}
+                        <img src="{{ shop.cover_image.url }}" alt="{{ shop.name }}" class="shop-image">
+                    {% else %}
+                        <img src="{% static 'images/placeholder.png' %}" alt="Ảnh trống" class="shop-image">
+                    {% endif %}
+                    <div class="shop-rating">⭐ 4.4</div>
+                    <div class="shop-info">
+                        <h3><a href="{% url 'shop_detail' shop.id %}">{{ shop.name }}</a></h3>
+                        <p class="shop-location">📍 {{ shop.district }}</p>
+                        <p class="shop-price">$ {{ shop.price_range }}</p>
+                        <div class="shop-tags">
+                             {% for tag in shop.tags.split|slice:":2" %}
+                                <span>{{ tag }}</span>
+                            {% endfor %}
+                        </div>
+                        <p class="shop-description">{{ shop.description|truncatewords:20 }}</p>
+                    </div>
+                </div>
+            {% empty %}
+                <p>Chưa có quán nào mới. Hãy thêm vào /admin để xem demo.</p>
+            {% endfor %}
+        </div>
+    </section>
+
+    <section class="section-divider">
+        <h2 class="section-title">Phổ biến trong khu vực</h2>
+        <p class="section-subtitle">Những quán cà phê được nhiều người ghé thăm</p>
+        <div class="shop-grid">
+             {% for shop in hot_shops|slice:"3:" %} {# Lấy thêm vài quán nếu có #}
+                <div class="shop-card">
+                    {% if shop.cover_image %}
+                        <img src="{{ shop.cover_image.url }}" alt="{{ shop.name }}" class="shop-image">
+                    {% else %}
+                        <img src="{% static 'images/placeholder.png' %}" alt="Ảnh trống" class="shop-image">
+                    {% endif %}
+                    <div class="shop-rating">⭐ 4.6</div>
+                    <div class="shop-info">
+                        <h3><a href="{% url 'shop_detail' shop.id %}">{{ shop.name }}</a></h3>
+                        <p class="shop-location">📍 {{ shop.district }}</p>
+                        <p class="shop-price">$ {{ shop.price_range }}</p>
+                        <div class="shop-tags">
+                             {% for tag in shop.tags.split|slice:":2" %}
+                                <span>{{ tag }}</span>
+                            {% endfor %}
+                        </div>
+                        <p class="shop-description">{{ shop.description|truncatewords:20 }}</p>
+                    </div>
+                </div>
+            {% empty %}
+                <p>Chưa có quán nào phổ biến.</p>
+            {% endfor %}
+        </div>
+    </section>
+
+    <section class="cta-banner-bottom">
+        <h2>Khám phá thêm nhiều quán cà phê</h2>
+        <p>Sử dụng bộ lọc chi tiết để tìm quán cà phê phù hợp với sở thích của bạn</p>
+        <a href="{% url 'shop_list' %}" class="btn-primary">Xem tất cả quán</a>
+    </section>
+{% endblock %}

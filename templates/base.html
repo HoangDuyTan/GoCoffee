@@ -1,0 +1,42 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}GoCoffee{% endblock %}</title>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+</head>
+<body>
+
+    <header class="main-header">
+        <nav class="navbar">
+            <a href="{% url 'home' %}" class="logo">
+                <img src="{% static 'images/coffee-cup-icon.png' %}" alt="GoCoffee">
+                <span>GoCoffee</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="{% url 'home' %}" class="active">Trang chủ</a></li>
+                <li><a href="{% url 'shop_list' %}">Khám phá</a></li>
+                <li><a href="{% url 'contact' %}">Liên hệ</a></li>
+            </ul>
+            <div class="auth-section">
+                <button type="button" class="btn-primary" id="login-button">Đăng nhập</button>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer class="main-footer">
+        <p>&copy; 2025 CoffeeSpot. Khám phá quán cà phê yêu thích của bạn.</p>
+    </footer>
+
+    <script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>
