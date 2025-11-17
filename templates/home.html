@@ -1,122 +1,183 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Trang chủ - CoffeeSpot{% endblock %}
-{% block extra_css %}
-    <link rel="stylesheet" href="{% static 'css/home.css' %}">
-{% endblock %}
+
+{% block title %}Trang chủ{% endblock title %}
+
+{% block extra_styles %}
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+{% endblock extra_styles %}
+
 
 {% block content %}
-    <section class="hero-section" style="background-image: url('{% static 'images/hero-bg.jpg' %}')">
-        <div class="hero-overlay">
-            <h1>Khám phá quán cà phê tuyệt vời</h1>
-            <p>Tìm kiếm và khám phá những quán cà phê tốt nhất tại TP.HCM với hệ thống đề xuất thông minh</p>
-            <form action="{% url 'shop_list' %}" method="GET" class="search-form">
-                <input type="text" name="search" placeholder="Tìm tên quán, địa điểm...">
-                <select name="district">
-                    <option value="">Tất cả khu vực</option>
-                    <option value="Quận 1">Quận 1</option>
-                    <option value="Quận 2">Quận 2</option>
-                    <option value="Quận 3">Quận 3</option>
-                    <option value="Bình Thạnh">Bình Thạnh</option>
-                </select>
-                <button type="submit" class="btn-primary">Tìm kiếm</button>
-            </form>
-        </div>
-    </section>
+<section class="hero-section">
+    <div class="hero-content container">
+        <h2>Khám phá quán cà phê tuyệt vời</h2>
+        <p>Tìm kiếm và khám phá những quán cà phê tốt nhất tại TP.HCM với hệ thống đề xuất thông minh</p>
 
-    <section class="section-divider">
-        <h2 class="section-title">Đang thịnh hành</h2>
-        <p class="section-subtitle">Những quán cà phê được đánh giá cao nhất</p>
-        <div class="shop-grid">
-            {% for shop in hot_shops %}
-                <div class="shop-card">
-                    {% if shop.cover_image %}
-                        <img src="{{ shop.cover_image.url }}" alt="{{ shop.name }}" class="shop-image">
-                    {% else %}
-                        <img src="{% static 'images/placeholder.png' %}" alt="Ảnh trống" class="shop-image">
-                    {% endif %}
-                    <div class="shop-rating">⭐ 4.5</div>
-                    <div class="shop-info">
-                        <h3><a href="{% url 'shop_detail' shop.id %}">{{ shop.name }}</a></h3>
-                        <p class="shop-location">📍 {{ shop.district }}</p>
-                        <p class="shop-price">$ {{ shop.price_range }}</p>
-                        <div class="shop-tags">
-                            {% for tag in shop.tags.split|slice:":2" %}
-                                <span>{{ tag }}</span>
-                            {% endfor %}
-                        </div>
-                        <p class="shop-description">{{ shop.description|truncatewords:20 }}</p>
-                    </div>
+        <form class="search-bar" action="{% url 'shop_list' %}" method="GET">
+            <div class="search-input-group search-input-main">
+                <i class="fa-solid fa-search"></i>
+                <input type="text" name="search" placeholder="Tên quán, địa điểm...">
+            </div>
+
+            <div class="search-divider"></div>
+
+            <div class="search-input-group search-input-region">
+                <i class="fa-solid fa-map-marker-alt"></i>
+                <div class="select-wrapper">
+                    <select name="district">
+                        <option value="">Tất cả khu vực</option>
+                        <option value="Quận 1">Quận 1</option>
+                        <option value="Quận 2">Quận 2</option>
+                        <option value="Quận 3">Quận 3</option>
+                        <option value="Bình Thạnh">Bình Thạnh</option>
+                    </select>
+                    <i class="fa-solid fa-chevron-down select-arrow"></i>
                 </div>
-            {% empty %}
-                <p>Chưa có quán nào thịnh hành. Hãy thêm vào /admin để xem demo.</p>
-            {% endfor %}
-        </div>
-    </section>
+            </div>
+            <button type="submit" class="btn btn-dark">Tìm kiếm</button>
+        </form>
+    </div>
+</section>
 
-    <section class="section-divider">
-        <h2 class="section-title">Quán mới</h2>
-        <p class="section-subtitle">Khám phá những quán cà phê mới được thêm vào</p>
-        <div class="shop-grid">
-            {% for shop in new_shops %}
-                 <div class="shop-card">
-                    {% if shop.cover_image %}
-                        <img src="{{ shop.cover_image.url }}" alt="{{ shop.name }}" class="shop-image">
-                    {% else %}
-                        <img src="{% static 'images/placeholder.png' %}" alt="Ảnh trống" class="shop-image">
-                    {% endif %}
-                    <div class="shop-rating">⭐ 4.4</div>
-                    <div class="shop-info">
-                        <h3><a href="{% url 'shop_detail' shop.id %}">{{ shop.name }}</a></h3>
-                        <p class="shop-location">📍 {{ shop.district }}</p>
-                        <p class="shop-price">$ {{ shop.price_range }}</p>
-                        <div class="shop-tags">
-                             {% for tag in shop.tags.split|slice:":2" %}
-                                <span>{{ tag }}</span>
-                            {% endfor %}
-                        </div>
-                        <p class="shop-description">{{ shop.description|truncatewords:20 }}</p>
-                    </div>
+<section class="content-section">
+    <div class="section-header">
+        <i class="fa-solid fa-chart-line"></i>
+        <div class="section-title">
+            <h2>Đang thịnh hành</h2>
+            <p>Những quán cà phê được đánh giá cao nhất</p>
+        </div>
+    </div>
+
+    <div class="card-grid">
+        {% for shop in hot_shop %}
+        <div class="cafe-card">
+            <div class="card-image">
+                {% if shop.cover_image %}
+                <img src="{{ shop.cover_image.url }}" alt="{{ shop.name }}">
+                {% else %}
+                <div class="card-image placeholder">
+                    <i class="fa-solid fa-image fa-3x"></i>
                 </div>
-            {% empty %}
-                <p>Chưa có quán nào mới. Hãy thêm vào /admin để xem demo.</p>
-            {% endfor %}
-        </div>
-    </section>
-
-    <section class="section-divider">
-        <h2 class="section-title">Phổ biến trong khu vực</h2>
-        <p class="section-subtitle">Những quán cà phê được nhiều người ghé thăm</p>
-        <div class="shop-grid">
-             {% for shop in hot_shops|slice:"3:" %} {# Lấy thêm vài quán nếu có #}
-                <div class="shop-card">
-                    {% if shop.cover_image %}
-                        <img src="{{ shop.cover_image.url }}" alt="{{ shop.name }}" class="shop-image">
-                    {% else %}
-                        <img src="{% static 'images/placeholder.png' %}" alt="Ảnh trống" class="shop-image">
-                    {% endif %}
-                    <div class="shop-rating">⭐ 4.6</div>
-                    <div class="shop-info">
-                        <h3><a href="{% url 'shop_detail' shop.id %}">{{ shop.name }}</a></h3>
-                        <p class="shop-location">📍 {{ shop.district }}</p>
-                        <p class="shop-price">$ {{ shop.price_range }}</p>
-                        <div class="shop-tags">
-                             {% for tag in shop.tags.split|slice:":2" %}
-                                <span>{{ tag }}</span>
-                            {% endfor %}
-                        </div>
-                        <p class="shop-description">{{ shop.description|truncatewords:20 }}</p>
-                    </div>
+                {% endif %}
+                <div class="card-rating">
+                    <i class="fa-solid fa-star"></i> 4.8
                 </div>
-            {% empty %}
-                <p>Chưa có quán nào phổ biến.</p>
-            {% endfor %}
+            </div>
+            <div class="card-content">
+                <h3><a href="{% url 'shop_detail' shop.id %}">{{ shop.name }}</a></h3>
+                <div class="card-info">
+                    <div><i class="fa-solid fa-location-dot"></i>{{ shop.district }}</div>
+                    <div><i class="fa-solid fa-dollar-sign"></i>{{ shop.price_range }}</div>
+                </div>
+                <div class="card-tags">
+                    {% for tag in shop.tags.split|slice:":2" %}
+                    <span class="tag">{{ tag }}</span>
+                    {% endfor %}
+                </div>
+                <p class="card-description">{{ shop.description|truncatewords:20 }}</p>
+            </div>
         </div>
-    </section>
+        {% empty %}
+        <p>Không có quán nào thịnh hành. (Hãy thêm dữ liệu vào /admin).</p>
+        {% endfor %}
 
-    <section class="cta-banner-bottom">
-        <h2>Khám phá thêm nhiều quán cà phê</h2>
-        <p>Sử dụng bộ lọc chi tiết để tìm quán cà phê phù hợp với sở thích của bạn</p>
-        <a href="{% url 'shop_list' %}" class="btn-primary">Xem tất cả quán</a>
-    </section>
-{% endblock %}
+    </div>
+</section>
+
+<section class="content-section">
+    <div class="section-header">
+        <i class="fa-solid fa-store"></i>
+        <div class="section-title">
+            <h2>Quán mới</h2>
+            <p>Khám phá những quán cà phê mới được thêm vào</p>
+        </div>
+    </div>
+
+    <div class="card-grid">
+        {% for shop in new_shop %}
+        <div class="cafe-card">
+            <div class="card-image">
+                {% if shop.cover_image %}
+                <img src="{{ shop.cover_image.url }}" alt="{{ shop.name }}">
+                {% else %}
+                <div class="card-image placeholder">
+                    <i class="fa-solid fa-image fa-3x"></i>
+                </div>
+                {% endif %}
+                <div class="card-rating">
+                    <i class="fa-solid fa-star"></i> 4.8
+                </div>
+            </div>
+            <div class="card-content">
+                <h3><a href="{% url 'shop_detail' shop.id %}">{{ shop.name }}</a></h3>
+                <div class="card-info">
+                    <div><i class="fa-solid fa-location-dot"></i>{{ shop.district }}</div>
+                    <div><i class="fa-solid fa-dollar-sign"></i>{{ shop.price_range }}</div>
+                </div>
+                <div class="card-tags">
+                    {% for tag in shop.tags.split|slice:":2" %}
+                    <span class="tag">{{ tag }}</span>
+                    {% endfor %}
+                </div>
+                <p class="card-description">{{ shop.description|truncatewords:20 }}</p>
+            </div>
+        </div>
+        {% empty %}
+        <p>Không có quán nào mới. (Hãy thêm dữ liệu vào /admin).</p>
+        {% endfor %}
+
+    </div>
+</section>
+
+<section class="content-section">
+    <div class="section-header">
+        <i class="fa-solid fa-fire"></i>
+        <div class="section-title">
+            <h2>Phổ biến trong khu vực</h2>
+            <p>Những quán cà phê được nhiều người ghé thăm</p>
+        </div>
+    </div>
+
+    <div class="card-grid">
+        {% for shop in popular_shop %}
+        <div class="cafe-card">
+            <div class="card-image">
+                {% if shop.cover_image %}
+                <img src="{{ shop.cover_image.url }}" alt="{{ shop.name }}">
+                {% else %}
+                <div class="card-image placeholder">
+                    <i class="fa-solid fa-image fa-3x"></i>
+                </div>
+                {% endif %}
+                <div class="card-rating">
+                    <i class="fa-solid fa-star"></i> 4.8
+                </div>
+            </div>
+            <div class="card-content">
+                <h3><a href="{% url 'shop_detail' shop.id %}">{{ shop.name }}</a></h3>
+                <div class="card-info">
+                    <div><i class="fa-solid fa-location-dot"></i>{{ shop.district }}</div>
+                    <div><i class="fa-solid fa-dollar-sign"></i>{{ shop.price_range }}</div>
+                </div>
+                <div class="card-tags">
+                    {% for tag in shop.tags.split|slice:":2" %}
+                    <span class="tag">{{ tag }}</span>
+                    {% endfor %}
+                </div>
+                <p class="card-description">{{ shop.description|truncatewords:20 }}</p>
+            </div>
+        </div>
+        {% empty %}
+        <p>Không có quán nào phổ biến trong khu vực. (Hãy thêm dữ liệu vào /admin).</p>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="cta-section">
+    <h2>Khám phá thêm nhiều quán cà phê</h2>
+    <p>Sử dụng bộ lọc chi tiết để tìm quán cà phê phù hợp với sở thích của bạn</p>
+    <a href="{% url 'shop_list' %}" class="btn btn-dark">Xem tất cả quán</a>
+</section>
+
+{% endblock content %}

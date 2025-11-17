@@ -1,82 +1,92 @@
 :root {
-    --primary-color: #5C4033; /* Màu nâu đậm */
-    --secondary-color: #A0522D; /* Màu nâu đất */
-    --accent-color: #D2B48C; /* Màu kem */
-    --background-light: #F8F8F8;
-    --text-dark: #333;
-    --text-light: #666;
-    --border-color: #eee;
-    --shadow-color: rgba(0,0,0,0.08);
+    --font-primary: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+    --primary-color: #865200;
+    --color-dark: #212529;
+    --color-muted: #6c757d;
+    --color-light: #495057;
+    --color-bg: #f8f9fa;
+    --color-white: #ffffff;
+    --color-border: #e0e0e0;
+    --color-accent: #b08d57;
+    --color-star: #ffc107;
+
+    --container-width: 1200px;
+    --border-radius: 8px;
+    --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
+/* ======== THIẾT LẬP CHUNG (RESET) ======== */
 * {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: var(--font-primary);
+    background-color: var(--color-bg);
+    color: var(--color-dark);
     line-height: 1.6;
-    color: var(--text-dark);
-    background-color: var(--background-light);
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
 }
 
 a {
     text-decoration: none;
-    color: var(--primary-color);
+    color: inherit;
 }
 
-a:hover {
-    color: var(--secondary-color);
+ul {
+    list-style: none;
 }
 
-h1, h2, h3 {
-    color: var(--text-dark);
-    margin-bottom: 15px;
+/* ======== LỚP TIỆN ÍCH CHUNG ======== */
+.container {
+    max-width: var(--container-width);
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 15px;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.2s ease;
 }
 
 .btn-primary {
-    background-color: var(--primary-color);
-    color: white;
-    padding: 10px 20px;
-    border-radius: 5px;
-    border: none;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: background-color 0.3s ease;
+    background-color: var(--color-dark);
+    color: var(--color-white);
 }
 
 .btn-primary:hover {
-    background-color: var(--secondary-color);
+    background-color: #444;
 }
 
-/* --- Section Dividers (Chung) --- */
-.section-divider {
-    max-width: 1200px;
-    margin: 40px auto;
-    padding: 20px;
-    text-align: center;
+.btn-dark {
+    background-color: var(--color-dark);
+    color: var(--color-white);
+}
+.btn-dark:hover {
+    background-color: #444;
 }
 
-.section-title {
-    font-size: 2rem;
-    font-weight: bold;
-    color: var(--primary-color);
-    margin-bottom: 10px;
-}
-
-.section-subtitle {
-    font-size: 1.1rem;
-    color: var(--text-light);
-    margin-bottom: 30px;
-}
-
-
-/* --- Header & Navbar --- */
-.main-header {
-    background-color: white;
-    box-shadow: 0 2px 5px var(--shadow-color);
+/* ======== HEADER / NAVBAR ======== */
+.header {
+    background-color: var(--color-white);
+    border-bottom: 1px solid var(--color-border);
+    padding: 15px 0;
     position: sticky;
     top: 0;
     z-index: 1000;
@@ -84,81 +94,55 @@ h1, h2, h3 {
 
 .navbar {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 10px 20px;
+    justify-content: space-between;
+    position: relative;
 }
 
-.navbar .logo {
-    display: flex;
-    align-items: center;
-    font-size: 1.5rem;
-    font-weight: bold;
+.logo-container {
+    flex-shrink: 0;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: 700;
     color: var(--primary-color);
 }
 
-.navbar .logo img {
-    height: 30px;
-    margin-right: 8px;
+.tagline {
+    font-size: 13px;
+    color: var(--color-muted);
 }
 
 .nav-links {
-    list-style: none;
     display: flex;
-}
-
-.nav-links li {
-    margin-left: 30px;
+    gap: 50px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 .nav-links a {
-    color: var(--text-dark);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 16px;
     font-weight: 500;
-    padding: 5px 0;
-    transition: color 0.3s ease;
+    color: var(--color-light);
+    transition: color 0.2s ease;
 }
 
-.nav-links a.active,
-.nav-links a:hover {
-    color: var(--secondary-color);
+.nav-links a:hover,
+.nav-links a.active {
+    color: var(--primary-color);
 }
 
-.auth-section .btn-primary {
-    padding: 8px 15px;
-    font-size: 0.9rem;
-}
-
-/* --- Footer --- */
-.main-footer {
-    background-color: var(--primary-color);
-    color: white;
+/* ======== FOOTER ======== */
+.footer {
     text-align: center;
-    padding: 20px;
-    margin-top: 30px;
-}
-
-.main-footer p {
-    font-size: 0.9rem;
-}
-
-
-/* --- Responsive Adjustments (Chung) --- */
-@media (max-width: 768px) {
-    .navbar {
-        flex-direction: column;
-        gap: 10px;
-    }
-    .nav-links {
-        margin-top: 10px;
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-    .nav-links li {
-        margin: 0 15px;
-    }
-    .section-title {
-        font-size: 1.8rem;
-    }
+    padding: 30px 0;
+    border-top: 1px solid var(--color-border);
+    margin-top: 40px;
+    color: var(--color-muted);
+    font-size: 14px;
 }

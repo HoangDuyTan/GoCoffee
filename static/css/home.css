@@ -1,200 +1,269 @@
-/* static/css/home.css */
-
-/* --- Hero Section --- */
+/* ======== HERO SECTION ======== */
 .hero-section {
+    position: relative;
+    padding: 150px 0;
+    text-align: center;
+    color: var(--color-white);
     background-size: cover;
     background-position: center;
-    color: white;
-    text-align: center;
-    padding: 100px 20px;
-    position: relative;
-    /* Cần set chiều cao để thấy ảnh nền */
-    min-height: 400px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(86, 54, 23, 0.8)), url('../images/hero-bg.webp');
+    margin-bottom: 80px;
 }
 
-.hero-overlay {
-    background-color: rgba(0, 0, 0, 0.5); /* Lớp phủ mờ */
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-}
-
-.hero-section h1 {
-    font-size: 3rem;
-    margin-bottom: 20px;
-    color: white;
-}
-
-.hero-section p {
-    font-size: 1.2rem;
-    margin-bottom: 30px;
-    max-width: 600px;
-    color: rgba(255, 255, 255, 0.9);
-}
-
-.search-form {
-    display: flex;
-    gap: 10px;
-    max-width: 700px;
-    margin: 0 auto;
-    background-color: white;
-    border-radius: 8px;
-    padding: 8px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-}
-
-.search-form input,
-.search-form select {
-    flex-grow: 1;
-    padding: 12px 15px;
-    border: none;
-    border-radius: 5px;
-    font-size: 1rem;
-    outline: none;
-    color: var(--text-dark);
-}
-
-.search-form button {
-    padding: 12px 25px;
-    font-size: 1rem;
-    white-space: nowrap; /* Ngăn nút xuống dòng */
-}
-
-
-/* --- Shop Grid --- */
-.shop-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Responsive grid */
-    gap: 25px;
-    margin-top: 20px;
-}
-
-.shop-card {
-    background-color: white;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 4px 10px var(--shadow-color);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    position: relative;
-    text-align: left;
-}
-
-.shop-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
-}
-
-.shop-image {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-}
-
-.shop-rating {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background-color: rgba(0,0,0,0.6);
-    color: white;
-    padding: 5px 10px;
-    border-radius: 5px;
-    font-size: 0.9rem;
-}
-
-.shop-info {
-    padding: 15px;
-}
-
-.shop-info h3 {
-    font-size: 1.3rem;
-    margin-bottom: 8px;
-    line-height: 1.4;
-}
-
-.shop-info h3 a {
-    color: var(--text-dark);
-}
-
-.shop-location, .shop-price {
-    font-size: 0.95rem;
-    color: var(--text-light);
-    margin-bottom: 5px;
-}
-
-.shop-tags {
-    margin: 10px 0;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
-}
-
-.shop-tags span {
-    background-color: var(--accent-color);
-    color: var(--primary-color);
-    font-size: 0.8rem;
-    padding: 4px 8px;
-    border-radius: 3px;
-    white-space: nowrap;
-}
-
-.shop-description {
-    font-size: 0.9rem;
-    color: var(--text-light);
-    margin-top: 10px;
-}
-
-
-/* --- CTA Banner Bottom --- */
-.cta-banner-bottom {
-    background-color: #FDF3E7; /* Màu nhạt hơn */
-    text-align: center;
-    padding: 60px 20px;
-    margin-top: 50px;
-    border-top: 1px solid var(--border-color);
-}
-
-.cta-banner-bottom h2 {
-    font-size: 2.2rem;
-    color: var(--primary-color);
+.hero-content h2 {
+    font-size: 50px;
+    font-weight: 700;
     margin-bottom: 15px;
 }
 
-.cta-banner-bottom p {
-    font-size: 1.1rem;
-    color: var(--text-light);
+.hero-content p {
+    font-size: 18px;
     margin-bottom: 30px;
-    max-width: 700px;
+    opacity: 0.9;
+    max-width: 600px;
     margin-left: auto;
     margin-right: auto;
 }
 
-/* --- Responsive Adjustments (Home) --- */
-@media (max-width: 768px) {
-    .hero-section h1 {
-        font-size: 2.2rem;
-    }
-    .hero-section p {
-        font-size: 1rem;
-    }
-    .search-form {
-        flex-direction: column;
-    }
-    .search-form input,
-    .search-form select,
-    .search-form button {
-        width: 100%;
-    }
-    .shop-grid {
-        grid-template-columns: 1fr;
-    }
+.search-bar {
+    display: flex;
+    background-color: var(--color-white);
+    border-radius: 50px;
+    padding: 8px;
+    max-width: 750px;
+    margin: 0 auto;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+    color: var(--color-dark);
+}
+
+.search-input-group {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    padding: 0 10px 0 20px;
+}
+
+.search-input-main {
+    flex: 2;
+}
+
+.search-input-region {
+    flex: 1;
+}
+
+.search-input-group i {
+    color: var(--color-muted);
+    margin-right: 12px;
+    font-size: 18px;
+}
+
+.search-input-group input,
+.search-input-group select {
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 16px;
+    width: 100%;
+    color: var(--color-dark);
+    font-family: var(--font-primary);
+    padding: 12px 0;
+}
+
+.select-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.select-arrow {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--color-muted);
+    font-size: 14px;
+    pointer-events: none;
+}
+
+.search-input-group select {
+    appearance: none;
+    cursor: pointer;
+    padding-right: 30px;
+}
+
+.search-input-group input {
+    padding: 12px 0;
+}
+
+.search-divider {
+    border-left: 1px solid var(--color-border);
+    margin: 6px 5px;
+}
+
+.search-bar .btn {
+    border-radius: 50px;
+    padding: 12px 30px;
+    font-size: 16px;
+}
+
+/* ======== MAIN CONTENT (TRANG CHỦ) ======== */
+.main-content {
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+
+.content-section {
+    margin-bottom: 80px;
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.section-header i {
+    font-size: 25px;
+    color: var(--color-accent);
+}
+
+.section-title h2 {
+    font-size: 25px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.section-title p {
+    font-size: 18px;
+    color: var(--color-muted);
+    margin: 0;
+}
+
+/* ======== CARD GRID ======== */
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+}
+
+/* ======== CAFE CARD ======== */
+.cafe-card {
+    background-color: var(--color-white);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cafe-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+.card-image {
+    position: relative;
+    width: 100%;
+    height: 200px;
+}
+
+.card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.card-image.placeholder {
+    background-color: #eeeeee;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #bbbbbb;
+}
+
+.card-rating {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: var(--color-white);
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.card-rating .fa-star {
+    color: var(--color-star);
+    margin-right: 4px;
+}
+
+.card-content {
+    padding: 20px;
+}
+
+.card-content h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.card-info {
+    font-size: 14px;
+    color: var(--color-muted);
+    margin-bottom: 15px;
+}
+
+.card-info div {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.card-info div:first-child {
+    margin-bottom: 5px;
+}
+
+.card-info i {
+    width: 14px;
+    text-align: center;
+}
+
+.card-tags {
+    margin-bottom: 15px;
+}
+
+.tag {
+    display: inline-block;
+    background-color: #f1f3f5;
+    color: var(--color-light);
+    padding: 4px 10px;
+    border-radius: 15px;
+    font-size: 12px;
+    font-weight: 500;
+    margin-right: 5px;
+    margin-bottom: 5px;
+}
+
+.card-description {
+    font-size: 14px;
+    color: var(--color-light);
+}
+
+/* ======== CTA SECTION ======== */
+.cta-section {
+    background-color: #fffaf0;
+    padding: 40px;
+    border-radius: var(--border-radius);
+    text-align: center;
+    margin-top: 20px;
+}
+
+.cta-section h2 {
+    font-size: 32px;
+    margin-bottom: 10px;
+}
+
+.cta-section p {
+    color: var(--color-muted);
+    margin-bottom: 25px;
 }

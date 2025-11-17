@@ -3,11 +3,13 @@ from .models import CafeShop
 
 # Create your views here.
 def home_view(request):
-    new_shop = CafeShop.objects.all().order_by('-id')[:3]
     hot_shop = CafeShop.objects.all()[:3]
+    new_shop = CafeShop.objects.all().order_by('-id')[:3]
+    popular_shop = (CafeShop.objects.all().order_by('?')[:6])[3:6]
     context = {
         'new_shop': new_shop,
-        'hot_shop': hot_shop
+        'hot_shop': hot_shop,
+        'popular_shop': popular_shop
     }
     return render(request, 'home.html', context)
 

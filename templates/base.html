@@ -3,40 +3,49 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}GoCoffee{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale-1.0">
+    <title>CoffeeSpot - {% block title %}Khám phá{% endblock title %}</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
+    {% block extra_styles %}
+    {% endblock extra_styles %}
 </head>
 <body>
 
-    <header class="main-header">
-        <nav class="navbar">
-            <a href="{% url 'home' %}" class="logo">
-                <img src="{% static 'images/coffee-cup-icon.png' %}" alt="GoCoffee">
-                <span>GoCoffee</span>
-            </a>
+    <header class="header">
+        <nav class="navbar container">
+            <div class="logo-container">
+                <a href="/" class="logo">GoCoffee</a>
+                <p class="tagline">Khám phá quán cà phê yêu thích</p>
+            </div>
+
             <ul class="nav-links">
-                <li><a href="{% url 'home' %}" class="active">Trang chủ</a></li>
-                <li><a href="{% url 'shop_list' %}">Khám phá</a></li>
-                <li><a href="{% url 'contact' %}">Liên hệ</a></li>
+                <li><a href="/" class="active"><i class="fa-solid fa-house"></i> Trang chủ</a></li>
+                <li><a href="#"><i class="fa-solid fa-compass"></i> Khám phá</a></li>
+                <li><a href="#"><i class="fa-solid fa-phone"></i> Liên hệ</a></li>
             </ul>
-            <div class="auth-section">
-                <button type="button" class="btn-primary" id="login-button">Đăng nhập</button>
+
+            <div class="nav-actions">
+                <a href="#" class="btn btn-primary">Đăng nhập</a>
             </div>
         </nav>
     </header>
 
-    <main class="main-content">
+    <main class="main-content container">
+
         {% block content %}
-        {% endblock %}
+        {% endblock content %}
+
     </main>
 
-    <footer class="main-footer">
-        <p>&copy; 2025 CoffeeSpot. Khám phá quán cà phê yêu thích của bạn.</p>
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 CoffeeSpot. Mọi quyền được bảo lưu.</p>
+        </div>
     </footer>
 
-    <script src="{% static 'js/main.js' %}"></script>
 </body>
 </html>
