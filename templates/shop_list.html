@@ -1,0 +1,205 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_styles %}
+<link rel="stylesheet" href="{% static 'css/shop_list.css' %}">
+{% endblock extra_styles %}
+
+{% block title}Khám phá{% endblock title}
+
+{% block content %}
+<section class="hero-section">
+    <div class="section-title">
+        <h2>Tìm kiếm quán cà phê</h2>
+        <p>Sử dụng bộ lọc để tìm quán phù hợp với bạn</p>
+    </div>
+
+    <div class="search-input-group search-input-main">
+        <i class="fa-solid fa-search"></i>
+        <input type="text" name="search" placeholder="Tìm kiếm theo tên, địa chỉ...">
+    </div>
+</section>
+<section class="content-section">
+    <div class="filter-section">
+        <div class="card-grid">
+            <h3><i class="fa-solid fa-location-dot"></i> Khu vực</h3>
+            <form class="filter district" method="GET">
+                <label class="custom-radio-container">
+                    <input type="radio" name="district" value="Tất cả" checked>
+                    <span class="radiomark"></span>
+                    Tất cả
+                </label>
+                <label class="custom-radio-container">
+                    <input type="radio" name="district" value="Quận 1">
+                    <span class="radiomark"></span>
+                    Quận 1
+                </label>
+                <label class="custom-radio-container">
+                    <input type="radio" name="district" value="Quận 2">
+                    <span class="radiomark"></span>
+                    Quận 2
+                </label>
+                <label class="custom-radio-container">
+                    <input type="radio" name="district" value="Quận 3">
+                    <span class="radiomark"></span>
+                    Quận 3
+                </label>
+                <label class="custom-radio-container">
+                    <input type="radio" name="district" value="Quận Bình Thạnh">
+                    <span class="radiomark"></span>
+                    Quận Bình Thạnh
+                </label>
+            </form>
+        </div>
+        <div class="card-grid">
+            <h3><i class="fa-solid fa-star"></i> Đánh giá tối thiểu</h3>
+            <form class="filter rate" method="GET">
+                <div class="filter-header">
+                    <span>Tất cả</span>
+                    <span id="slider-value">0.0</span>
+                </div>
+                <input type="range" min="0" max="100" value="0" step="0.1">
+            </form>
+        </div>
+        <div class="card-grid">
+            <h3><i class="fa-solid fa-wind"></i> Không khí</h3>
+            <form class="filter atmosphere" method="GET">
+                <label class="custom-checkbox-container">
+                    <input type="checkbox" name="atmosphere" value="Hiện đại">
+                    <span class="checkmark"></span>
+                    Hiện đại
+                </label>
+                <label class="custom-checkbox-container">
+                    <input type="checkbox" name="atmosphere" value="Ấm cúng">
+                    <span class="checkmark"></span>
+                    Ấm cúng
+                </label>
+                <label class="custom-checkbox-container">
+                    <input type="checkbox" name="atmosphere" value="Yên tĩnh">
+                    <span class="checkmark"></span>
+                    Yên tĩnh
+                </label>
+                <label class="custom-checkbox-container">
+                    <input type="checkbox" name="atmosphere" value="Sang trọng">
+                    <span class="checkmark"></span>
+                    Sang trọng
+                </label>
+                <label class="custom-checkbox-container">
+                    <input type="checkbox" name="atmosphere" value="Hoài cổ">
+                    <span class="checkmark"></span>
+                    Hoài cổ
+                </label>
+                <label class="custom-checkbox-container">
+                    <input type="checkbox" name="atmosphere" value="Nghệ thuật">
+                    <span class="checkmark"></span>
+                    Nghệ thuật
+                </label>
+            </form>
+        </div>
+        <div class="card-grid">
+            <h3><i class="fa-solid fa-dollar-sign"></i> Mức giá</h3>
+            <form class="filter price-range" method="GET">
+                <label class="custom-radio-container">
+                    <input type="radio" name="price-range" value="Tất cả" checked>
+                    <span class="radiomark"></span>
+                    Tất cả
+                </label>
+                <label class="custom-radio-container">
+                    <input type="radio" name="price-range" value="Dưới 50,000đ">
+                    <span class="radiomark"></span>
+                    Dưới 50,000đ
+                </label>
+                <label class="custom-radio-container">
+                    <input type="radio" name="price-range" value="50,000đ - 80,000đ">
+                    <span class="radiomark"></span>
+                    50,000đ - 80,000đ
+                </label>
+                <label class="custom-radio-container">
+                    <input type="radio" name="price-range" value="Trên 80,000đ">
+                    <span class="radiomark"></span>
+                    Trên 80,000đ
+                </label>
+            </form>
+        </div>
+        <div class="card-grid">
+            <h3><i class="fa-solid fa-wifi"></i> Tiện ích</h3>
+            <form class="filter amenities">
+                <label class="custom-checkbox-container">
+                    <input type="checkbox" name="amenities" value="Wifi">
+                    <span class="checkmark"></span>
+                    Wifi
+                </label>
+                <label class="custom-checkbox-container">
+                    <input type="checkbox" name="amenities" value="Điều hòa">
+                    <span class="checkmark"></span>
+                    Điều hòa
+                </label>
+                <label class="custom-checkbox-container">
+                    <input type="checkbox" name="amenities" value="Ổ cắm điện">
+                    <span class="checkmark"></span>
+                    Ổ cắm điện
+                </label>
+                <label class="custom-checkbox-container">
+                    <input type="checkbox" name="amenities" value="Chỗ đậu xe">
+                    <span class="checkmark"></span>
+                    Chỗ đậu xe
+                </label>
+                <label class="custom-checkbox-container">
+                    <input type="checkbox" name="amenities" value="View đẹp">
+                    <span class="checkmark"></span>
+                    View đẹp
+                </label>
+
+                <label class="custom-checkbox-container">
+                    <input type="checkbox" name="amenities" value="Sân vườn">
+                    <span class="checkmark"></span>
+                    Sân vườn
+                </label>
+            </form>
+        </div>
+    </div>
+
+    <div class="main-section">
+        <div class="content-header">
+            <p>Tìm thấy {{x}} quán cà phê</p>
+            <div class="content-view">
+                <button class="active"><i class="fa-solid fa-list"></i> Danh sách</button>
+                <button class=""><i class="fa-regular fa-map"></i> Map</button>
+            </div>
+        </div>
+        <div class="content-main">
+            {% for shop in shops %}
+            <div class="cafe-card">
+                <div class="card-image">
+                    {% if shop.cover_image %}
+                    <img src="{{ shop.cover_image.url }}" alt="{{ shop.name }}">
+                    {% else %}
+                    <div class="card-image placeholder">
+                        <i class="fa-solid fa-image fa-3x"></i>
+                    </div>
+                    {% endif %}
+                    <div class="card-rating">
+                        <i class="fa-solid fa-star"></i> 4.8
+                    </div>
+                </div>
+                <div class="card-content">
+                    <h3><a href="{% url 'shop_detail' shop.id %}">{{ shop.name }}</a></h3>
+                    <div class="card-info">
+                        <div><i class="fa-solid fa-location-dot"></i>{{ shop.district }}</div>
+                        <div><i class="fa-solid fa-dollar-sign"></i>{{ shop.price_range }}</div>
+                    </div>
+                    <div class="card-tags">
+                        {% for tag in shop.tags.split|slice:":2" %}
+                        <span class="tag">{{ tag }}</span>
+                        {% endfor %}
+                    </div>
+                    <p class="card-description">{{ shop.description|truncatewords:20 }}</p>
+                </div>
+            </div>
+            {% empty %}
+            <p>Không có quán nào phổ biến trong khu vực. (Hãy thêm dữ liệu vào /admin).</p>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock content %}

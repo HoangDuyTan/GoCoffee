@@ -1,0 +1,338 @@
+
+:root {
+    --primary-color: #865200;
+    --text-color: #333;
+    --border-color: #ddd;
+    --background-grey: #f8f8f8;
+}
+
+/* --- HERO SECTION --- */
+.hero-section {
+    padding: 20px 20px 0;
+}
+
+.section-title {
+    margin-bottom: 20px;
+}
+
+.section-title h2 {
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.section-title p {
+    font-size: 1rem;
+    color: #6c757d; 
+}
+
+.search-input-main {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 30px;
+    padding: 12px 15px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color, #ddd);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    background-color: white;
+}
+
+.search-input-main i {
+    color: #888;
+    font-size: 1.1rem;
+    margin-right: 10px;
+}
+
+.search-input-main input {
+    flex-grow: 1;
+    border: none;
+    outline: none;
+    font-size: 1rem;
+    padding: 0;
+    color: var(--text-color, #333);
+}
+
+.search-input-main input::placeholder {
+    color: #b0b0b0;
+}
+
+.content-section {
+    display: flex;
+    padding: 20px;
+    gap: 20px;
+    background-color: var(--background-grey);
+}
+
+.filter-section {
+    flex: 0 0 280px;
+    max-width: 280px;
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.main-section {
+    flex-grow: 1;
+}
+
+.filter-section .card-grid {
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee; /* Đường kẻ phân cách giữa các bộ lọc */
+}
+
+.filter-section .card-grid:last-child {
+    border-bottom: none; /* Bỏ đường kẻ cuối cùng */
+    margin-bottom: 0;
+}
+
+.filter-section h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: var(--text-color);
+}
+
+.filter-section i {
+    margin-right: 8px;
+    color: #b08d57; /* Màu icon */
+}
+
+/* Custom Checkbox/Radio Styling */
+.custom-radio-container,
+.custom-checkbox-container {
+    display: block;
+    position: relative;
+    padding-left: 25px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.custom-radio-container input,
+.custom-checkbox-container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+/* Tạo radio/checkbox giả */
+.radiomark, .checkmark {
+    position: absolute;
+    top: 2px;
+    left: 0;
+    height: 18px;
+    width: 18px;
+    background-color: #eee;
+    border-radius: 50%; /* Radio */
+}
+.checkmark {
+    border-radius: 4px; /* Checkbox */
+}
+
+/* Khi radio/checkbox được chọn */
+.custom-radio-container input:checked ~ .radiomark {
+    background-color: #865200; /* Màu khi được chọn */
+}
+.custom-checkbox-container input:checked ~ .checkmark {
+    background-color: #865200;
+}
+
+/* Icon tick/dot khi được chọn */
+.custom-radio-container input:checked ~ .radiomark:after,
+.custom-checkbox-container input:checked ~ .checkmark:after {
+    content: "";
+    position: absolute;
+    display: block;
+}
+.custom-radio-container input:checked ~ .radiomark:after {
+    top: 5px;
+    left: 5px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: white;
+}
+.custom-checkbox-container input:checked ~ .checkmark:after {
+    left: 6px;
+    top: 3px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+
+/* Styling cho bộ lọc Đánh giá tối thiểu (Rate) */
+.filter.rate .filter-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+/* --- SLIDER STYLING (Để slider trông phẳng và hiện đại) --- */
+input[type=range] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 5px; /* Chiều cao của track */
+    background: #ddd;
+    border-radius: 5px;
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+}
+
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 15px; /* Kích thước của thumb */
+    height: 15px;
+    border-radius: 50%;
+    background: #865200;
+    cursor: pointer;
+    margin-top: -5px; /* Căn chỉnh thumb ở giữa track */
+}
+
+input[type=range]::-moz-range-thumb {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: #865200;
+    cursor: pointer;
+    border: none;
+}
+/* --- MAIN SECTION (Kết quả tìm kiếm) --- */
+.content-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.content-header p {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #555;
+}
+
+.content-view button {
+    padding: 8px 15px;
+    border: 1px solid #ddd;
+    background-color: white;
+    cursor: pointer;
+    font-size: 0.9rem;
+    border-radius: 6px;
+    transition: all 0.2s;
+}
+
+.content-view button i {
+    margin-right: 5px;
+}
+
+/* Nút Danh sách đang được chọn (active) */
+.content-view button.active {
+    background-color: #333; /* Màu đen hoặc màu rất đậm */
+    color: white;
+    border-color: #333;
+}
+
+/* Container của các card (tạo lưới 2 cột) */
+.content-main {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2 cột bằng nhau */
+    gap: 20px;
+}
+
+/* --- CARD CÀ PHÊ --- */
+.cafe-card {
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08); /* Shadow rõ hơn */
+    transition: transform 0.2s;
+}
+
+.cafe-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+}
+
+.card-image {
+    position: relative;
+    height: 200px; /* Chiều cao ảnh cố định */
+    overflow: hidden;
+}
+
+.card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.card-rating {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    font-weight: bold;
+}
+
+.card-content {
+    padding: 15px;
+}
+
+.card-content h3 {
+    margin-top: 0;
+    font-size: 1.15rem;
+    margin-bottom: 8px;
+}
+
+.card-info {
+    display: flex;
+    gap: 15px;
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.card-info i {
+    margin-right: 5px;
+    color: #888;
+}
+
+.card-tags {
+    margin-bottom: 10px;
+}
+
+.tag {
+    display: inline-block;
+    background-color: #E6F0F8; /* Nền xanh nhạt */
+    color: #865200; /* Chữ xanh */
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    margin-right: 5px;
+    font-weight: 500;
+}
+
+.card-description {
+    font-size: 0.9rem;
+    color: #555;
+    line-height: 1.4;
+}
