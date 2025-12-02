@@ -1,6 +1,14 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+def normalize_comma_separated_string(value):
+    if not value:
+        return ""
+
+    cleaned_value = value.strip()
+    item_list = [item.strip() for item in cleaned_value.split(',') if item.strip()]
+    return ','.join(item_list)
+
 #Model chính cho quán Cafe
 class CafeShop(models.Model):
     name = models.CharField(max_length = 200)
@@ -13,8 +21,24 @@ class CafeShop(models.Model):
     price_range = models.CharField(max_length = 100, blank = True)
     cover_image = models.ImageField(upload_to = 'covers/', blank = True, null = True)
 
+    def save(self, *args, **kwargs):
+        self.tags = normalize_comma_separated_string(self.tags)
+        self.amenities = normalize_comma_separated_string(self.amenities)
+        super().save(*args, **kwargs)
+
+    def get_tag_list(self):
+        if self.tags:
+            return [tag.strip() for tag in self.tags.split(',') if tag.strip()]
+        return []
+
+    def get_amenities_list(self):
+        if self.amenities:
+            return [amenity.strip() for amenity in self.amenities.split(',') if amenity.strip()]
+        return []
+
     def __str__(self):
         return self.name
+
 
 #Model cho Menu
 class MenuItem(models.Model):

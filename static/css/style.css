@@ -16,7 +16,7 @@
     --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
-/* ======== THIẾT LẬP CHUNG (RESET) ======== */
+/* ======== THIẾT LẬP CHUNG ======== */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -45,7 +45,7 @@ ul {
     list-style: none;
 }
 
-/* ======== LỚP TIỆN ÍCH CHUNG ======== */
+/* ======== TIỆN ÍCH CHUNG ======== */
 .container {
     max-width: var(--container-width);
     margin-left: auto;

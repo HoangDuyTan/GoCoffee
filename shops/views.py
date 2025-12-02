@@ -5,7 +5,7 @@ from .models import CafeShop
 def home_view(request):
     hot_shop = CafeShop.objects.all()[:3]
     new_shop = CafeShop.objects.all().order_by('-id')[:3]
-    popular_shop = (CafeShop.objects.all().order_by('?')[:6])[3:6]
+    popular_shop = CafeShop.objects.all().order_by('?')[:3]
     context = {
         'new_shop': new_shop,
         'hot_shop': hot_shop,
