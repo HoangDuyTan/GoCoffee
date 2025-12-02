@@ -17,6 +17,7 @@ class CafeShop(models.Model):
 
     tags = models.CharField(max_length = 300, blank = True)
     amenities = models.CharField(max_length = 300, blank = True) #Tiện ích các thứ như Wifi, Chỗ đậu xe...
+    description = models.CharField(max_length = 300, blank = True) #Tối đa 20 chữ
 
     price_range = models.CharField(max_length = 100, blank = True)
     cover_image = models.ImageField(upload_to = 'covers/', blank = True, null = True)
@@ -24,6 +25,7 @@ class CafeShop(models.Model):
     def save(self, *args, **kwargs):
         self.tags = normalize_comma_separated_string(self.tags)
         self.amenities = normalize_comma_separated_string(self.amenities)
+        self.description = normalize_comma_separated_string(self.description)
         super().save(*args, **kwargs)
 
     def get_tag_list(self):
@@ -80,3 +82,10 @@ class SavedShop(models.Model):
 
     def __str__(self):
         return f'{self.user.username} đã lưu {self.shop.name}'
+
+#Model cho Liên hệ
+class Contact (models.Model):
+    fullname = models.CharField(max_length = 100)
+    email = models.CharField(max_length = 100)
+    topic = models.CharField(max_length = 100)
+    content = models.TextField()
