@@ -28,8 +28,22 @@
                     <select name="district">
                         <option value="">Tất cả khu vực</option>
                         <option value="Quận 1">Quận 1</option>
-                        <option value="Quận 2">Quận 2</option>
                         <option value="Quận 3">Quận 3</option>
+                        <option value="Quận 4">Quận 4</option>
+                        <option value="Quận 5">Quận 5</option>
+                        <option value="Quận 6">Quận 6</option>
+                        <option value="Quận 7">Quận 7</option>
+                        <option value="Quận 8">Quận 8</option>
+                        <option value="Quận 9">Quận 9</option>
+                        <option value="Quận 10">Quận 10</option>
+                        <option value="Quận 11">Quận 11</option>
+                        <option value="Quận 12">Quận 12</option>
+                        <option value="Bình Tân">Quận Bình Tân</option>
+                        <option value="Phú Nhuận">Quận Phú Nhuận</option>
+                        <option value="Tân Bình">Quận Tân Bình</option>
+                        <option value="Tân Phú">Quận Tân Phú</option>
+                        <option value="Gò Vấp">Quận Gò Vấp</option>
+                        <option value="Thủ Đức">TP.Thủ Đức</option>
                         <option value="Bình Thạnh">Bình Thạnh</option>
                     </select>
                     <i class="fa-solid fa-chevron-down select-arrow"></i>
@@ -68,10 +82,10 @@
                 <h3><a href="{% url 'shop_detail' shop.id %}">{{ shop.name }}</a></h3>
                 <div class="card-info">
                     <div><i class="fa-solid fa-location-dot"></i>{{ shop.district }}</div>
-                    <div><i class="fa-solid fa-dollar-sign"></i>{{ shop.price_range }}</div>
+                    <div><i class="fa-solid fa-wallet"></i>{{ shop.price_range }}</div>
                 </div>
                 <div class="card-tags">
-                    {% for tag in shop.tags.split|slice:":2" %}
+                    {% for tag in shop.get_tag_list|slice:":2" %}
                     <span class="tag">{{ tag }}</span>
                     {% endfor %}
                 </div>
@@ -113,10 +127,10 @@
                 <h3><a href="{% url 'shop_detail' shop.id %}">{{ shop.name }}</a></h3>
                 <div class="card-info">
                     <div><i class="fa-solid fa-location-dot"></i>{{ shop.district }}</div>
-                    <div><i class="fa-solid fa-dollar-sign"></i>{{ shop.price_range }}</div>
+                    <div><i class="fa-solid fa-wallet"></i>{{ shop.price_range }}</div>
                 </div>
                 <div class="card-tags">
-                    {% for tag in shop.tags.split|slice:":2" %}
+                    {% for tag in shop.get_tag_list|slice:":2" %}
                     <span class="tag">{{ tag }}</span>
                     {% endfor %}
                 </div>
@@ -158,10 +172,10 @@
                 <h3><a href="{% url 'shop_detail' shop.id %}">{{ shop.name }}</a></h3>
                 <div class="card-info">
                     <div><i class="fa-solid fa-location-dot"></i>{{ shop.district }}</div>
-                    <div><i class="fa-solid fa-dollar-sign"></i>{{ shop.price_range }}</div>
+                    <div><i class="fa-brands fa-cash-app"></i>{{ shop.price_range }}</div>
                 </div>
                 <div class="card-tags">
-                    {% for tag in shop.tags.split|slice:":2" %}
+                    {% for tag in shop.get_tag_list|slice:":2" %}
                     <span class="tag">{{ tag }}</span>
                     {% endfor %}
                 </div>

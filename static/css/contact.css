@@ -1,0 +1,215 @@
+/* Contact Banner */
+.contact-banner {
+    background-color: #ce6f00; /* Màu cam đậm */
+    background-image: linear-gradient(to right, #ce6f00, #ff8c00); /* Gradient cam */
+    color: #fff;
+    padding: 80px 5%;
+    text-align: left;
+}
+
+.contact-banner h1 {
+    font-size: 40px;
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+.contact-banner p {
+    font-size: 18px;
+    font-weight: 400;
+    opacity: 0.9;
+}
+
+/* Contact Content */
+.contact-content {
+    display: flex;
+    justify-content: center;
+    padding: 40px 5%;
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.contact-info-card, .contact-form-card {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.contact-info-card {
+    flex: 1; /* Chiếm 1 phần */
+    max-width: 400px;
+}
+
+.contact-form-card {
+    flex: 2; /* Chiếm 2 phần */
+    max-width: 700px;
+}
+
+.contact-info-card h2, .contact-form-card h2 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 25px;
+}
+
+/* Info Items (Thông tin liên hệ) */
+.info-item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.info-icon {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #fff5e6; /* Màu nền icon nhạt */
+    color: #ce6f00; /* Màu icon */
+    font-size: 18px;
+    margin-right: 15px;
+    flex-shrink: 0;
+}
+
+.info-details strong {
+    display: block;
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 3px;
+    color: #555;
+}
+
+.info-details a, .info-details span {
+    display: block;
+    color: #333;
+    text-decoration: none;
+    font-size: 15px;
+}
+
+.info-details a:hover {
+    color: #ce6f00;
+}
+
+.social-icons i {
+    font-size: 20px;
+    margin-right: 15px;
+    cursor: pointer;
+    color: #999;
+    transition: color 0.3s;
+}
+
+.social-icons i:hover {
+    color: #ce6f00;
+}
+
+
+/* Contact Form */
+.contact-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.form-group {
+    flex: 1 1 calc(50% - 10px); /* 2 cột */
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group.full-width {
+    flex: 1 1 100%; /* 1 cột */
+}
+
+.form-group label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #555;
+    margin-bottom: 5px;
+}
+
+.form-group input, .form-group textarea {
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    box-sizing: border-box;
+    transition: border-color 0.3s;
+    background-color: #f9f9f9;
+}
+
+.form-group input:focus, .form-group textarea:focus {
+    border-color: #ce6f00;
+    outline: none;
+    background-color: #fff;
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+/* Placeholder styling (tùy chọn) */
+.form-group input::placeholder, .form-group textarea::placeholder {
+    color: #aaa;
+    font-style: italic;
+}
+
+.submit-btn {
+    background-color: #ce6f00;
+    color: #fff;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    margin-top: 10px;
+    transition: background-color 0.3s;
+    width: 100%;
+}
+
+.submit-btn:hover {
+    background-color: #ff8c00;
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+    .contact-content {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .contact-info-card, .contact-form-card {
+        max-width: 100%;
+    }
+
+    .contact-info-card {
+        order: 2; /* Đặt thông tin liên hệ xuống dưới trong mobile */
+    }
+
+    .contact-form-card {
+        order: 1;
+    }
+
+    .form-group {
+        flex: 1 1 100%; /* Trên mobile, các trường input chiếm hết chiều rộng */
+    }
+
+    .header {
+        flex-wrap: wrap;
+    }
+
+    .navbar {
+        order: 3;
+        width: 100%;
+        justify-content: space-around;
+        margin-top: 10px;
+    }
+
+    .logo, .login-btn {
+        margin-bottom: 0;
+    }
+}
