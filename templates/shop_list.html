@@ -190,10 +190,10 @@
                     <h3><a href="{% url 'shop_detail' shop.id %}">{{ shop.name }}</a></h3>
                     <div class="card-info">
                         <div><i class="fa-solid fa-location-dot"></i>{{ shop.district }}</div>
-                        <div><i class="fa-solid fa-dollar-sign"></i>{{ shop.price_range }}</div>
+                        <div><i class="fa-solid fa-wallet"></i>{{ shop.price_range }}</div>
                     </div>
                     <div class="card-tags">
-                        {% for tag in shop.tags.split|slice:":2" %}
+                        {% for tag in shop.get_tag_list|slice:":2" %}
                         <span class="tag">{{ tag }}</span>
                         {% endfor %}
                     </div>
@@ -201,7 +201,7 @@
                 </div>
             </div>
             {% empty %}
-            <p>Không có quán nào phổ biến trong khu vực. (Hãy thêm dữ liệu vào /admin).</p>
+            <p>Không có quán nào thịnh hành. (Hãy thêm dữ liệu vào /admin).</p>
             {% endfor %}
         </div>
     </div>
