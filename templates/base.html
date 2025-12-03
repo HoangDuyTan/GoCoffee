@@ -7,7 +7,6 @@
     <title>CoffeeSpot - {% block title %}Khám phá{% endblock title %}</title>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
     {% block extra_styles %}
@@ -29,7 +28,12 @@
             </ul>
 
             <div class="nav-actions">
-                <a href="#" class="btn btn-primary">Đăng nhập</a>
+                {% if request.user.is_authenticated %}
+                    <span>Chào, {{ user.username }}</span>
+                    <a href="{% url 'logout' %}" class="btn logout-btn">Đăng xuất</a>
+                {% else %}
+                    <a href="#" class="btn btn-primary" id="login-button">Đăng nhập</a>
+                {% endif %}
             </div>
         </nav>
     </header>
@@ -47,5 +51,43 @@
         </div>
     </footer>
 
+    <div class="modal" id="authModal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+
+            <div class="modal-tabs">
+                <button class="tab-button active" id="login-tab">Đăng nhập</button>
+                <button class="tab-button" id="register-tab">Đăng ký</button>
+            </div>
+
+            <div id="login-form" class="tab-pane active">
+                <form action="{% url 'login' %}" method="POST">
+                    {% csrf_token %}
+                    <label>Email hoặc Tên đăng nhập</label>
+                    <input type="text" name="username" placeholder="Nhập email hoặc username" required>
+                    <label>Mật khẩu</label>
+                    <input type="password" name="password" placeholder="Nhập mật khẩu" required>
+                    <button type="submit" class="btn btn-dark">Đăng nhập</button>
+                </form>
+            </div>
+
+            <div id="register-form" class="tab-pane">
+                <form action="{% url 'register' %}" method="POST">
+                    {% csrf_token %}
+                    <label>Tên đăng nhập</label>
+                    <input type="text" name="username" placeholder="Nhập họ và tên" required>
+                    <label>Email</label>
+                    <input type="email" name="email" placeholder="email@example.com" required>
+                    <label>Mật khẩu</label>
+                    <input type="password" name="password" placeholder="••••••••" required>
+                    <label>Nhập lại mật khẩu</label>
+                    <input type="password" name="confirm_password" placeholder="••••••••" required>
+                    <button type="submit" class="btn btn-dark">Đăng ký</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static 'js/main.js' %}"></script>
 </body>
 </html>

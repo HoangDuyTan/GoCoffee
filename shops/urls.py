@@ -1,4 +1,5 @@
-from django.urls import path
+from django.contrib import admin
+from django.urls import path, include
 from . import views
 
 urlpatterns = [
@@ -13,4 +14,7 @@ urlpatterns = [
 
     # Trang liên hệ
     path('contact/', views.contact_view, name='contact'),
+
+    # Chức năng đăng nhập
+    path('users/', include('users.urls')),
 ]

@@ -153,6 +153,7 @@
     box-shadow: var(--box-shadow);
     overflow: hidden;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
 }
 
 .cafe-card:hover {
@@ -167,9 +168,15 @@
 }
 
 .card-image img {
+    display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: transform 0.3s ease-in-out;
+}
+
+.card-image:hover img{
+    transform: scale(1.1);
 }
 
 .card-image.placeholder {
