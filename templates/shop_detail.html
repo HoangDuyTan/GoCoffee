@@ -1,0 +1,206 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ shop.name }}{% endblock title %}
+
+{% block extra_styles %}
+<link rel="stylesheet" href="{% static 'css/shop_detail.css' %}">
+{% endblock extra_styles %}
+
+{% block content %}
+<section class="shop-hero-section">
+    <a href="{% url 'home' %}" class="btn btn-back">
+        <i class="fa-solid fa-arrow-left"></i> Quay lại
+    </a>
+
+    <div class="shop-cover-image">
+        {% if shop.cover_image %}
+        <img src="{{ shop.cover_image.url }}" alt="{{ shop.name }}">
+        {% else %}
+        <div class="placeholder-image">
+            <i class="fa-solid fa-mug-hot fa-5x"></i>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="shop-info-overlay full-width-overlay">
+        <div class="overlay-inner">
+            <h1>{{ shop.name }}</h1>
+            <div class="shop-meta">
+                <span><i class="fa-solid fa-star"></i> {{ shop.rating_avg|default:"0"|floatformat:1 }} ({{ shop.review_count|default:"0" }} đánh giá)</span>
+                <span><i class="fa-solid fa-map-pin"></i> {{ shop.district }}</span>
+                <span><i class="fa-solid fa-dollar-sign"></i> {{ shop.price_range }}</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="shop-content-container container">
+    <div class="main-content">
+
+        <section class="shop-description-section">
+            <h2>Về quán</h2>
+            <p>{{ shop.description }}</p>
+
+            <div class="shop-features">
+                <h3>Đặc điểm & Không khí</h3>
+                <div class="tag-list">
+                    {% for tag in shop.get_tag_list %}
+                    <span class="feature-tag">{{ tag }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+
+        <section class="shop-menu-section">
+            <h2>Menu</h2>
+            {% for category, items in grouped_menu.items %}
+            <div class="menu-category">
+                <h3><i class="fa-solid fa-mug-saucer"></i> {{ category }}</h3>
+                <ul class="menu-list">
+                    {% for item in items %}
+                    <li class="menu-item">
+                        <span class="item-name">{{ item.name }}</span>
+                        <span class="item-price">{{ item.price }}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% empty %}
+            <p>Menu đang được cập nhật.</p>
+            {% endfor %}
+
+            <p class="menu-note">
+                * Giá có thể thay đổi theo thời gian. Vui lòng liên hệ trực tiếp quán để biết thông tin chi tiết.
+            </p>
+        </section>
+
+        <section class="shop-review-section">
+            <h2>Đánh giá & Bình luận</h2>
+            <div class="review-login-prompt">
+                <p>Viết bình luận của bạn....</p>
+            </div>
+
+            {% for review in reviews %}
+            <div class="review-card">
+                <div class="review-header">
+                    <span class="reviewer-name">{{ review.user.username }}</span>
+                    <span class="review-date">{{ review.created_at|date:"d/m/Y" }}</span>
+                </div>
+                <div class="review-rating">
+                    {% for i in "12345"|make_list %}
+                        {% if review.rating >= i|default_if_none:"0"|add:"0" %}
+                            <i class="fa-solid fa-star rated"></i>
+                        {% else %}
+                            <i class="fa-regular fa-star"></i>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                <p class="review-comment">{{ review.comment }}</p>
+            </div>
+            {% empty %}
+            <p>Chưa có đánh giá nào cho quán này.</p>
+            {% endfor %}
+        </section>
+
+        <section class="related-shops-section">
+            <h2>Những quán liên quan</h2>
+            <div class="related-shops-grid">
+                {% for related_shop in related_shops %}
+                <div class="cafe-card">
+                    <div class="card-image-placeholder">
+                        {% if related_shop.cover_image %}
+                        <img src="{{ related_shop.cover_image.url }}" alt="{{ related_shop.name }}">
+                        {% else %}
+                        <div class="placeholder-image">
+                            <i class="fa-solid fa-image fa-2x"></i>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="card-content">
+                        <h3><a href="{% url 'shop_detail' related_shop.id %}">{{ related_shop.name }}</a></h3>
+                        <div class="card-rating">
+                            <i class="fa-solid fa-star"></i> 4.8
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <p>Không tìm thấy quán liên quan.</p>
+                {% endfor %}
+            </div>
+        </section>
+
+    </div>
+
+    <div class="sidebar-content">
+        <div class="info-box sticky-box">
+            <h2>Thông tin</h2>
+            <div class="info-item">
+                 <i class="fa-solid fa-location-dot"></i>
+                <span class="info-label">Địa chỉ</span>
+            <p>{{ shop.address }}</p>
+            </div>
+            <hr>
+
+            <h2>Tiện nghi</h2>
+<div class="amenities-grid">
+    {% for amenity in shop.get_amenities_list %}
+    <div class="amenity-item">
+
+        {% with am=amenity|lower %}
+
+            {% if "wifi" in am %}
+                <i class="fa-solid fa-wifi"></i>
+
+            {% elif "nhà xe" in am or "gửi xe" in am or "đỗ xe" in am %}
+                <i class="fa-solid fa-square-parking"></i>
+
+            {% elif "điều hòa" in am or "máy lạnh" in am %}
+                <i class="fa-solid fa-wind"></i>
+
+            {% elif "thú cưng" in am %}
+                <i class="fa-solid fa-paw"></i>
+
+            {% elif "24" in am or "24h" in am %}
+                <i class="fa-solid fa-clock"></i>
+
+            {% elif "ngoài trời" in am %}
+                <i class="fa-solid fa-umbrella-beach"></i>
+
+            {% elif "nhạc" in am %}
+                <i class="fa-solid fa-music"></i>
+
+            {% else %}
+                <i class="fa-solid fa-check"></i>
+
+            {% endif %}
+        {% endwith %}
+
+        {{ amenity }}
+    </div>
+    {% endfor %}
+</div>
+
+
+            <button class="btn btn-outline-primary full-width-btn">
+                <i class="fa-regular fa-heart"></i> Lưu vào yêu thích
+            </button>
+        </div>
+    </div>
+</div>
+
+<section class="gallery-section container">
+    <h2>Khung cảnh quán</h2>
+    <div class="shop-gallery-grid">
+        {% for image in shop.images.all|slice:":4" %}
+        <div class="gallery-item">
+            <img src="{{ image.image.url }}" alt="Hình ảnh quán {{ shop.name }}">
+        </div>
+        {% empty %}
+        <p>Đang cập nhật hình ảnh...</p>
+        {% endfor %}
+    </div>
+</section>
+
+
+{% endblock %}
