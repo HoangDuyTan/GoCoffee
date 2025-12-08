@@ -171,6 +171,7 @@
                 <button class=""><i class="fa-regular fa-map"></i> Map</button>
             </div>
         </div>
+
         <div class="content-main">
             {% for shop in shops %}
             <div class="cafe-card">
@@ -204,6 +205,27 @@
             <p>Không có quán nào thịnh hành. (Hãy thêm dữ liệu vào /admin).</p>
             {% endfor %}
         </div>
+
+        {% if shops.paginator.num_pages > 1 %}
+        <div class="pagination-container">
+            <div class="pagination">
+
+                {% if shops.has_previous %}
+                <a href="?{{ request.GET.urlencode }}&page=1" class="page-link">&laquo; Đầu</a>
+                <a href="?page={{ shops.previous_page_number }}" class="page-link">Trước</a>
+                {% endif %}
+
+                <span class="current-page">
+                    Trang {{ shops.number }} / {{ shops.paginator.num_pages }}
+                </span>
+
+                {% if shops.has_next %}
+                <a href="?page={{ shops.next_page_number }}" class="page-link">Sau</a>
+                <a href="?page={{ shops.paginator.num_pages }}" class="page-link">Cuối &raquo;</a>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
     </div>
 </section>
 {% endblock content %}

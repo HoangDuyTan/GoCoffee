@@ -67,7 +67,7 @@
         <div class="card-list swiper">
             <div class="card-grid swiper-wrapper">
                 {% for shop in hot_shop %}
-                <div class="cafe-card swiper-slide">
+                <a href="{% url 'shop_detail' shop.id %}" class="cafe-card swiper-slide">
                     <div class="card-image">
                         {% if shop.cover_image %}
                         <img src="{{ shop.cover_image.url }}" alt="{{ shop.name }}">
@@ -81,7 +81,8 @@
                         </div>
                     </div>
                     <div class="card-content">
-                        <h3><a href="{% url 'shop_detail' shop.id %}">{{ shop.name }}</a></h3>
+                        <h3>{{ shop.name }}</h3>
+
                         <div class="card-info">
                             <div><i class="fa-solid fa-location-dot"></i>{{ shop.district }}</div>
                             <div><i class="fa-solid fa-wallet"></i>{{ shop.price_range }}</div>
@@ -93,7 +94,7 @@
                         </div>
                         <p class="card-description">{{ shop.description|truncatewords:20 }}</p>
                     </div>
-                </div>
+                </a>
                 {% empty %}
                 <p>Không có quán nào thịnh hành. (Hãy thêm dữ liệu vào /admin).</p>
                 {% endfor %}
@@ -120,7 +121,7 @@
         <div class="card-list swiper">
             <div class="card-grid swiper-wrapper">
                 {% for shop in new_shop %}
-                <div class="cafe-card swiper-slide">
+                <a href="{% url 'shop_detail' shop.id %}" class="cafe-card swiper-slide">
                     <div class="card-image">
                         {% if shop.cover_image %}
                         <img src="{{ shop.cover_image.url }}" alt="{{ shop.name }}">
@@ -134,7 +135,8 @@
                         </div>
                     </div>
                     <div class="card-content">
-                        <h3><a href="{% url 'shop_detail' shop.id %}">{{ shop.name }}</a></h3>
+                        <h3>{{ shop.name }}</h3>
+
                         <div class="card-info">
                             <div><i class="fa-solid fa-location-dot"></i>{{ shop.district }}</div>
                             <div><i class="fa-solid fa-wallet"></i>{{ shop.price_range }}</div>
@@ -146,9 +148,9 @@
                         </div>
                         <p class="card-description">{{ shop.description|truncatewords:20 }}</p>
                     </div>
-                </div>
+                </a>
                 {% empty %}
-                <p>Không có quán nào mới. (Hãy thêm dữ liệu vào /admin).</p>
+                <p>Không có quán nào thịnh hành. (Hãy thêm dữ liệu vào /admin).</p>
                 {% endfor %}
             </div>
         </div>
@@ -173,7 +175,7 @@
         <div class="card-list swiper">
             <div class="card-grid swiper-wrapper">
                 {% for shop in popular_shop %}
-                <div class="cafe-card swiper-slide">
+                <a href="{% url 'shop_detail' shop.id %}" class="cafe-card swiper-slide">
                     <div class="card-image">
                         {% if shop.cover_image %}
                         <img src="{{ shop.cover_image.url }}" alt="{{ shop.name }}">
@@ -187,10 +189,11 @@
                         </div>
                     </div>
                     <div class="card-content">
-                        <h3><a href="{% url 'shop_detail' shop.id %}">{{ shop.name }}</a></h3>
+                        <h3>{{ shop.name }}</h3>
+
                         <div class="card-info">
                             <div><i class="fa-solid fa-location-dot"></i>{{ shop.district }}</div>
-                            <div><i class="fa-brands fa-cash-app"></i>{{ shop.price_range }}</div>
+                            <div><i class="fa-solid fa-wallet"></i>{{ shop.price_range }}</div>
                         </div>
                         <div class="card-tags">
                             {% for tag in shop.get_tag_list|slice:":2" %}
@@ -199,9 +202,9 @@
                         </div>
                         <p class="card-description">{{ shop.description|truncatewords:20 }}</p>
                     </div>
-                </div>
+                </a>
                 {% empty %}
-                <p>Không có quán nào phổ biến trong khu vực. (Hãy thêm dữ liệu vào /admin).</p>
+                <p>Không có quán nào thịnh hành. (Hãy thêm dữ liệu vào /admin).</p>
                 {% endfor %}
             </div>
         </div>

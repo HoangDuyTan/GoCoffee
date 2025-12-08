@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from .models import CafeShop
 from django.db.models import Avg, Count
+from django.core.paginator import Paginator
 # Create your views here.
 def home_view(request):
     hot_shop = CafeShop.objects.all()[:10]
@@ -14,9 +15,11 @@ def home_view(request):
     return render(request, 'home.html', context)
 
 def shop_list_view(request):
-    shops = CafeShop.objects.all()
+    shops = CafeShop.objects.all().order_by('-id')
+    paginator = Paginator(shops, 8)
+    page_number = request.GET.get('page')
     context = {
-        'shops': shops
+        'shops': paginator.get_page(page_number)
     }
     return render(request, 'shop_list.html', context)
 
