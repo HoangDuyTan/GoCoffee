@@ -3,9 +3,9 @@ from .models import CafeShop
 from django.db.models import Avg, Count
 # Create your views here.
 def home_view(request):
-    hot_shop = CafeShop.objects.all()[:3]
-    new_shop = CafeShop.objects.all().order_by('-id')[:3]
-    popular_shop = CafeShop.objects.all().order_by('?')[:3]
+    hot_shop = CafeShop.objects.all()[:10]
+    new_shop = CafeShop.objects.all().order_by('-id')[:10]
+    popular_shop = CafeShop.objects.all().order_by('?')[:10]
     context = {
         'new_shop': new_shop,
         'hot_shop': hot_shop,

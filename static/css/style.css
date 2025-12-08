@@ -287,3 +287,64 @@ ul {
     font-size: 16px;
     width: 100%;
 }
+
+/* ======== SWIPER ======== */
+.swiper {
+    max-width: 100%;
+    overflow: hidden;
+    padding: 20px 0;
+    position: static;
+}
+
+.swiper-slide {
+    height: auto;
+    display: flex;
+}
+
+.swiper-pagination {
+    position: relative;
+    bottom: auto;
+    margin-top: 30px;
+}
+
+.swiper-button-prev,
+.swiper-button-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    color: var(--primary-color);
+    transition: all 0.3s ease;
+}
+
+.swiper-button-prev {
+    left: -70px;
+}
+
+.swiper-button-next {
+    right: -70px;
+}
+
+.swiper-button-next:hover,
+.swiper-button-prev:hover {
+    color: var(--color-dark);
+    transform: translateY(-50%) scale(1.1);
+}
+
+.swiper-pagination-bullet {
+    width: 10px;
+    height: 10px;
+    background-color: var(--primary-color);
+    opacity: 1;
+    border-radius: 50%;
+    transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+.swiper-pagination-bullet-active {
+    width: 30px;
+    border-radius: 5px;
+    background-color: var(--primary-color);
+}
