@@ -1,5 +1,5 @@
-from django.shortcuts import render, get_object_or_404
-from .models import CafeShop
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import CafeShop, Contact
 from django.db.models import Avg, Count
 from django.core.paginator import Paginator
 # Create your views here.
@@ -30,7 +30,30 @@ def shop_detail_view(request, shop_id):
     }
     return render(request, 'shop_detail.html', context)
 
+
 def contact_view(request):
+
+    if request.method == 'POST':
+        fullname = request.POST.get('fullname')
+        email = request.POST.get('email')
+        topic = request.POST.get('topic')
+        content = request.POST.get('content')
+
+        try:
+            Contact.objects.create(
+                fullname=fullname,
+                email=email,
+                topic=topic,
+                content=content
+            )
+
+            return redirect('contact')
+
+        except Exception as e:
+            print(f"Lỗi khi lưu Contact: {e}")
+            pass
+
+
     return render(request, 'contact.html')
 
 

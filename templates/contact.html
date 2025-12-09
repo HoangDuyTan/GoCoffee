@@ -53,29 +53,34 @@
             </div>
 
             <div class="contact-form-card">
-                <h2>Gửi tin nhắn cho chúng tôi</h2>
-                <form action="#" method="POST" class="contact-form">
-                    <div class="form-group">
-                        <label for="name">Họ và tên *</label>
-                        <input type="text" id="name" name="name" required placeholder="Nguyễn Văn A">
-                    </div>
-                    <div class="form-group">
-                        <label for="email">Email *</label>
-                        <input type="email" id="email" name="email" required placeholder="your@email.com">
-                    </div>
-                    <div class="form-group full-width">
-                        <label for="subject">Chủ đề *</label>
-                        <input type="text" id="subject" name="subject" required placeholder="Bạn muốn nói về điều gì?">
-                    </div>
-                    <div class="form-group full-width textarea-group">
-                        <label for="message">Nội dung *</label>
-                        <textarea id="message" name="message" rows="5" required placeholder="Viết tin nhắn của bạn tại đây..."></textarea>
-                    </div>
-                    <div class="form-group full-width">
-                        <button type="submit" class="submit-btn">Gửi tin nhắn</button>
-                    </div>
-                </form>
-            </div>
+    <h2>Gửi tin nhắn cho chúng tôi</h2>
+
+    <form action="{% url 'contact' %}" method="POST" class="contact-form">
+        {% csrf_token %} <div class="form-group">
+            <label for="name">Họ và tên *</label>
+            <input type="text" id="name" name="fullname" required placeholder="Nguyễn Văn A">
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email *</label>
+            <input type="email" id="email" name="email" required placeholder="your@email.com">
+        </div>
+
+        <div class="form-group full-width">
+            <label for="subject">Chủ đề *</label>
+            <input type="text" id="subject" name="topic" required placeholder="Bạn muốn nói về điều gì?">
+        </div>
+
+        <div class="form-group full-width textarea-group">
+            <label for="message">Nội dung *</label>
+            <textarea id="message" name="content" rows="5" required placeholder="Viết tin nhắn của bạn tại đây..."></textarea>
+        </div>
+
+        <div class="form-group full-width">
+            <button type="submit" class="submit-btn">Gửi tin nhắn</button>
+        </div>
+    </form>
+</div>
         </section>
 
 {% endblock content %}

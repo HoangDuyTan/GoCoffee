@@ -1,7 +1,7 @@
 /* Contact Banner */
 .contact-banner {
-    background-color: #ce6f00; /* Màu cam đậm */
-    background-image: linear-gradient(to right, #ce6f00, #ff8c00); /* Gradient cam */
+    background-color: #ce6f00; 
+    background-image: linear-gradient(to right, #ce6f00, #ff8c00);
     color: #fff;
     padding: 80px 5%;
     text-align: left;
@@ -37,12 +37,12 @@
 }
 
 .contact-info-card {
-    flex: 1; /* Chiếm 1 phần */
+    flex: 1;
     max-width: 400px;
 }
 
 .contact-form-card {
-    flex: 2; /* Chiếm 2 phần */
+    flex: 2;
     max-width: 700px;
 }
 
@@ -53,7 +53,7 @@
     margin-bottom: 25px;
 }
 
-/* Info Items (Thông tin liên hệ) */
+/* Info Items  */
 .info-item {
     display: flex;
     align-items: flex-start;
@@ -67,7 +67,7 @@
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background-color: #fff5e6; /* Màu nền icon nhạt */
+    background-color: #fff5e6;
     color: #ce6f00; /* Màu icon */
     font-size: 18px;
     margin-right: 15px;
@@ -114,13 +114,13 @@
 }
 
 .form-group {
-    flex: 1 1 calc(50% - 10px); /* 2 cột */
+    flex: 1 1 calc(50% - 10px);
     display: flex;
     flex-direction: column;
 }
 
 .form-group.full-width {
-    flex: 1 1 100%; /* 1 cột */
+    flex: 1 1 100%;
 }
 
 .form-group label {
@@ -151,7 +151,7 @@
     min-height: 120px;
 }
 
-/* Placeholder styling (tùy chọn) */
+/* Placeholder styling  */
 .form-group input::placeholder, .form-group textarea::placeholder {
     color: #aaa;
     font-style: italic;
@@ -187,7 +187,7 @@
     }
 
     .contact-info-card {
-        order: 2; /* Đặt thông tin liên hệ xuống dưới trong mobile */
+        order: 2;
     }
 
     .contact-form-card {
@@ -195,7 +195,7 @@
     }
 
     .form-group {
-        flex: 1 1 100%; /* Trên mobile, các trường input chiếm hết chiều rộng */
+        flex: 1 1 100%;
     }
 
     .header {
