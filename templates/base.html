@@ -21,11 +21,43 @@
 <body>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-<header class="header">
-    <nav class="navbar container">
-        <div class="logo-container">
-            <a href="/" class="logo">GoCoffee</a>
-            <p class="tagline">Khám phá quán cà phê yêu thích</p>
+    <header class="header">
+        <nav class="navbar container">
+            <div class="logo-container">
+                <a href="/" class="logo">GoCoffee</a>
+                <p class="tagline">Khám phá quán cà phê yêu thích</p>
+            </div>
+
+            <ul class="nav-links">
+                <li><a href="{% url 'home' %}" class="{% if request.resolver_match.url_name == 'home' %}active{% endif %}"><i class="fa-solid fa-house"></i> Trang chủ</a></li>
+                {% if request.user.is_authenticated %}
+                <li><a href="{% url 'for_you' %}" class="{% if request.resolver_match.user_name == 'for_you' %}active{% endif %}"><i class="fa-solid fa-heart"></i>Dành cho bạn</a></li>
+                {% endif %}
+                <li><a href="{% url 'shop_list' %}" class="{% if request.resolver_match.url_name == 'shop_list' %}active{% endif %}"><i class="fa-solid fa-compass"></i> Khám phá</a></li>
+                <li><a href="{% url 'contact' %}" class="{% if request.resolver_match.url_name == 'contact' %}active{% endif %}"><i class="fa-solid fa-phone"></i> Liên hệ</a></li>
+            </ul>
+
+            <div class="nav-actions">
+                {% if request.user.is_authenticated %}
+                    <span>Chào, {{ user.username }}</span>
+                    <a href="{% url 'logout' %}" class="btn logout-btn">Đăng xuất</a>
+                {% else %}
+                    <a href="#" class="btn btn-primary" id="login-button">Đăng nhập</a>
+                {% endif %}
+            </div>
+        </nav>
+    </header>
+
+    <main class="main-content container">
+
+        {% block content %}
+        {% endblock content %}
+
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 CoffeeSpot. Mọi quyền được bảo lưu.</p>
         </div>
 
         <ul class="nav-links">

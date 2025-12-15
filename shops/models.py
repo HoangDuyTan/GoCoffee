@@ -27,6 +27,12 @@ class CafeShop(models.Model):
     latitude = models.FloatField(null=True, blank=True)
     longitude = models.FloatField(null=True, blank=True)
 
+    # RECOMMENDATION SYSTEM
+    avg_service_score = models.FloatField(default = 0)
+    avg_ambiance_score = models.FloatField(default = 0)
+    avg_drink_score = models.FloatField(default = 0)
+    avg_price_score = models.FloatField(default = 0)
+
     def save(self, *args, **kwargs):
         self.tags = normalize_comma_separated_string(self.tags)
         self.amenities = normalize_comma_separated_string(self.amenities)
@@ -101,6 +107,12 @@ class Review(models.Model):
     comment = models.TextField(blank = True)
     created_at = models.DateTimeField(auto_now_add = True)
 
+    # SEGMENT OF ASPECT
+    sentiment_service = models.IntegerField(default = 0)
+    sentiment_ambiance = models.IntegerField(default = 0)
+    sentiment_drink = models.IntegerField(default = 0)
+    sentiment_price = models.IntegerField(default = 0)
+
     def __str__(self):
         return f'Review {self.shop.name} bởi {self.user.username}'
 
@@ -121,3 +133,16 @@ class Contact (models.Model):
     email = models.CharField(max_length = 100)
     topic = models.CharField(max_length = 100)
     content = models.TextField()
+
+# Recommendation System
+class ShopViewLog (models.Model):
+    user = models.ForeignKey(User, on_delete = models.CASCADE)
+    shop = models.ForeignKey(CafeShop, on_delete = models.CASCADE)
+    view_count = models.IntegerField(default = 1)
+    last_viewed = models.DateTimeField(auto_now = True)
+
+    class Meta:
+        unique_together = ('shop', 'user')
+
+    def __str__(self):
+        return f'{self.user.username} viewed {self.shop.name} {self.view_count}'
