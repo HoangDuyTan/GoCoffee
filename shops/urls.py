@@ -15,6 +15,9 @@ urlpatterns = [
     # Trang liên hệ
     path('contact/', views.contact_view, name='contact'),
 
+    # Trang Dành cho bạn
+    path('foryou/', views.for_you_view, name='for_you'),
+
     # Chức năng đăng nhập
     path('users/', include('users.urls')),
 ]
