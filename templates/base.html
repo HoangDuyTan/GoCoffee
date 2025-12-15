@@ -24,6 +24,9 @@
 
             <ul class="nav-links">
                 <li><a href="{% url 'home' %}" class="{% if request.resolver_match.url_name == 'home' %}active{% endif %}"><i class="fa-solid fa-house"></i> Trang chủ</a></li>
+                {% if request.user.is_authenticated %}
+                <li><a href="{% url 'for_you' %}" class="{% if request.resolver_match.user_name == 'for_you' %}active{% endif %}"><i class="fa-solid fa-heart"></i>Dành cho bạn</a></li>
+                {% endif %}
                 <li><a href="{% url 'shop_list' %}" class="{% if request.resolver_match.url_name == 'shop_list' %}active{% endif %}"><i class="fa-solid fa-compass"></i> Khám phá</a></li>
                 <li><a href="{% url 'contact' %}" class="{% if request.resolver_match.url_name == 'contact' %}active{% endif %}"><i class="fa-solid fa-phone"></i> Liên hệ</a></li>
             </ul>
