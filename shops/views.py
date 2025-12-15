@@ -1,7 +1,11 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import CafeShop, Contact, ShopViewLog
+from django.contrib import messages
+
+from .models import CafeShop, Contact, ShopViewLog, Review
 from django.db.models import Avg, Count, F
 from django.core.paginator import Paginator
+from .ai_utils import analyze_review_sentiment, get_collaboration_recommendation
 # Create your views here.
 def home_view(request):
     hot_shop = CafeShop.objects.all()[:10]
@@ -98,3 +102,46 @@ def shop_detail_view(request, shop_id):
         'related_shops': related_shops,
     }
     return render(request, 'shop_detail.html', context)
+
+# =============== AI ===============
+@login_required(login_url='/login/')
+def submit_review(request, shop_id):
+    shop = get_object_or_404(CafeShop, pk=shop_id)
+    if request.method == 'POST':
+        comment_text = request.POST.get('comment', '').strip()
+        rating_value = request.POST.get('rating')
+
+        if not rating_value or not comment_text:
+            messages.error(request, "Vui lòng nhập nội dung và chọn số sao!")
+            return redirect('shop_detail', shop_id=shop_id)
+
+        ai_scores = analyze_review_sentiment(comment_text)
+        try:
+            Review.objects.create(
+                shop=shop,
+                user=request.user,
+                comment=comment_text,
+                rating=int(rating_value),
+                **ai_scores
+            )
+            messages.success(request, "Cảm ơn bạn đã đánh giá!")
+            update_shop_stats(shop)
+        except Exception as e:
+            print(e)
+            messages.error(request, "Có lỗi xảy ra, vui lòng thử lại.")
+
+    return redirect('shop_detail', shop_id=shop_id)
+
+def update_shop_stats(shop):
+    aggs = shop.reviews.aggregate(
+        avg_service=Avg('sentiment_service'),
+        avg_ambiance=Avg('sentiment_ambiance'),
+        avg_drink=Avg('sentiment_drink'),
+        avg_price=Avg('sentiment_price')
+    )
+
+    shop.avg_service = aggs['avg_service'] or 0
+    shop.avg_ambiance = aggs['avg_ambiance'] or 0
+    shop.avg_drink = aggs['avg_drink'] or 0
+    shop.avg_price = aggs['avg_price'] or 0
+    shop.save()

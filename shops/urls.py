@@ -20,4 +20,7 @@ urlpatterns = [
 
     # Chức năng đăng nhập
     path('users/', include('users.urls')),
+
+    # Chức năng Review
+    path('shop/<int:shop_id>/review/', views.submit_review, name='submit_review'),
 ]
