@@ -19,7 +19,6 @@ def home_view(request):
     }
     return render(request, 'home.html', context)
 
-
 def for_you_view(request):
     return render(request, 'for_you.html')
 
@@ -96,6 +95,7 @@ def shop_list_view(request):
         'selected_amenities': amenities
     }
     return render(request, 'shop_list.html', context)
+
 def shop_map_api(request):
     shops, _, _, _, _, _ = filtered_shops(request)
     data = [
