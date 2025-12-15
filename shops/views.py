@@ -1,7 +1,11 @@
 from django.shortcuts import render, get_object_or_404, redirect
+
 from .models import CafeShop, Contact
 from django.db.models import Avg, Count
 from django.core.paginator import Paginator
+from django.db.models import Q
+from django.http import JsonResponse
+
 # Create your views here.
 def home_view(request):
     hot_shop = CafeShop.objects.all()[:10]
@@ -14,14 +18,95 @@ def home_view(request):
     }
     return render(request, 'home.html', context)
 
-def shop_list_view(request):
+def filtered_shops(request):
     shops = CafeShop.objects.all().order_by('-id')
+
+    #search
+    query = request.GET.get('search')
+    if query:
+        shops = shops.filter(
+            Q(name__icontains=query) |
+            Q(address__icontains=query) |
+            Q(tags__icontains=query)
+        )
+
+    #filtered district
+    district = request.GET.get('district')
+    if district:
+        shops = shops.filter(district=district)
+
+    rating = request.GET.get('rating', '0')
+
+    if rating:
+        try:
+            rating = float(rating)
+        except ValueError:
+            rating = 0
+        if rating > 0:
+            shops = shops.filter(rating=rating)
+
+    tags = request.GET.getlist('tags[]')
+    if tags:
+        query = Q()
+        for tag in tags:
+            query |= Q(tags__icontains=tag)
+        shops = shops.filter(query)
+
+    price_range = request.GET.get('price_range')
+    if price_range:
+        filtered_shops = []
+
+        for shop in shops:
+            min_price = shop.get_min_price()
+            max_price = shop.get_max_price()
+
+            if price_range == 'under_50' and max_price and max_price <= 50000:
+                filtered_shops.append(shop)
+            elif price_range == '50_80' and min_price and max_price:
+                if min_price >= 50000 and max_price <= 80000:
+                    filtered_shops.append(shop)
+            elif price_range == 'over_80' and min_price and min_price >= 80000:
+                filtered_shops.append(shop)
+        shops = filtered_shops
+
+    amenities = request.GET.getlist('amenities[]')
+    if amenities:
+        query = Q()
+        for amenity in amenities:
+            query |= Q(amenities__icontains=amenity)
+        shops = shops.filter(query)
+
+    return shops, district, rating, tags, price_range, amenities
+
+def shop_list_view(request):
+    shops, district, rating, tags, price_range, amenities = filtered_shops(request)
     paginator = Paginator(shops, 8)
     page_number = request.GET.get('page')
     context = {
-        'shops': paginator.get_page(page_number)
+        'shops': paginator.get_page(page_number),
+        'selected_district': district,
+        'rating': rating,
+        'selected_tags': tags,
+        'selected_price_range': price_range,
+        'selected_amenities': amenities
     }
     return render(request, 'shop_list.html', context)
+def shop_map_api(request):
+    shops, _, _, _, _, _ = filtered_shops(request)
+    data = [
+        {
+            'name': shop.name,
+            'lat': shop.latitude,
+            'lng': shop.longitude,
+            'rating': shop.rating,
+            'address': shop.address,
+            'cover_image': shop.cover_image.url if shop.cover_image else '',
+        }
+        for shop in shops
+        if shop.latitude and shop.longitude
+    ]
+
+    return JsonResponse(data, safe=False)
 
 def shop_detail_view(request, shop_id):
     shop = get_object_or_404(CafeShop, pk=shop_id)
@@ -29,7 +114,6 @@ def shop_detail_view(request, shop_id):
         'shop': shop
     }
     return render(request, 'shop_detail.html', context)
-
 
 def contact_view(request):
 

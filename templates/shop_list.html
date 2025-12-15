@@ -14,218 +14,377 @@
         <p>Sử dụng bộ lọc để tìm quán phù hợp với bạn</p>
     </div>
 
-    <div class="search-input-group search-input-main">
-        <i class="fa-solid fa-search"></i>
+    <form method="get" class="search-input-group search-input-main">
+        <button type="submit" onchange="submitFilters()"><i class="fa-solid fa-search"></i></button>
         <input type="text" name="search" placeholder="Tìm kiếm theo tên, địa chỉ...">
-    </div>
+    </form>
 </section>
 
 <section class="content-section">
-    <div class="filter-section">
+    <form class="filter-section" id="filters" method="get">
         <div class="card-grid">
             <h3><i class="fa-solid fa-location-dot"></i> Khu vực</h3>
-            <form class="filter district" method="GET">
+            <div class="filter district">
                 <label class="custom-radio-container">
-                    <input type="radio" name="district" value="Tất cả" checked>
+                    <input type="radio" name="district" value=""
+                           onchange="submitFilters()"
+                           {% if not selected_district %}checked{% endif %}>
                     <span class="radiomark"></span>
                     Tất cả
                 </label>
                 <label class="custom-radio-container">
-                    <input type="radio" name="district" value="Quận 1">
+                    <input type="radio" name="district" value="Quận 1"
+                           onchange="submitFilters()"
+                           {% if selected_district == "Quận 1" %}checked{% endif %} >
                     <span class="radiomark"></span>
                     Quận 1
                 </label>
                 <label class="custom-radio-container">
-                    <input type="radio" name="district" value="Quận 2">
+                    <input type="radio" name="district" value="Quận 2"
+                           onchange="submitFilters()"
+                           {% if selected_district == "Quận 2" %}checked{% endif %} >
                     <span class="radiomark"></span>
                     Quận 2
                 </label>
                 <label class="custom-radio-container">
-                    <input type="radio" name="district" value="Quận 3">
+                    <input type="radio" name="district" value="Quận 3"
+                           onchange="submitFilters()"
+                           {% if selected_district == "Quận 3" %}checked{% endif %} >
                     <span class="radiomark"></span>
                     Quận 3
                 </label>
                 <label class="custom-radio-container">
-                    <input type="radio" name="district" value="Quận Bình Thạnh">
+                    <input type="radio" name="district" value="Quận 4"
+                           onchange="submitFilters()"
+                           {% if selected_district == "Quận 4" %}checked{% endif %} >
                     <span class="radiomark"></span>
-                    Quận Bình Thạnh
+                    Quận 4
                 </label>
-            </form>
+                <label class="custom-radio-container">
+                    <input type="radio" name="district" value="Quận 5"
+                           onchange="submitFilters()"
+                           {% if selected_district == "Quận 5" %}checked{% endif %} >
+                    <span class="radiomark"></span>
+                    Quận 5
+                </label>
+                <label class="custom-radio-container">
+                    <input type="radio" name="district" value="Quận 6"
+                           onchange="submitFilters()"
+                           {% if selected_district == "Quận 6" %}checked{% endif %}>
+                    <span class="radiomark"></span>
+                    Quận 6
+                </label>
+                <label class="custom-radio-container">
+                    <input type="radio" name="district" value="Quận 7"
+                           onchange="submitFilters()"
+                           {% if selected_district == "Quận 7" %}checked{% endif %}>
+                    <span class="radiomark"></span>
+                    Quận 7
+                </label>
+                <label class="custom-radio-container">
+                    <input type="radio" name="district" value="Quận 8"
+                           onchange="submitFilters()"
+                           {% if selected_district == "Quận 8" %}checked{% endif %}>
+                    <span class="radiomark"></span>
+                    Quận 8
+                </label>
+                <label class="custom-radio-container">
+                    <input type="radio" name="district" value="Quận 9"
+                           onchange="submitFilters()"
+                           {% if selected_district == "Quận 9" %}checked{% endif %}>
+                    <span class="radiomark"></span>
+                    Quận 9
+                </label>
+                <label class="custom-radio-container">
+                    <input type="radio" name="district" value="Quận 10"
+                           onchange="submitFilters()"
+                           {% if selected_district == "Quận 10" %}checked{% endif %}>
+                    <span class="radiomark"></span>
+                    Quận 10
+                </label>
+                <label class="custom-radio-container">
+                    <input type="radio" name="district" value="Quận 11"
+                           onchange="submitFilters()"
+                           {% if selected_district == "Quận 11" %}checked{% endif %}>
+                    <span class="radiomark"></span>
+                    Quận 11
+                </label>
+                <label class="custom-radio-container">
+                    <input type="radio" name="district" value="Quận 12"
+                           onchange="submitFilters()"
+                           {% if selected_district == "Quận 12" %}checked{% endif %}>
+                    <span class="radiomark"></span>
+                    Quận 12
+                </label>
+                <label class="custom-radio-container">
+                    <input type="radio" name="district" value="Bình Tân"
+                           onchange="submitFilters()"
+                           {% if selected_district == "Bình Tân" %}checked{% endif %}>
+                    <span class="radiomark"></span>
+                    Quận Bình Tân
+                </label>
+                <label class="custom-radio-container">
+                    <input type="radio" name="district" value="Phú Nhuận"
+                           onchange="submitFilters()"
+                           {% if selected_district == "Phú Nhuận" %}checked{% endif %}>
+                    <span class="radiomark"></span>
+                    Quận Phú Nhuận
+                </label>
+                <label class="custom-radio-container">
+                    <input type="radio" name="district" value="Tân Bình"
+                           onchange="submitFilters()"
+                           {% if selected_district == "Tân Bình" %}checked{% endif %}>
+                    <span class="radiomark"></span>
+                    Quận Tân Bình
+                </label>
+                <label class="custom-radio-container">
+                    <input type="radio" name="district" value="Tân Phú"
+                           onchange="submitFilters()"
+                           {% if selected_district == "Tân Phú" %}checked{% endif %}>
+                    <span class="radiomark"></span>
+                    Quận Tân Phú
+                </label>
+                <label class="custom-radio-container">
+                    <input type="radio" name="district" value="Gò Vấp"
+                           onchange="submitFilters()"
+                           {% if selected_district == "Gò Vấp" %}checked{% endif %}>
+                    <span class="radiomark"></span>
+                    Quận Gò Vấp
+                </label>
+                <label class="custom-radio-container">
+                    <input type="radio" name="district" value="Thủ Đức"
+                           onchange="submitFilters()"
+                           {% if selected_district == "Thủ Đức" %}checked{% endif %}>
+                    <span class="radiomark"></span>
+                    TP. Thủ Đức
+                </label>
+                <label class="custom-radio-container">
+                    <input type="radio" name="district" value="Bình Thạnh"
+                           onchange="submitFilters()"
+                           {% if selected_district == "Bình Thạnh" %}checked{% endif %}>
+                    <span class="radiomark"></span>
+                    Bình Thạnh
+                </label>
+            </div>
         </div>
 
         <div class="card-grid">
             <h3><i class="fa-solid fa-star"></i> Đánh giá tối thiểu</h3>
-            <form class="filter rate" method="GET">
+            <div class="filter rating">
                 <div class="filter-header">
                     <span>Tất cả</span>
-                    <span id="slider-value">0.0</span>
+                    <span id="slider-value">
+                        {% if rating and rating|floatformat != "0" %}
+                            {{ rating }}
+                        {% endif %}
+                    </span>
                 </div>
-                <input type="range" min="0" max="100" value="0" step="0.1">
-            </form>
+                <input type="range" name="rating" min="0" max="5" value="{{ rating|default:'0' }}" step="0.1"
+                       onchange="submitFilters()"
+                       oninput="document.getElementById('slider-value').innerText = this.value == 0 ? '' : this.value">
+            </div>
         </div>
 
         <div class="card-grid">
             <h3><i class="fa-solid fa-wind"></i> Không khí</h3>
-            <form class="filter atmosphere" method="GET">
+            <div class="filter tags">
                 <label class="custom-checkbox-container">
-                    <input type="checkbox" name="atmosphere" value="Hiện đại">
+                    <input type="checkbox" name="tags[]" value="Hiện đại"
+                           onchange="submitFilters()"
+                           {% if "Hiện đại" in selected_tags %}checked{% endif %}>
                     <span class="checkmark"></span>
                     Hiện đại
                 </label>
                 <label class="custom-checkbox-container">
-                    <input type="checkbox" name="atmosphere" value="Ấm cúng">
+                    <input type="checkbox" name="tags[]" value="Ấm cúng"
+                           onchange="submitFilters()"
+                           {% if "Ấm cúng" in selected_tags %}checked{% endif %}>
                     <span class="checkmark"></span>
                     Ấm cúng
                 </label>
                 <label class="custom-checkbox-container">
-                    <input type="checkbox" name="atmosphere" value="Yên tĩnh">
+                    <input type="checkbox" name="tags[]" value="Yên tĩnh"
+                           onchange="submitFilters()"
+                           {% if "Yên tĩnh" in selected_tags %}checked{% endif %}>
                     <span class="checkmark"></span>
                     Yên tĩnh
                 </label>
                 <label class="custom-checkbox-container">
-                    <input type="checkbox" name="atmosphere" value="Sang trọng">
+                    <input type="checkbox" name="tags[]" value="Sang trọng"
+                           onchange="submitFilters()"
+                           {% if "Sang trọng" in selected_tags %}checked{% endif %}>
                     <span class="checkmark"></span>
                     Sang trọng
                 </label>
                 <label class="custom-checkbox-container">
-                    <input type="checkbox" name="atmosphere" value="Hoài cổ">
+                    <input type="checkbox" name="tags[]" value="Hoài cổ"
+                           onchange="submitFilters()"
+                           {% if "Hoài cổ" in selected_tags %}checked{% endif %}>
                     <span class="checkmark"></span>
                     Hoài cổ
                 </label>
                 <label class="custom-checkbox-container">
-                    <input type="checkbox" name="atmosphere" value="Nghệ thuật">
+                    <input type="checkbox" name="tags[]" value="Nghệ thuật"
+                           onchange="submitFilters()"
+                           {% if "Nghệ thuật" in selected_tags %}checked{% endif %}>
                     <span class="checkmark"></span>
                     Nghệ thuật
                 </label>
-            </form>
+            </div>
         </div>
 
         <div class="card-grid">
-            <h3><i class="fa-solid fa-dollar-sign"></i> Mức giá</h3>
-            <form class="filter price-range" method="GET">
+            <h3><i class="fa-solid fa-dollar-sign"></i>Mức giá</h3>
+            <div class="filter price-range">
                 <label class="custom-radio-container">
-                    <input type="radio" name="price-range" value="Tất cả" checked>
+                    <input type="radio" name="price_range" value=""
+                           onchange="submitFilters()"
+                           {% if not selected_price_range %}checked{% endif %}>
                     <span class="radiomark"></span>
                     Tất cả
                 </label>
                 <label class="custom-radio-container">
-                    <input type="radio" name="price-range" value="Dưới 50,000đ">
+                    <input type="radio" name="price_range" value="under_50"
+                           onchange="submitFilters()"
+                           {% if selected_price_range == "under_50" %}checked{% endif %}>
                     <span class="radiomark"></span>
                     Dưới 50,000đ
                 </label>
                 <label class="custom-radio-container">
-                    <input type="radio" name="price-range" value="50,000đ - 80,000đ">
+                    <input type="radio" name="price_range" value="50_80"
+                           onchange="submitFilters()"
+                           {% if selected_price_range == "50_80" %}checked{% endif %}>
                     <span class="radiomark"></span>
                     50,000đ - 80,000đ
                 </label>
                 <label class="custom-radio-container">
-                    <input type="radio" name="price-range" value="Trên 80,000đ">
+                    <input type="radio" name="price_range" value="over_80"
+                           onchange="submitFilters()"
+                           {% if selected_price_range == "over_80" %}checked{% endif %}>
                     <span class="radiomark"></span>
                     Trên 80,000đ
                 </label>
-            </form>
+            </div>
         </div>
+
         <div class="card-grid">
             <h3><i class="fa-solid fa-wifi"></i> Tiện ích</h3>
-            <form class="filter amenities">
+            <div class="filter amenities">
                 <label class="custom-checkbox-container">
-                    <input type="checkbox" name="amenities" value="Wifi">
+                    <input type="checkbox" name="amenities[]" value="Wifi"
+                           onchange="submitFilters()"
+                           {% if "Wifi" in selected_amenities %}checked{% endif %}>
                     <span class="checkmark"></span>
                     Wifi
                 </label>
                 <label class="custom-checkbox-container">
-                    <input type="checkbox" name="amenities" value="Điều hòa">
+                    <input type="checkbox" name="amenities[]" value="Điều hòa"
+                           onchange="submitFilters()"
+                           {% if "Điều hòa" in selected_amenities %}checked{% endif %}>
                     <span class="checkmark"></span>
                     Điều hòa
                 </label>
                 <label class="custom-checkbox-container">
-                    <input type="checkbox" name="amenities" value="Ổ cắm điện">
+                    <input type="checkbox" name="amenities[]" value="Ổ cắm điện"
+                           onchange="submitFilters()"
+                           {% if "Ổ cắm điện" in selected_amenities %}checked{% endif %}>
                     <span class="checkmark"></span>
                     Ổ cắm điện
                 </label>
                 <label class="custom-checkbox-container">
-                    <input type="checkbox" name="amenities" value="Chỗ đậu xe">
+                    <input type="checkbox" name="amenities[]" value="Chỗ đậu xe"
+                           onchange="submitFilters()"
+                           {% if "Chỗ đậu xe" in selected_amenities %}checked{% endif %}>
                     <span class="checkmark"></span>
                     Chỗ đậu xe
                 </label>
                 <label class="custom-checkbox-container">
-                    <input type="checkbox" name="amenities" value="View đẹp">
+                    <input type="checkbox" name="amenities[]" value="View đẹp"
+                           onchange="submitFilters()"
+                           {% if "View đẹp" in selected_amenities %}checked{% endif %}>
                     <span class="checkmark"></span>
                     View đẹp
                 </label>
 
                 <label class="custom-checkbox-container">
-                    <input type="checkbox" name="amenities" value="Sân vườn">
+                    <input type="checkbox" name="amenities[]" value="Sân vườn"
+                           onchange="submitFilters()"
+                           {% if "Sân vườn" in selected_amenities %}checked{% endif %}>
                     <span class="checkmark"></span>
                     Sân vườn
                 </label>
-            </form>
+            </div>
         </div>
-    </div>
+    </form>
 
     <div class="main-section">
         <div class="content-header">
-            <p>Tìm thấy {{x}} quán cà phê</p>
+            <p>Tìm thấy {{ shops.paginator.count }} quán cà phê</p>
             <div class="content-view">
-                <button class="active"><i class="fa-solid fa-list"></i> Danh sách</button>
-                <button class=""><i class="fa-regular fa-map"></i> Map</button>
+                <button type="button" class="active" id="list-btn"><i class="fa-solid fa-list"></i> Danh sách</button>
+                <button type="button" class="" id="map-btn"><i class="fa-regular fa-map"></i> Map</button>
             </div>
         </div>
-
-        <div class="content-main">
-            {% for shop in shops %}
-            <div class="cafe-card">
-                <div class="card-image">
-                    {% if shop.cover_image %}
-                    <img src="{{ shop.cover_image.url }}" alt="{{ shop.name }}">
-                    {% else %}
-                    <div class="card-image placeholder">
-                        <i class="fa-solid fa-image fa-3x"></i>
+        <div id="shop-list">
+            <div class="content-main">
+                {% for shop in shops %}
+                <div class="cafe-card">
+                    <div class="card-image">
+                        {% if shop.cover_image %}
+                        <img src="{{ shop.cover_image.url }}" alt="{{ shop.name }}">
+                        {% else %}
+                        <div class="card-image placeholder">
+                            <i class="fa-solid fa-image fa-3x"></i>
+                        </div>
+                        {% endif %}
+                        <div class="card-rating">
+                            <i class="fa-solid fa-star"></i> {{ shop.rating }}
+                        </div>
                     </div>
+                    <div class="card-content">
+                        <h3><a href="{% url 'shop_detail' shop.id %}">{{ shop.name }}</a></h3>
+                        <div class="card-info">
+                            <div><i class="fa-solid fa-location-dot"></i>{{ shop.district }}</div>
+                            <div><i class="fa-solid fa-wallet"></i>{{ shop.price_range }}</div>
+                        </div>
+                        <div class="card-tags">
+                            {% for tag in shop.get_tag_list|slice:":2" %}
+                            <span class="tag">{{ tag }}</span>
+                            {% endfor %}
+                        </div>
+                        <p class="card-description">{{ shop.description|truncatewords:20 }}</p>
+                    </div>
+                </div>
+                {% empty %}
+                <p>Không tìm thấy quán cà phê</p>
+                {% endfor %}
+            </div>
+
+            {% if shops.paginator.num_pages > 1 %}
+            <div class="pagination-container">
+                <div class="pagination">
+
+                    {% if shops.has_previous %}
+                    <a href="?{{ request.GET.urlencode }}&page=1" class="page-link">&laquo; Đầu</a>
+                    <a href="?page={{ shops.previous_page_number }}" class="page-link">Trước</a>
                     {% endif %}
-                    <div class="card-rating">
-                        <i class="fa-solid fa-star"></i> 4.8
-                    </div>
-                </div>
-                <div class="card-content">
-                    <h3><a href="{% url 'shop_detail' shop.id %}">{{ shop.name }}</a></h3>
-                    <div class="card-info">
-                        <div><i class="fa-solid fa-location-dot"></i>{{ shop.district }}</div>
-                        <div><i class="fa-solid fa-wallet"></i>{{ shop.price_range }}</div>
-                    </div>
-                    <div class="card-tags">
-                        {% for tag in shop.get_tag_list|slice:":2" %}
-                        <span class="tag">{{ tag }}</span>
-                        {% endfor %}
-                    </div>
-                    <p class="card-description">{{ shop.description|truncatewords:20 }}</p>
+
+                    <span class="current-page">
+                        Trang {{ shops.number }} / {{ shops.paginator.num_pages }}
+                    </span>
+
+                    {% if shops.has_next %}
+                    <a href="?page={{ shops.next_page_number }}" class="page-link">Sau</a>
+                    <a href="?page={{ shops.paginator.num_pages }}" class="page-link">Cuối &raquo;</a>
+                    {% endif %}
                 </div>
             </div>
-            {% empty %}
-            <p>Không có quán nào thịnh hành. (Hãy thêm dữ liệu vào /admin).</p>
-            {% endfor %}
+            {% endif %}
         </div>
-
-        {% if shops.paginator.num_pages > 1 %}
-        <div class="pagination-container">
-            <div class="pagination">
-
-                {% if shops.has_previous %}
-                <a href="?{{ request.GET.urlencode }}&page=1" class="page-link">&laquo; Đầu</a>
-                <a href="?page={{ shops.previous_page_number }}" class="page-link">Trước</a>
-                {% endif %}
-
-                <span class="current-page">
-                    Trang {{ shops.number }} / {{ shops.paginator.num_pages }}
-                </span>
-
-                {% if shops.has_next %}
-                <a href="?page={{ shops.next_page_number }}" class="page-link">Sau</a>
-                <a href="?page={{ shops.paginator.num_pages }}" class="page-link">Cuối &raquo;</a>
-                {% endif %}
-            </div>
+        <div class="content-main" id="shop-map">
+            <div id="map"></div>
         </div>
-        {% endif %}
     </div>
+
 </section>
 {% endblock content %}

@@ -3,93 +3,105 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale-1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CoffeeSpot - {% block title %}Khám phá{% endblock title %}</title>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.css"/>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link
+            rel="stylesheet"
+            href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
+
 
     {% block extra_styles %}
     {% endblock extra_styles %}
 </head>
 <body>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-    <header class="header">
-        <nav class="navbar container">
-            <div class="logo-container">
-                <a href="/" class="logo">GoCoffee</a>
-                <p class="tagline">Khám phá quán cà phê yêu thích</p>
-            </div>
-
-            <ul class="nav-links">
-                <li><a href="{% url 'home' %}" class="{% if request.resolver_match.url_name == 'home' %}active{% endif %}"><i class="fa-solid fa-house"></i> Trang chủ</a></li>
-                <li><a href="{% url 'shop_list' %}" class="{% if request.resolver_match.url_name == 'shop_list' %}active{% endif %}"><i class="fa-solid fa-compass"></i> Khám phá</a></li>
-                <li><a href="{% url 'contact' %}" class="{% if request.resolver_match.url_name == 'contact' %}active{% endif %}"><i class="fa-solid fa-phone"></i> Liên hệ</a></li>
-            </ul>
-
-            <div class="nav-actions">
-                {% if request.user.is_authenticated %}
-                    <span>Chào, {{ user.username }}</span>
-                    <a href="{% url 'logout' %}" class="btn logout-btn">Đăng xuất</a>
-                {% else %}
-                    <a href="#" class="btn btn-primary" id="login-button">Đăng nhập</a>
-                {% endif %}
-            </div>
-        </nav>
-    </header>
-
-    <main class="main-content container">
-
-        {% block content %}
-        {% endblock content %}
-
-    </main>
-
-    <footer class="footer">
-        <div class="container">
-            <p>&copy; 2025 CoffeeSpot. Mọi quyền được bảo lưu.</p>
+<header class="header">
+    <nav class="navbar container">
+        <div class="logo-container">
+            <a href="/" class="logo">GoCoffee</a>
+            <p class="tagline">Khám phá quán cà phê yêu thích</p>
         </div>
-    </footer>
 
-    <div class="modal" id="authModal">
-        <div class="modal-content">
-            <span class="close-button">&times;</span>
+        <ul class="nav-links">
+            <li><a href="{% url 'home' %}"
+                   class="{% if request.resolver_match.url_name == 'home' %}active{% endif %}"><i
+                    class="fa-solid fa-house"></i> Trang chủ</a></li>
+            <li><a href="{% url 'shop_list' %}"
+                   class="{% if request.resolver_match.url_name == 'shop_list' %}active{% endif %}"><i
+                    class="fa-solid fa-compass"></i> Khám phá</a></li>
+            <li><a href="{% url 'contact' %}"
+                   class="{% if request.resolver_match.url_name == 'contact' %}active{% endif %}"><i
+                    class="fa-solid fa-phone"></i> Liên hệ</a></li>
+        </ul>
 
-            <div class="modal-tabs">
-                <button class="tab-button active" id="login-tab">Đăng nhập</button>
-                <button class="tab-button" id="register-tab">Đăng ký</button>
-            </div>
+        <div class="nav-actions">
+            {% if request.user.is_authenticated %}
+            <span>Chào, {{ user.username }}</span>
+            <a href="{% url 'logout' %}" class="btn logout-btn">Đăng xuất</a>
+            {% else %}
+            <a href="#" class="btn btn-primary" id="login-button">Đăng nhập</a>
+            {% endif %}
+        </div>
+    </nav>
+</header>
 
-            <div id="login-form" class="tab-pane active">
-                <form action="{% url 'login' %}" method="POST">
-                    {% csrf_token %}
-                    <label>Email hoặc Tên đăng nhập</label>
-                    <input type="text" name="username" placeholder="Nhập email hoặc username" required>
-                    <label>Mật khẩu</label>
-                    <input type="password" name="password" placeholder="Nhập mật khẩu" required>
-                    <button type="submit" class="btn btn-dark">Đăng nhập</button>
-                </form>
-            </div>
+<main class="main-content container">
 
-            <div id="register-form" class="tab-pane">
-                <form action="{% url 'register' %}" method="POST">
-                    {% csrf_token %}
-                    <label>Tên đăng nhập</label>
-                    <input type="text" name="username" placeholder="Nhập họ và tên" required>
-                    <label>Email</label>
-                    <input type="email" name="email" placeholder="email@example.com" required>
-                    <label>Mật khẩu</label>
-                    <input type="password" name="password" placeholder="••••••••" required>
-                    <label>Nhập lại mật khẩu</label>
-                    <input type="password" name="confirm_password" placeholder="••••••••" required>
-                    <button type="submit" class="btn btn-dark">Đăng ký</button>
-                </form>
-            </div>
+    {% block content %}
+    {% endblock content %}
+
+</main>
+
+<footer class="footer">
+    <div class="container">
+        <p>&copy; 2025 CoffeeSpot. Mọi quyền được bảo lưu.</p>
+    </div>
+</footer>
+
+<div class="modal" id="authModal">
+    <div class="modal-content">
+        <span class="close-button">&times;</span>
+
+        <div class="modal-tabs">
+            <button class="tab-button active" id="login-tab">Đăng nhập</button>
+            <button class="tab-button" id="register-tab">Đăng ký</button>
+        </div>
+
+        <div id="login-form" class="tab-pane active">
+            <form action="{% url 'login' %}" method="POST">
+                {% csrf_token %}
+                <label>Email hoặc Tên đăng nhập</label>
+                <input type="text" name="username" placeholder="Nhập email hoặc username" required>
+                <label>Mật khẩu</label>
+                <input type="password" name="password" placeholder="Nhập mật khẩu" required>
+                <button type="submit" class="btn btn-dark">Đăng nhập</button>
+            </form>
+        </div>
+
+        <div id="register-form" class="tab-pane">
+            <form action="{% url 'register' %}" method="POST">
+                {% csrf_token %}
+                <label>Tên đăng nhập</label>
+                <input type="text" name="username" placeholder="Nhập họ và tên" required>
+                <label>Email</label>
+                <input type="email" name="email" placeholder="email@example.com" required>
+                <label>Mật khẩu</label>
+                <input type="password" name="password" placeholder="••••••••" required>
+                <label>Nhập lại mật khẩu</label>
+                <input type="password" name="confirm_password" placeholder="••••••••" required>
+                <button type="submit" class="btn btn-dark">Đăng ký</button>
+            </form>
         </div>
     </div>
+</div>
 
-    <script src="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.js"></script>
-    <script src="{% static 'js/main.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.js"></script>
+<script src="{% static 'js/main.js' %}"></script>
 </body>
 </html>
