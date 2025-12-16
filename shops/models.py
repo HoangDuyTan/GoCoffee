@@ -33,12 +33,6 @@ class CafeShop(models.Model):
     avg_drink_score = models.FloatField(default = 0)
     avg_price_score = models.FloatField(default = 0)
 
-    # RECOMMENDATION SYSTEM
-    avg_service_score = models.FloatField(default = 0)
-    avg_ambiance_score = models.FloatField(default = 0)
-    avg_drink_score = models.FloatField(default = 0)
-    avg_price_score = models.FloatField(default = 0)
-
     def save(self, *args, **kwargs):
         self.tags = normalize_comma_separated_string(self.tags)
         self.amenities = normalize_comma_separated_string(self.amenities)
