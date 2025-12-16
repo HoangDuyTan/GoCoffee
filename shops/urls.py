@@ -26,7 +26,4 @@ urlpatterns = [
 
     # Chức năng Review
     path('shop/<int:shop_id>/review/', views.submit_review, name='submit_review'),
-
-    # Chức năng Review
-    path('shop/<int:shop_id>/review/', views.submit_review, name='submit_review'),
 ]
