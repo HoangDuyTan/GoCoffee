@@ -69,3 +69,105 @@ document.querySelectorAll('.carousel-container').forEach(function (container) {
         },
     });
 });
+document.addEventListener("DOMContentLoaded", function () {
+
+    window.submitFilters = function () {
+        const scrollY = window.scrollY;
+        sessionStorage.setItem("scrollY", scrollY);
+
+        document.getElementById("filters").submit();
+    };
+
+    const savedScroll = sessionStorage.getItem("scrollY");
+    if (savedScroll !== null) {
+        window.scrollTo(0, parseInt(savedScroll));
+        sessionStorage.removeItem("scrollY");
+    }
+
+});
+const shopList = document.getElementById("shop-list");
+const shopMap = document.getElementById("shop-map");
+const listBtn = document.getElementById("list-btn");
+const mapBtn = document.getElementById("map-btn");
+
+function showList() {
+    listBtn.classList.add("active");
+    mapBtn.classList.remove("active");
+    shopList.style.display = "block";
+    shopMap.style.display = "none";
+}
+
+function showMap() {
+    mapBtn.classList.add("active");
+    listBtn.classList.remove("active");
+    shopList.style.display = "none";
+    shopMap.style.display = "block";
+    loadMap();
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    const mode = sessionStorage.getItem("viewMode") || "list";
+    if (mode === "shop-list") {
+        showList();
+    } else {
+        showMap();
+    }
+    listBtn.addEventListener("click", () => {
+        sessionStorage.setItem("viewMode", "shop-list");
+        showList();
+    });
+    mapBtn.addEventListener("click", () => {
+        sessionStorage.setItem("viewMode", "shop-map");
+        showMap();
+    });
+});
+
+let map;
+let maploaded = false
+
+function loadMap() {
+    if (!maploaded) {
+        map = L.map('map').setView([10.7769, 106.7009], 13);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        markersLayer = L.layerGroup().addTo(map);
+        maploaded = true;
+    }
+
+    const params = new URLSearchParams(
+        new FormData(document.getElementById("filters"))
+    );
+
+    fetch("/api/shops/map/?" + params)
+        .then(res => res.json())
+        .then(data => {
+            markersLayer.clearLayers();
+
+            data.forEach(shop => {
+                if (!shop.lat || !shop.lng) return;
+
+                const icon = L.divIcon({
+                    className: "custom-marker",
+                    html: `<div class="marker-rating">${shop.rating}<i class="fa-solid fa-star"></i></div>`
+                });
+
+                const marker = L.marker([shop.lat, shop.lng], {icon: icon})
+                    .addTo(markersLayer)
+                    .bindPopup(`
+                        <b>${shop.name}</b><br>
+                        ${shop.cover_image ? `<img src="${shop.cover_image}" class="map-popup-img">` : ""}<br>
+                        ${shop.rating} <i class="fa-solid fa-star"></i><br>
+                        ${shop.address ?? ""}
+                    `);
+            });
+
+            if (data.length > 0) {
+                map.setView([data[0].lat, data[0].lng], 13);
+            }
+        });
+}
+
+

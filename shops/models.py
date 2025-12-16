@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 def normalize_comma_separated_string(value):
     if not value:
@@ -21,6 +22,16 @@ class CafeShop(models.Model):
 
     price_range = models.CharField(max_length = 100, blank = True)
     cover_image = models.ImageField(upload_to = 'covers/', blank = True, null = True)
+    rating = models.FloatField(default = 0, validators = [MinValueValidator(0), MaxValueValidator(5)])
+
+    latitude = models.FloatField(null=True, blank=True)
+    longitude = models.FloatField(null=True, blank=True)
+
+    # RECOMMENDATION SYSTEM
+    avg_service_score = models.FloatField(default = 0)
+    avg_ambiance_score = models.FloatField(default = 0)
+    avg_drink_score = models.FloatField(default = 0)
+    avg_price_score = models.FloatField(default = 0)
 
     # RECOMMENDATION SYSTEM
     avg_service_score = models.FloatField(default = 0)
@@ -32,6 +43,9 @@ class CafeShop(models.Model):
         self.tags = normalize_comma_separated_string(self.tags)
         self.amenities = normalize_comma_separated_string(self.amenities)
         self.description = normalize_comma_separated_string(self.description)
+
+        if self.address and (self.latitude is None or self.longitude is None):
+            self.geocode()
         super().save(*args, **kwargs)
 
     def get_tag_list(self):
@@ -46,6 +60,31 @@ class CafeShop(models.Model):
 
     def __str__(self):
         return self.name
+
+    def get_min_price(self):
+        try:
+            return int(self.price_range.split('-')[0].replace('₫','').replace('.','').strip())
+        except:
+            return none
+
+    def get_max_price(self):
+        try:
+            return int(self.price_range.split('-')[1].replace('₫','').replace('.','').strip())
+        except:
+            return none
+
+    def geocode_address(address):
+        url = "https://maps.googleapis.com/maps/api/geocode/json"
+        params = {
+            "address": self.address,
+            "key": settings.GOOGLE_MAPS_API_KEY
+        }
+        res = requests.get(url, params=params).json()
+
+        if res["status"] == "OK":
+            location = res["results"][0]["geometry"]["location"]
+            self.latitude = location["lat"]
+            self.longitude = location["lng"]
 
 #Model cho Menu
 class MenuItem(models.Model):
