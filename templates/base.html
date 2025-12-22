@@ -9,11 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.css"/>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <link
-            rel="stylesheet"
-            href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    />
-
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 
     {% block extra_styles %}
     {% endblock extra_styles %}
@@ -34,7 +30,7 @@
                     class="fa-solid fa-house"></i> Trang chủ</a></li>
             {% if request.user.is_authenticated %}
             <li><a href="{% url 'for_you' %}"
-                   class="{% if request.resolver_match.user_name == 'for_you' %}active{% endif %}"><i
+                   class="{% if request.resolver_match.url_name == 'for_you' %}active{% endif %}"><i
                     class="fa-solid fa-heart"></i>Dành cho bạn</a></li>
             {% endif %}
             <li><a href="{% url 'shop_list' %}"
