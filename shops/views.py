@@ -1,37 +1,182 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
+from django.db.models import Q
+from django.http import JsonResponse
 from django.contrib import messages
-
 from .models import CafeShop, Contact, ShopViewLog, Review
 from django.db.models import Avg, Count, F
 from django.core.paginator import Paginator
-from .ai_utils import analyze_review_sentiment, get_collaboration_recommendation
+from .ai_utils import analyze_review_sentiment, analyze_collaboration_recommendation
+import random
+
+
 # Create your views here.
 def home_view(request):
-    hot_shop = CafeShop.objects.all()[:10]
-    new_shop = CafeShop.objects.all().order_by('-id')[:10]
-    popular_shop = CafeShop.objects.all().order_by('?')[:10]
+    hot_shops = CafeShop.objects.filter(rating__gte=4.0).order_by('-rating')[:10]
+    new_shops = CafeShop.objects.all().order_by('-id')[:10]
+    popular_shops = CafeShop.objects.annotate(review_count=Count('reviews')).order_by('-review_count')[:10]
     context = {
-        'new_shop': new_shop,
-        'hot_shop': hot_shop,
-        'popular_shop': popular_shop
+        'new_shop': new_shops,
+        'hot_shop': hot_shops,
+        'popular_shop': popular_shops
     }
     return render(request, 'home.html', context)
 
+
+@login_required(login_url='/login/')
 def for_you_view(request):
-    return render(request, 'for_you.html')
+    user = request.user
+
+    # AI RECOMMENDATION
+    ai_shops = analyze_collaboration_recommendation(user.id) or []
+
+    if not ai_shops:
+        ai_shops = list(CafeShop.objects.filter(rating__gte=4.0).order_by('?')[:5])
+
+    for shop in ai_shops:
+        base_score = 85
+        bonus = int((shop.rating * 2) + random.randint(1, 5))
+        shop.match_score = min(base_score + bonus, 99)
+
+        tags = []
+        if getattr(shop, 'avg_ambiance', 0) > 0.6:
+            tags.append('Không gian Chill')
+        if getattr(shop, 'avg_service', 0) > 0.6:
+            tags.append('Phục vụ tốt')
+        if getattr(shop, 'avg_drink', 0) > 0.6:
+            tags.append('Đồ uống ngon')
+        if getattr(shop, 'avg_price', 0) > 0.6:
+            tags.append('Giá hợp lý')
+        if not tags and shop.tags:
+            tags = [t.strip() for t in shop.tags.split(',')][:2]
+
+        shop.ai_display_tags = tags[:2]
+        reasons = [
+            "Hợp với gu của bạn",
+            "Được đánh giá cao gần đây",
+            "Nhiều người giống bạn đã thích",
+            "Không gian phù hợp làm việc"
+        ]
+        shop.ai_reason = random.choice(reasons)
+
+    # USER PERSONA
+    most_viewed_district = ShopViewLog.objects.filter(user=user) \
+        .values('shop__district').annotate(count=Count('id')).order_by('-count').first()
+
+    favorite_district = most_viewed_district['shop__district'] if most_viewed_district else "Toàn thành phố"
+    styles = ["Yên tĩnh", "Work-friendly"] if user.id % 2 == 0 else ["Sống ảo", "Hiện đại"]
+
+    user_prefs = {
+        'district': favorite_district,
+        'style': styles,
+        'price_range': "35k - 65k"
+    }
+
+    similar_shops = CafeShop.objects.filter(rating__gte=4.0).exclude(id__in=[s.id for s in ai_shops]).order_by('?')[:6]
+
+    context = {
+        'ai_shops': ai_shops,
+        'similar_shops': similar_shops,
+        'user_prefs': user_prefs,
+    }
+    return render(request, 'for_you.html', context)
+
+
+def filtered_shops(request):
+    shops = CafeShop.objects.all().order_by('-id')
+
+    # search
+    query = request.GET.get('search')
+    if query:
+        shops = shops.filter(
+            Q(name__icontains=query) |
+            Q(address__icontains=query) |
+            Q(tags__icontains=query)
+        )
+
+    # filtered district
+    district = request.GET.get('district')
+    if district:
+        shops = shops.filter(district=district)
+
+    rating = request.GET.get('rating', '0')
+
+    if rating:
+        try:
+            rating = float(rating)
+        except ValueError:
+            rating = 0
+        if rating > 0:
+            shops = shops.filter(rating=rating)
+
+    tags = request.GET.getlist('tags[]')
+    if tags:
+        query = Q()
+        for tag in tags:
+            query |= Q(tags__icontains=tag)
+        shops = shops.filter(query)
+
+    price_range = request.GET.get('price_range')
+    if price_range:
+        filtered_shops = []
+
+        for shop in shops:
+            min_price = shop.get_min_price()
+            max_price = shop.get_max_price()
+
+            if price_range == 'under_50' and max_price and max_price <= 50000:
+                filtered_shops.append(shop)
+            elif price_range == '50_80' and min_price and max_price:
+                if min_price >= 50000 and max_price <= 80000:
+                    filtered_shops.append(shop)
+            elif price_range == 'over_80' and min_price and min_price >= 80000:
+                filtered_shops.append(shop)
+        shops = filtered_shops
+
+    amenities = request.GET.getlist('amenities[]')
+    if amenities:
+        query = Q()
+        for amenity in amenities:
+            query |= Q(amenities__icontains=amenity)
+        shops = shops.filter(query)
+
+    return shops, district, rating, tags, price_range, amenities
+
 
 def shop_list_view(request):
-    shops = CafeShop.objects.all().order_by('-id')
+    shops, district, rating, tags, price_range, amenities = filtered_shops(request)
     paginator = Paginator(shops, 8)
     page_number = request.GET.get('page')
     context = {
-        'shops': paginator.get_page(page_number)
+        'shops': paginator.get_page(page_number),
+        'selected_district': district,
+        'rating': rating,
+        'selected_tags': tags,
+        'selected_price_range': price_range,
+        'selected_amenities': amenities
     }
     return render(request, 'shop_list.html', context)
 
-def contact_view(request):
 
+def shop_map_api(request):
+    shops, _, _, _, _, _ = filtered_shops(request)
+    data = [
+        {
+            'name': shop.name,
+            'lat': shop.latitude,
+            'lng': shop.longitude,
+            'rating': shop.rating,
+            'address': shop.address,
+            'cover_image': shop.cover_image.url if shop.cover_image else '',
+        }
+        for shop in shops
+        if shop.latitude and shop.longitude
+    ]
+
+    return JsonResponse(data, safe=False)
+
+
+def contact_view(request):
     if request.method == 'POST':
         fullname = request.POST.get('fullname')
         email = request.POST.get('email')
@@ -51,7 +196,6 @@ def contact_view(request):
         except Exception as e:
             print(f"Lỗi khi lưu Contact: {e}")
             pass
-
 
     return render(request, 'contact.html')
 
@@ -79,6 +223,7 @@ def shop_detail_view(request, shop_id):
 
     # 3. Xử lý Menu
     menu_items = shop.menu_items.all().order_by('category', 'id')
+
     grouped_menu = {}
     for item in menu_items:
         category = item.category if item.category else "Menu chung"
@@ -95,6 +240,9 @@ def shop_detail_view(request, shop_id):
     # 5. Lấy quán liên quan (cùng quận)
     related_shops = CafeShop.objects.filter(district=shop.district).exclude(pk=shop_id)[:3]
 
+    # 5. Kiểm tra xem người dùng đã lưu quán này chưa
+    # Phải import SavedShop nếu bạn muốn kiểm tra (tạm thời không cần vì không hiển thị)
+
     context = {
         'shop': shop,
         'grouped_menu': grouped_menu,
@@ -102,6 +250,7 @@ def shop_detail_view(request, shop_id):
         'related_shops': related_shops,
     }
     return render(request, 'shop_detail.html', context)
+
 
 # =============== AI ===============
 @login_required(login_url='/login/')
@@ -131,6 +280,7 @@ def submit_review(request, shop_id):
             messages.error(request, "Có lỗi xảy ra, vui lòng thử lại.")
 
     return redirect('shop_detail', shop_id=shop_id)
+
 
 def update_shop_stats(shop):
     aggs = shop.reviews.aggregate(

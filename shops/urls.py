@@ -21,6 +21,9 @@ urlpatterns = [
     # Chức năng đăng nhập
     path('users/', include('users.urls')),
 
+    # Map API
+    path("api/shops/map/", views.shop_map_api, name="shop_map_api"),
+
     # Chức năng Review
     path('shop/<int:shop_id>/review/', views.submit_review, name='submit_review'),
 ]

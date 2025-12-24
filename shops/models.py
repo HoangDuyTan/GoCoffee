@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 def normalize_comma_separated_string(value):
     if not value:
@@ -10,42 +11,122 @@ def normalize_comma_separated_string(value):
     return ','.join(item_list)
 
 #Model chính cho quán Cafe
+DISTRICT_CHOICES = [
+    ('Quận 1', 'Quận 1'),
+    ('Quận 2', 'Quận 2'),
+    ('Quận 3', 'Quận 3'),
+    ('Quận 4', 'Quận 4'),
+    ('Quận 5', 'Quận 5'),
+    ('Quận 6', 'Quận 6'),
+    ('Quận 7', 'Quận 7'),
+    ('Quận 8', 'Quận 8'),
+    ('Quận 9', 'Quận 9'),
+    ('Quận 10', 'Quận 10'),
+    ('Quận 11', 'Quận 11'),
+    ('Quận 12', 'Quận 12'),
+    ('Bình Tân', 'Quận Bình Tân'),
+    ('Phú Nhuận', 'Quận Phú Nhuận'),
+    ('Tân Bình', 'Quận Tân Bình'),
+    ('Tân Phú', 'Quận Tân Phú'),
+    ('Gò Vấp', 'Quận Gò Vấp'),
+    ('Thủ Đức', 'TP. Thủ Đức'),
+    ('Bình Thạnh', 'Bình Thạnh'),
+]
+
+TAG_CHOICES = [
+    ('Hiện đại', 'Hiện đại'),
+    ('Ấm cúng', 'Ấm cúng'),
+    ('Yên tĩnh', 'Yên tĩnh'),
+    ('Sang trọng', 'Sang trọng'),
+    ('Hoài cổ', 'Hoài cổ'),
+    ('Nghệ thuật', 'Nghệ thuật'),
+]
+
+AMENITY_CHOICES = [
+    ('Wifi', 'Wifi'),
+    ('Điều hòa', 'Điều hòa'),
+    ('Ổ cắm điện', 'Ổ cắm điện'),
+    ('Chỗ đậu xe', 'Chỗ đậu xe'),
+    ('View đẹp', 'View đẹp'),
+    ('Sân vườn', 'Sân vườn'),
+]
+
+PRICE_CHOICES = [
+    ('Dưới 50.000đ', 'Dưới - 50.000đ'),
+    ('50.000đ - 80.000đ', '50.000đ - 80.000đ'),
+    ('Trên 80.000đ', 'Trên 80.000đ'),
+]
+
 class CafeShop(models.Model):
     name = models.CharField(max_length = 200)
     address = models.CharField(max_length = 300)
-    district = models.CharField(max_length = 100) #Dùng để lọc
+    district = models.CharField(max_length=100, choices=DISTRICT_CHOICES)
 
     tags = models.CharField(max_length = 300, blank = True)
     amenities = models.CharField(max_length = 300, blank = True) #Tiện ích các thứ như Wifi, Chỗ đậu xe...
     description = models.CharField(max_length = 300, blank = True) #Tối đa 20 chữ
 
-    price_range = models.CharField(max_length = 100, blank = True)
+    price_range = models.CharField(max_length=100, choices=PRICE_CHOICES, blank=True)
     cover_image = models.ImageField(upload_to = 'covers/', blank = True, null = True)
+    rating = models.FloatField(default = 0, validators = [MinValueValidator(0), MaxValueValidator(5)])
+
+    latitude = models.FloatField(null=True, blank=True)
+    longitude = models.FloatField(null=True, blank=True)
 
     # RECOMMENDATION SYSTEM
-    avg_service_score = models.FloatField(default = 0)
-    avg_ambiance_score = models.FloatField(default = 0)
-    avg_drink_score = models.FloatField(default = 0)
-    avg_price_score = models.FloatField(default = 0)
+    avg_service = models.FloatField(default = 0)
+    avg_ambiance = models.FloatField(default = 0)
+    avg_drink = models.FloatField(default = 0)
+    avg_price = models.FloatField(default = 0)
 
     def save(self, *args, **kwargs):
         self.tags = normalize_comma_separated_string(self.tags)
         self.amenities = normalize_comma_separated_string(self.amenities)
         self.description = normalize_comma_separated_string(self.description)
+
+        if self.address and (self.latitude is None or self.longitude is None):
+            self.geocode()
         super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.name
 
     def get_tag_list(self):
         if self.tags:
-            return [tag.strip() for tag in self.tags.split(',') if tag.strip()]
+            return self.tags.split(',')
         return []
 
     def get_amenities_list(self):
         if self.amenities:
-            return [amenity.strip() for amenity in self.amenities.split(',') if amenity.strip()]
+            return self.amenities.split(',')
         return []
 
-    def __str__(self):
-        return self.name
+    def get_min_price(self):
+        try:
+            return int(self.price_range.split('-')[0].replace('₫','').replace('.','').strip())
+        except:
+            return None
+
+    def get_max_price(self):
+        try:
+            return int(self.price_range.split('-')[1].replace('₫','').replace('.','').strip())
+        except:
+            return None
+
+    def geocode_address(self):
+        url = "https://maps.googleapis.com/maps/api/geocode/json"
+        params = {
+            "address": self.address,
+            "key": settings.GOOGLE_MAPS_API_KEY
+        }
+        try:
+            res = requests.get(url, params=params).json()
+            if res["status"] == "OK":
+                location = res["results"][0]["geometry"]["location"]
+                self.latitude = location["lat"]
+                self.longitude = location["lng"]
+        except Exception as e:
+            print(f"Error geocoding: {e}")
 
 #Model cho Menu
 class MenuItem(models.Model):
