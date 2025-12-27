@@ -106,24 +106,35 @@
         <section class="related-shops-section">
             <h2>Những quán liên quan</h2>
             <div class="related-shops-grid">
-                {% for related_shop in related_shops %}
-                <div class="cafe-card">
-                    <div class="card-image-placeholder">
-                        {% if related_shop.cover_image %}
-                        <img src="{{ related_shop.cover_image.url }}" alt="{{ related_shop.name }}">
+                {% for shop in related_shops %}
+                <a href="{% url 'shop_detail' shop.id %}" class="cafe-card swiper-slide">
+                    <div class="card-image">
+                        {% if shop.cover_image %}
+                        <img src="{{ shop.cover_image.url }}" alt="{{ shop.name }}">
                         {% else %}
-                        <div class="placeholder-image">
-                            <i class="fa-solid fa-image fa-2x"></i>
+                        <div class="card-image placeholder">
+                            <i class="fa-solid fa-image fa-3x"></i>
                         </div>
                         {% endif %}
-                    </div>
-                    <div class="card-content">
-                        <h3><a href="{% url 'shop_detail' related_shop.id %}">{{ related_shop.name }}</a></h3>
                         <div class="card-rating">
-                            <i class="fa-solid fa-star"></i> 4.8
+                            <i class="fa-solid fa-star"></i> {{ shop.rating }}
                         </div>
                     </div>
-                </div>
+                    <div class="card-content">
+                        <h3>{{ shop.name }}</h3>
+
+                        <div class="card-info">
+                            <div><i class="fa-solid fa-location-dot"></i>{{ shop.district }}</div>
+                            <div><i class="fa-solid fa-wallet"></i>{{ shop.price_range }}</div>
+                        </div>
+                        <div class="card-tags">
+                            {% for tag in shop.get_tag_list|slice:":2" %}
+                            <span class="tag">{{ tag }}</span>
+                            {% endfor %}
+                        </div>
+                        <p class="card-description">{{ shop.description|truncatewords:20 }}</p>
+                    </div>
+                </a>
                 {% empty %}
                 <p>Không tìm thấy quán liên quan.</p>
                 {% endfor %}
