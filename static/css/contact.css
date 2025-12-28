@@ -1,7 +1,7 @@
 /* Contact Banner */
 .contact-banner {
     background-color: #ce6f00; 
-    background-image: linear-gradient(to right, #ce6f00, #ff8c00);
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(86, 54, 23, 0.8)), url('https://i.pinimg.com/736x/d5/7c/1e/d57c1e61e3d9c4519c271f9a0629e37a.jpg');
     color: #fff;
     padding: 80px 5%;
     text-align: left;

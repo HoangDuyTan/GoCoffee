@@ -90,42 +90,37 @@ const shopMap = document.getElementById("shop-map");
 const listBtn = document.getElementById("list-btn");
 const mapBtn = document.getElementById("map-btn");
 
-if (shopList && shopMap && listBtn && mapBtn) {
-
-    function showList() {
-        listBtn.classList.add("active");
-        mapBtn.classList.remove("active");
-        shopList.style.display = "block";
-        shopMap.style.display = "none";
-    }
-
-    function showMap() {
-        mapBtn.classList.add("active");
-        listBtn.classList.remove("active");
-        shopList.style.display = "none";
-        shopMap.style.display = "block";
-        loadMap();
-    }
-
-    document.addEventListener("DOMContentLoaded", () => {
-        const mode = sessionStorage.getItem("viewMode") || "list";
-        if (mode === "shop-list") {
-            showList();
-        } else {
-            showMap();
-        }
-
-        listBtn.addEventListener("click", () => {
-            sessionStorage.setItem("viewMode", "shop-list");
-            showList();
-        });
-
-        mapBtn.addEventListener("click", () => {
-            sessionStorage.setItem("viewMode", "shop-map");
-            showMap();
-        });
-    });
+function showList() {
+    listBtn.classList.add("active");
+    mapBtn.classList.remove("active");
+    shopList.style.display = "block";
+    shopMap.style.display = "none";
 }
+
+function showMap() {
+    mapBtn.classList.add("active");
+    listBtn.classList.remove("active");
+    shopList.style.display = "none";
+    shopMap.style.display = "block";
+    loadMap();
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    const mode = sessionStorage.getItem("viewMode");
+    if (mode === "shop-map") {
+        showMap();
+    } else {
+        showList();
+    }
+    listBtn.addEventListener("click", () => {
+        sessionStorage.setItem("viewMode", "shop-list");
+        showList();
+    });
+    mapBtn.addEventListener("click", () => {
+        sessionStorage.setItem("viewMode", "shop-map");
+        showMap();
+    });
+});
 
 let map;
 let maploaded = false
@@ -174,5 +169,3 @@ function loadMap() {
             }
         });
 }
-
-
