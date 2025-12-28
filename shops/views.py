@@ -113,6 +113,28 @@ def for_you_view(request):
         else:
             shop.ai_reason = "Gợi ý khám phá mới"
 
+    # TOP SECTION
+    # service
+    excluded_ids = [s.id for s in ai_shops]
+    top_service_shops = CafeShop.objects.filter(
+        rating__gte=4.0,
+        avg_service__gte=0.8
+    ).exclude(id__in=excluded_ids).order_by('-avg_service')[:5]
+    excluded_ids.extend(s.id for s in top_service_shops)
+
+    # ambiance
+    top_ambiance_shops = CafeShop.objects.filter(
+        rating__gte=4.0,
+        avg_ambiance__gte=0.8
+    ).exclude(id__in=excluded_ids).order_by('-avg_ambiance')[:5]
+    excluded_ids.extend([s.id for s in top_ambiance_shops])
+
+    # drink
+    top_drink_shops = CafeShop.objects.filter(
+        rating__gte=4.0,
+        avg_drink__gte=0.8
+    ).exclude(id__in=excluded_ids).order_by('-avg_drink')[:5]
+
     # Dữ liệu trả về
     user_prefs = {
         'district': favorite_district,
@@ -125,6 +147,9 @@ def for_you_view(request):
     context = {
         'ai_shops': ai_shops,
         'similar_shops': similar_shops,
+        'top_service_shops': top_service_shops,
+        'top_ambiance_shops': top_ambiance_shops,
+        'top_drink_shops': top_drink_shops,
         'user_prefs': user_prefs,
     }
     return render(request, 'for_you.html', context)
