@@ -106,11 +106,11 @@ function showMap() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    const mode = sessionStorage.getItem("viewMode") || "list";
-    if (mode === "shop-list") {
-        showList();
-    } else {
+    const mode = sessionStorage.getItem("viewMode");
+    if (mode === "shop-map") {
         showMap();
+    } else {
+        showList();
     }
     listBtn.addEventListener("click", () => {
         sessionStorage.setItem("viewMode", "shop-list");
