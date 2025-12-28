@@ -1,6 +1,5 @@
 import pandas as pd
 from sklearn.metrics.pairwise import cosine_similarity
-from django.db.models import Case, When
 from shops.models import CafeShop, Review, ShopViewLog
 
 class RecommenderEngine:

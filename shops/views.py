@@ -4,10 +4,9 @@ from django.db.models import Q
 from django.http import JsonResponse
 from django.contrib import messages
 from .models import CafeShop, Contact, ShopViewLog, Review
-from django.db.models import Avg, Count, F, Count
+from django.db.models import Avg, F, Count
 from django.core.paginator import Paginator
 from .ai_utils import analyze_review_sentiment, analyze_collaboration_recommendation
-import random
 from collections import Counter
 
 
