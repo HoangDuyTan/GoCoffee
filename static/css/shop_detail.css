@@ -66,6 +66,10 @@
     background: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0));
 }
 
+.overlay-inner{
+    padding-left: 40px;
+}
+
 .shop-info-overlay .container {
     max-width: var(--container-width);
     margin-left: auto;
@@ -95,7 +99,8 @@
 .shop-description-section,
 .shop-menu-section,
 .shop-review-section,
-.related-shops-section {
+.related-shops-section,
+.gallery-section{
     background-color: var(--color-white);
     padding: 25px;
     border-radius: var(--border-radius);
