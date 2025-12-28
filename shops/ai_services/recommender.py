@@ -5,8 +5,9 @@ from shops.models import CafeShop, Review, ShopViewLog
 
 class RecommenderEngine:
     def __init__(self):
-        self.top_k_users = 5
+        self.top_k_users = 10
         self.top_n_items = 8
+        self.threshold = 0.3
 
     def get_collaboration_recommendation(self, user_id):
         # 1. Lấy ra ma trận
@@ -20,31 +21,41 @@ class RecommenderEngine:
                                        columns=user_item_matrix.index)
 
         # 3. Tìm 5 user khác có cùng độ tương đồng cao nhất
-        similar_users = user_similar_df[user_id].sort_values(ascending=False).drop(user_id).head(self.top_k_users)
-        similar_users = similar_users[similar_users > 0]
+        similar_users = user_similar_df[user_id].drop(user_id)
+        similar_users = similar_users[similar_users >= self.threshold].sort_values(ascending=False).head(self.top_k_users)
         if similar_users.empty:
             return []
 
         # 4. Lấy rating của các neighbor để tính điểm cho shop
         neighbor_rating = user_item_matrix.loc[similar_users.index]
         # Tính tổng điểm dọc theo cột (từng shop)
-        weighted_score = neighbor_rating.multiply(similar_users, axis=0).sum(axis=0)
+        weighted_sum = neighbor_rating.multiply(similar_users, axis=0).sum(axis=0)
+        sum_of_similarities = similar_users.sum()
+        if sum_of_similarities == 0:
+            return []
+        predicted_ratings = weighted_sum / sum_of_similarities
 
         # 5. Lọc quán
         # Những quán user đã xem
         watched_shops = user_item_matrix.loc[user_id]
         watched_shops = watched_shops[watched_shops > 0].index
         # Lọc quán chưa đi và xếp điểm từ cao xuống thấp
-        recommendation_scores = weighted_score[~weighted_score.index.isin(watched_shops)]
-        recommendation_scores = recommendation_scores[recommendation_scores > 0].sort_values(ascending=False)
+        final_scores = predicted_ratings[~predicted_ratings.index.isin(watched_shops)]
+        final_scores = final_scores[final_scores > 0].sort_values(ascending=False)
 
-        rec_shop_ids = recommendation_scores.head(self.top_n_items).index.tolist()
+        rec_shop_ids = final_scores.head(self.top_n_items).index.tolist()
         if not rec_shop_ids:
             return []
 
-        preserved_order = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(rec_shop_ids)])
-        return CafeShop.objects.filter(pk__in=rec_shop_ids).order_by(preserved_order)
+        shops = list(CafeShop.objects.filter(pk__in=rec_shop_ids))
+        shops.sort(key=lambda x: rec_shop_ids.index(x.id))
 
+        for shop in shops:
+            pred_score = final_scores.get(shop.id, 0)
+            # Quy đổi ra thang 0.0 - 1.0 để View hiển thị %
+            # (Chia cho 5 vì rating max là 5)
+            shop.similarity = round(pred_score / 5.0, 2)
+        return shops
 
     def _get_interaction_matrix(self):
         reviews = list(Review.objects.all().values('user_id', 'shop_id', 'rating'))

@@ -87,10 +87,10 @@ def for_you_view(request):
             ai_shops = list(CafeShop.objects.filter(rating__gte=4.0).order_by('?')[:5])
 
     for index, shop in enumerate(ai_shops):
-        if hasattr(shop, 'similarity'):
+        if hasattr(shop, 'similarity') and shop.similarity > 0:
             shop.match_score = int(shop.similarity * 100)
         else:
-            shop.match_score = max(98 - (index * 4), 75)
+            shop.match_score = None
 
         tags = []
         if getattr(shop, 'avg_ambiance', 0) > 0.6: tags.append('Không gian Chill')
@@ -111,7 +111,7 @@ def for_you_view(request):
         elif hasattr(shop, 'similarity'):
             shop.ai_reason = "Tương đồng cao với các quán bạn thích"
         else:
-            shop.ai_reason = "Được cộng đồng đánh giá cao"
+            shop.ai_reason = "Gợi ý khám phá mới"
 
     # Dữ liệu trả về
     user_prefs = {

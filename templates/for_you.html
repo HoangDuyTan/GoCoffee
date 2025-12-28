@@ -59,7 +59,11 @@
             <div class="spotlight-card">
                 <div class="spotlight-image">
                     <div class="match-score-badge">
+                        {% if best_shop.match_score %}
                         <i class="fa-solid fa-fingerprint"></i> {{ best_shop.match_score }}% Match
+                        {% else %}
+                        <i class="fa-solid fa-sparkles"></i> Gợi ý mới
+                        {% endif %}
                     </div>
                     {% if best_shop.cover_image %}
                     <img src="{{ best_shop.cover_image.url }}" alt="{{ best_shop.name }}">
@@ -112,7 +116,11 @@
                     <a href="{% url 'shop_detail' shop.id %}" class="cafe-card swiper-slide">
                         <div class="card-image">
                             <div class="ai-match-badge">
+                                {% if shop.match_score %}
                                 <i class="fa-solid fa-fingerprint"></i> {{ shop.match_score }}%
+                                {% else %}
+                                <i class="fa-solid fa-star"></i> Mới
+                                {% endif %}
                             </div>
 
                             {% if shop.cover_image %}
