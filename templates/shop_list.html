@@ -22,6 +22,9 @@
 
 <section class="content-section">
     <form class="filter-section" id="filters" method="get">
+        <input type="hidden" name="page" id="page-input" value="">
+        <input type="hidden" name="search" value="{{ request.GET.search }}">
+
         <div class="card-grid">
             <h3><i class="fa-solid fa-location-dot"></i> Khu vực</h3>
             <div class="filter district">
@@ -328,7 +331,7 @@
         <div id="shop-list">
             <div class="content-main">
                 {% for shop in shops %}
-                <div class="cafe-card">
+                <a href="{% url 'shop_detail' shop.id %}" class="cafe-card swiper-slide">
                     <div class="card-image">
                         {% if shop.cover_image %}
                         <img src="{{ shop.cover_image.url }}" alt="{{ shop.name }}">
@@ -342,7 +345,8 @@
                         </div>
                     </div>
                     <div class="card-content">
-                        <h3><a href="{% url 'shop_detail' shop.id %}">{{ shop.name }}</a></h3>
+                        <h3>{{ shop.name }}</h3>
+
                         <div class="card-info">
                             <div><i class="fa-solid fa-location-dot"></i>{{ shop.district }}</div>
                             <div><i class="fa-solid fa-wallet"></i>{{ shop.price_range }}</div>
@@ -354,7 +358,7 @@
                         </div>
                         <p class="card-description">{{ shop.description|truncatewords:20 }}</p>
                     </div>
-                </div>
+                </a>
                 {% empty %}
                 <p>Không tìm thấy quán cà phê</p>
                 {% endfor %}
@@ -365,8 +369,8 @@
                 <div class="pagination">
 
                     {% if shops.has_previous %}
-                    <a href="?{{ request.GET.urlencode }}&page=1" class="page-link">&laquo; Đầu</a>
-                    <a href="?page={{ shops.previous_page_number }}" class="page-link">Trước</a>
+                    <a href="javascript:void(0)" onclick="goToPage(1)" class="page-link">&laquo; Đầu</a>
+                    <a href="javascript:void(0)" onclick="goToPage({{ shops.previous_page_number }})" class="page-link">Trước</a>
                     {% endif %}
 
                     <span class="current-page">
@@ -374,8 +378,10 @@
                     </span>
 
                     {% if shops.has_next %}
-                    <a href="?page={{ shops.next_page_number }}" class="page-link">Sau</a>
-                    <a href="?page={{ shops.paginator.num_pages }}" class="page-link">Cuối &raquo;</a>
+                    <a href="javascript:void(0)" onclick="goToPage({{ shops.next_page_number }})"
+                       class="page-link">Sau</a>
+                    <a href="javascript:void(0)" onclick="goToPage({{ shops.paginator.num_pages }})" class="page-link">Cuối
+                        &raquo;</a>
                     {% endif %}
                 </div>
             </div>
@@ -387,4 +393,11 @@
     </div>
 
 </section>
+
+<script>
+    function goToPage(pageNumber) {
+        document.getElementById("page-input").value = pageNumber;
+        submitFilters()
+    }
+</script>
 {% endblock content %}

@@ -25,6 +25,7 @@
     margin-right: auto;
 }
 
+/* ======== SEARCH ======== */
 .search-bar {
     display: flex;
     background-color: var(--color-white);
@@ -119,24 +120,36 @@
     display: flex;
     align-items: center;
     gap: 15px;
-    margin-bottom: 20px;
+    margin-bottom: 40px;
+    padding-left: 20px;
+    border-left: 5px solid #d97706;
+    position: relative;
 }
 
 .section-header i {
-    font-size: 25px;
-    color: var(--color-accent);
+    font-size: 1.8rem;
+    background: #fff;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    color: #d97706;
 }
 
 .section-title h2 {
-    font-size: 25px;
-    font-weight: 600;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1e293b;
     margin: 0;
 }
 
 .section-title p {
-    font-size: 18px;
-    color: var(--color-muted);
-    margin: 0;
+    margin: 5px 0 0;
+    color: #64748b;
+    font-size: 0.95rem;
 }
 
 /* ======== CARD GRID ======== */
@@ -279,19 +292,48 @@
 
 /* ======== CTA SECTION ======== */
 .cta-section {
-    background-color: #fffaf0;
-    padding: 40px;
-    border-radius: var(--border-radius);
+    background: linear-gradient(135deg, #0f172a 0%, #334155 100%) !important;
+    color: white;
+    position: relative;
+    overflow: hidden;
+    border-radius: 30px !important;
+    padding: 60px 20px !important;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
     text-align: center;
-    margin-top: 20px;
+}
+
+.cta-section::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(245, 158, 11, 0.15) 0%, transparent 60%);
+    pointer-events: none;
 }
 
 .cta-section h2 {
-    font-size: 32px;
-    margin-bottom: 10px;
+    color: white;
+    font-weight: 800;
 }
 
 .cta-section p {
-    color: var(--color-muted);
-    margin-bottom: 25px;
+    color: rgba(255, 255, 255, 0.7) !important;
+    font-size: 1.1rem;
+}
+
+.cta-section .btn {
+    background: white;
+    color: #0f172a;
+    font-weight: 700;
+    border: none;
+    padding: 15px 40px;
+    margin-top: 30px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.cta-section .btn:hover {
+    background: #f1f5f9;
+    transform: translateY(-3px);
 }

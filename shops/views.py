@@ -4,10 +4,11 @@ from django.db.models import Q
 from django.http import JsonResponse
 from django.contrib import messages
 from .models import CafeShop, Contact, ShopViewLog, Review
-from django.db.models import Avg, Count, F
+from django.db.models import Avg, Count, F, Count
 from django.core.paginator import Paginator
 from .ai_utils import analyze_review_sentiment, analyze_collaboration_recommendation
 import random
+from collections import Counter
 
 
 # Create your views here.
@@ -27,49 +28,118 @@ def home_view(request):
 def for_you_view(request):
     user = request.user
 
-    # AI RECOMMENDATION
-    ai_shops = analyze_collaboration_recommendation(user.id) or []
+    # 1. LẤY DỮ LIỆU LỊCH SỬ
+    viewed_shop_ids = ShopViewLog.objects.filter(user=user).values_list('shop_id', flat=True)
+    viewed_shops = CafeShop.objects.filter(id__in=viewed_shop_ids)
 
-    if not ai_shops:
-        ai_shops = list(CafeShop.objects.filter(rating__gte=4.0).order_by('?')[:5])
+    # 2. XÂY DỰNG USER PERSONA
+    # tags
+    all_tags = []
+    for shop in viewed_shops:
+        if shop.tags:
+            tags_list = [t.strip() for t in shop.tags.split(',')]
+            all_tags.extend(tags_list)
 
-    for shop in ai_shops:
-        base_score = 85
-        bonus = int((shop.rating * 2) + random.randint(1, 5))
-        shop.match_score = min(base_score + bonus, 99)
+    if all_tags:
+        most_common = Counter(all_tags).most_common(2)
+        user_styles = [tag[0] for tag in most_common]
+    else:
+        user_styles = ["Đang tìm hiểu...", "Khám phá ngay"]
 
-        tags = []
-        if getattr(shop, 'avg_ambiance', 0) > 0.6:
-            tags.append('Không gian Chill')
-        if getattr(shop, 'avg_service', 0) > 0.6:
-            tags.append('Phục vụ tốt')
-        if getattr(shop, 'avg_drink', 0) > 0.6:
-            tags.append('Đồ uống ngon')
-        if getattr(shop, 'avg_price', 0) > 0.6:
-            tags.append('Giá hợp lý')
-        if not tags and shop.tags:
-            tags = [t.strip() for t in shop.tags.split(',')][:2]
-
-        shop.ai_display_tags = tags[:2]
-        reasons = [
-            "Hợp với gu của bạn",
-            "Được đánh giá cao gần đây",
-            "Nhiều người giống bạn đã thích",
-            "Không gian phù hợp làm việc"
-        ]
-        shop.ai_reason = random.choice(reasons)
-
-    # USER PERSONA
+    # district
     most_viewed_district = ShopViewLog.objects.filter(user=user) \
         .values('shop__district').annotate(count=Count('id')).order_by('-count').first()
 
     favorite_district = most_viewed_district['shop__district'] if most_viewed_district else "Toàn thành phố"
-    styles = ["Yên tĩnh", "Work-friendly"] if user.id % 2 == 0 else ["Sống ảo", "Hiện đại"]
 
+    # price range
+    price_range_display = "Mọi mức giá"
+    if viewed_shops.exists():
+        total_min = 0
+        total_max = 0
+        count = 0
+
+        for shop in viewed_shops:
+            mn = shop.get_min_price()
+            mx = shop.get_max_price()
+            if mn is not None and mx is not None:
+                total_min += mn
+                total_max += mx
+                count += 1
+
+        if count > 0:
+            avg_min = total_min / count
+            avg_max = total_max / count
+            p_min = int(round(avg_min / 1000))
+            p_max = int(round(avg_max / 1000))
+            price_range_display = f"{p_min}k - {p_max}k"
+
+    # 3. AI RECOMMENDATION
+    ai_shops = analyze_collaboration_recommendation(user.id) or []
+
+    if not ai_shops:
+        if user_styles and user_styles[0] != "Đang tìm hiểu...":
+            top_style = user_styles[0]
+            ai_shops = list(CafeShop.objects.filter(tags__icontains=top_style)
+                            .exclude(id__in=viewed_shop_ids).order_by('-rating')[:5])
+
+        if not ai_shops:
+            ai_shops = list(CafeShop.objects.filter(rating__gte=4.0).order_by('?')[:5])
+
+    for index, shop in enumerate(ai_shops):
+        if hasattr(shop, 'similarity') and shop.similarity > 0:
+            shop.match_score = int(shop.similarity * 100)
+        else:
+            shop.match_score = None
+
+        tags = []
+        if getattr(shop, 'avg_ambiance', 0) > 0.6: tags.append('Không gian Chill')
+        if getattr(shop, 'avg_service', 0) > 0.6: tags.append('Phục vụ tốt')
+        if getattr(shop, 'avg_drink', 0) > 0.6: tags.append('Đồ uống ngon')
+        if getattr(shop, 'avg_price', 0) > 0.6: tags.append('Giá hợp lý')
+
+        # Nếu chưa đủ tag AI, lấy tag gốc
+        if len(tags) < 2 and shop.tags:
+            original_tags = [t.strip() for t in shop.tags.split(',')]
+            remaining = [t for t in original_tags if t not in tags]
+            tags.extend(remaining[:2 - len(tags)])
+
+        shop.ai_display_tags = tags[:2]
+
+        if user_styles and user_styles[0] in (shop.tags or ""):
+            shop.ai_reason = f"Có style '{user_styles[0]}' đúng gu bạn"
+        elif hasattr(shop, 'similarity'):
+            shop.ai_reason = "Tương đồng cao với các quán bạn thích"
+        else:
+            shop.ai_reason = "Gợi ý khám phá mới"
+
+    # TOP SECTION
+    # service
+    excluded_ids = [s.id for s in ai_shops]
+    top_service_shops = CafeShop.objects.filter(
+        rating__gte=4.0,
+        avg_service__gte=0.8
+    ).exclude(id__in=excluded_ids).order_by('-avg_service')[:5]
+    excluded_ids.extend(s.id for s in top_service_shops)
+
+    # ambiance
+    top_ambiance_shops = CafeShop.objects.filter(
+        rating__gte=4.0,
+        avg_ambiance__gte=0.8
+    ).exclude(id__in=excluded_ids).order_by('-avg_ambiance')[:5]
+    excluded_ids.extend([s.id for s in top_ambiance_shops])
+
+    # drink
+    top_drink_shops = CafeShop.objects.filter(
+        rating__gte=4.0,
+        avg_drink__gte=0.8
+    ).exclude(id__in=excluded_ids).order_by('-avg_drink')[:5]
+
+    # Dữ liệu trả về
     user_prefs = {
         'district': favorite_district,
-        'style': styles,
-        'price_range': "35k - 65k"
+        'style': user_styles,
+        'price_range': price_range_display
     }
 
     similar_shops = CafeShop.objects.filter(rating__gte=4.0).exclude(id__in=[s.id for s in ai_shops]).order_by('?')[:6]
@@ -77,6 +147,9 @@ def for_you_view(request):
     context = {
         'ai_shops': ai_shops,
         'similar_shops': similar_shops,
+        'top_service_shops': top_service_shops,
+        'top_ambiance_shops': top_ambiance_shops,
+        'top_drink_shops': top_drink_shops,
         'user_prefs': user_prefs,
     }
     return render(request, 'for_you.html', context)

@@ -9,7 +9,7 @@
 
 {% block content %}
 <section class="shop-hero-section">
-    <a href="{% url 'home' %}" class="btn btn-back">
+    <a href="javascript:history.back()" class="btn btn-back">
         <i class="fa-solid fa-arrow-left"></i> Quay lại
     </a>
 
@@ -75,6 +75,19 @@
             </p>
         </section>
 
+         <section class="gallery-section container">
+            <h2>Khung cảnh quán</h2>
+            <div class="shop-gallery-grid">
+                {% for image in shop.images.all|slice:":4" %}
+                <div class="gallery-item">
+                    <img src="{{ image.image.url }}" alt="Hình ảnh quán {{ shop.name }}">
+                </div>
+                {% empty %}
+                <p>Đang cập nhật hình ảnh...</p>
+                {% endfor %}
+            </div>
+        </section>
+
         <section class="shop-review-section">
             <h2>Đánh giá & Bình luận</h2>
             <div class="review-login-prompt">
@@ -89,11 +102,11 @@
                 </div>
                 <div class="review-rating">
                     {% for i in "12345"|make_list %}
-                        {% if review.rating >= i|default_if_none:"0"|add:"0" %}
-                            <i class="fa-solid fa-star rated"></i>
-                        {% else %}
-                            <i class="fa-regular fa-star"></i>
-                        {% endif %}
+                    {% if review.rating >= i|default_if_none:"0"|add:"0" %}
+                    <i class="fa-solid fa-star rated"></i>
+                    {% else %}
+                    <i class="fa-regular fa-star"></i>
+                    {% endif %}
                     {% endfor %}
                 </div>
                 <p class="review-comment">{{ review.comment }}</p>
@@ -103,83 +116,56 @@
             {% endfor %}
         </section>
 
-        <section class="related-shops-section">
-            <h2>Những quán liên quan</h2>
-            <div class="related-shops-grid">
-                {% for related_shop in related_shops %}
-                <div class="cafe-card">
-                    <div class="card-image-placeholder">
-                        {% if related_shop.cover_image %}
-                        <img src="{{ related_shop.cover_image.url }}" alt="{{ related_shop.name }}">
-                        {% else %}
-                        <div class="placeholder-image">
-                            <i class="fa-solid fa-image fa-2x"></i>
-                        </div>
-                        {% endif %}
-                    </div>
-                    <div class="card-content">
-                        <h3><a href="{% url 'shop_detail' related_shop.id %}">{{ related_shop.name }}</a></h3>
-                        <div class="card-rating">
-                            <i class="fa-solid fa-star"></i> 4.8
-                        </div>
-                    </div>
-                </div>
-                {% empty %}
-                <p>Không tìm thấy quán liên quan.</p>
-                {% endfor %}
-            </div>
-        </section>
-
     </div>
 
     <div class="sidebar-content">
         <div class="info-box sticky-box">
             <h2>Thông tin</h2>
             <div class="info-item">
-                 <i class="fa-solid fa-location-dot"></i>
+                <i class="fa-solid fa-location-dot"></i>
                 <span class="info-label">Địa chỉ</span>
-            <p>{{ shop.address }}</p>
+                <p>{{ shop.address }}</p>
             </div>
             <hr>
 
             <h2>Tiện nghi</h2>
-<div class="amenities-grid">
-    {% for amenity in shop.get_amenities_list %}
-    <div class="amenity-item">
+            <div class="amenities-grid">
+                {% for amenity in shop.get_amenities_list %}
+                <div class="amenity-item">
 
-        {% with am=amenity|lower %}
+                    {% with am=amenity|lower %}
 
-            {% if "wifi" in am %}
-                <i class="fa-solid fa-wifi"></i>
+                    {% if "wifi" in am %}
+                    <i class="fa-solid fa-wifi"></i>
 
-            {% elif "nhà xe" in am or "gửi xe" in am or "đỗ xe" in am %}
-                <i class="fa-solid fa-square-parking"></i>
+                    {% elif "nhà xe" in am or "gửi xe" in am or "đỗ xe" in am %}
+                    <i class="fa-solid fa-square-parking"></i>
 
-            {% elif "điều hòa" in am or "máy lạnh" in am %}
-                <i class="fa-solid fa-wind"></i>
+                    {% elif "điều hòa" in am or "máy lạnh" in am %}
+                    <i class="fa-solid fa-wind"></i>
 
-            {% elif "thú cưng" in am %}
-                <i class="fa-solid fa-paw"></i>
+                    {% elif "thú cưng" in am %}
+                    <i class="fa-solid fa-paw"></i>
 
-            {% elif "24" in am or "24h" in am %}
-                <i class="fa-solid fa-clock"></i>
+                    {% elif "24" in am or "24h" in am %}
+                    <i class="fa-solid fa-clock"></i>
 
-            {% elif "ngoài trời" in am %}
-                <i class="fa-solid fa-umbrella-beach"></i>
+                    {% elif "ngoài trời" in am %}
+                    <i class="fa-solid fa-umbrella-beach"></i>
 
-            {% elif "nhạc" in am %}
-                <i class="fa-solid fa-music"></i>
+                    {% elif "nhạc" in am %}
+                    <i class="fa-solid fa-music"></i>
 
-            {% else %}
-                <i class="fa-solid fa-check"></i>
+                    {% else %}
+                    <i class="fa-solid fa-check"></i>
 
-            {% endif %}
-        {% endwith %}
+                    {% endif %}
+                    {% endwith %}
 
-        {{ amenity }}
-    </div>
-    {% endfor %}
-</div>
+                    {{ amenity }}
+                </div>
+                {% endfor %}
+            </div>
 
 
             <button class="btn btn-outline-primary full-width-btn">
@@ -189,18 +175,42 @@
     </div>
 </div>
 
-<section class="gallery-section container">
-    <h2>Khung cảnh quán</h2>
-    <div class="shop-gallery-grid">
-        {% for image in shop.images.all|slice:":4" %}
-        <div class="gallery-item">
-            <img src="{{ image.image.url }}" alt="Hình ảnh quán {{ shop.name }}">
-        </div>
+<section class="related-shops-section">
+    <h2>Những quán liên quan</h2>
+    <div class="related-shops-grid">
+        {% for shop in related_shops %}
+        <a href="{% url 'shop_detail' shop.id %}" class="cafe-card swiper-slide">
+            <div class="card-image">
+                {% if shop.cover_image %}
+                <img src="{{ shop.cover_image.url }}" alt="{{ shop.name }}">
+                {% else %}
+                <div class="card-image placeholder">
+                    <i class="fa-solid fa-image fa-3x"></i>
+                </div>
+                {% endif %}
+                <div class="card-rating">
+                    <i class="fa-solid fa-star"></i> {{ shop.rating }}
+                </div>
+            </div>
+            <div class="card-content">
+                <h3>{{ shop.name }}</h3>
+
+                <div class="card-info">
+                    <div><i class="fa-solid fa-location-dot"></i>{{ shop.district }}</div>
+                    <div><i class="fa-solid fa-wallet"></i>{{ shop.price_range }}</div>
+                </div>
+                <div class="card-tags">
+                    {% for tag in shop.get_tag_list|slice:":2" %}
+                    <span class="tag">{{ tag }}</span>
+                    {% endfor %}
+                </div>
+                <p class="card-description">{{ shop.description|truncatewords:20 }}</p>
+            </div>
+        </a>
         {% empty %}
-        <p>Đang cập nhật hình ảnh...</p>
+        <p>Không tìm thấy quán liên quan.</p>
         {% endfor %}
     </div>
 </section>
-
 
 {% endblock %}
