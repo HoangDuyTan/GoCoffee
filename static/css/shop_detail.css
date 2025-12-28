@@ -195,83 +195,75 @@
 }
 
 /* --- Reviews --- */
-
-.star-rating {
+.review-form {
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    padding: 20px;
     display: flex;
-    flex-direction: row-reverse;
-    justify-content: flex-end;
-    gap: 10px;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.review-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .star-rating input {
     display: none;
 }
 
+.star-rating {
+    display: flex;
+    flex-direction: row-reverse;
+    gap: 6px;
+}
 .star-rating label i {
-    font-size: 32px;
-    color: #ccc;
+    font-size: 24px;
+    color: #d1d5db;
     cursor: pointer;
     transition: color 0.2s ease;
 }
 
-/* hover */
 .star-rating label:hover i,
-.star-rating label:hover ~ label i {
-    color: #ffb400;
+.star-rating label:hover ~ label i,
+.star-rating input:checked ~ label i {
+    color: #d9983c;
 }
-
-/* checked */
-.star-rating input:checked + label i,
-.star-rating input:checked + label ~ label i {
-    color: #ffb400;
-}
-.rating-stars {
-    display: flex;
-    gap: 6px;
-    cursor: pointer;
-}
-
-.rating-stars i {
-    font-size: 22px;
-    color: #ccc;
-    transition: color 0.2s ease, transform 0.15s ease;
-}
-
-.rating-stars i.active,
-.rating-stars i.hover {
-    color: #ffb400;
-}
-
-.rating-stars i:hover {
-    transform: scale(1.1);
-}
-
-.review-form textarea {
-    width: 100%;
-    min-height: 140px;
-    padding: 15px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    font-size: 16px;
-    resize: vertical;
-}
-.shop-review-section,
-.review-form {
-    width: 100%;
-    max-width: 100%;
-}
-
+/* nút post */
 .btn-submit-review {
-    align-self: flex-start;
-    background-color: #1a1a1a;
-    color: white;
-    padding: 12px 25px;
+    background: #c07a1a !important;
+    color: #fff;
+    font-size: 14px;
+    padding: 8px 16px;
     border-radius: 6px;
-    font-weight: 600;
+    white-space: nowrap;
     border: none;
     cursor: pointer;
+    transition: background 0.2s ease;
 }
 
+.btn-submit-review:hover {
+    background: #a46817;
+}
+
+/* textarea */
+.review-form textarea {
+    width: 100%;
+    min-height: 160px;
+    padding: 16px;
+    font-size: 14px;
+    border-radius: 10px;
+    border: 1px solid #d1d5db;
+    outline: none;
+}
+
+.review-form textarea:focus {
+    border-color: #9ca3af;
+    box-shadow: none;
+}
 .review-card {
     padding: 20px 0;
     border-bottom: 1px solid #eee;
