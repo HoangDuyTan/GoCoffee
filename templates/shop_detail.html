@@ -125,29 +125,29 @@
             {% endif %}
 
             <div class="reviews-list">
-                {% for review in reviews %}
-                <div class="review-card">
-                    <div class="review-header">
-                        <span class="reviewer-name">@{{ review.user.username }}</span>
-                        <span class="review-date">{{ review.created_at|date:"d/m/Y" }}</span>
-                    </div>
+    {% with 3 as max_visible %}
+        {% for review in reviews %}
+<div class="review-card {% if forloop.counter > max_visible %}hidden-review{% endif %}">
+    <div class="review-header">
+        <span class="reviewer-name">@{{ review.user.username }}</span>
+        <span class="review-date">{{ review.created_at|date:"d/m/Y" }}</span>
+    </div>
 
-                    <div class="review-rating">
-                        {% for i in "12345"|make_list %}
-                            {% if review.rating >= forloop.counter %}
-                                <i class="fa-solid fa-star rated"></i>
-                            {% else %}
-                                <i class="fa-regular fa-star"></i>
-                            {% endif %}
-                        {% endfor %}
-                    </div>
+    <div class="review-rating">
+        {% for i in "12345"|make_list %}
+            {% if review.rating >= forloop.counter %}
+                <i class="fa-solid fa-star rated"></i>
+            {% else %}
+                <i class="fa-regular fa-star"></i>
+            {% endif %}
+        {% endfor %}
+    </div>
 
-                    <p>{{ review.comment }}</p>
-                </div>
-                {% empty %}
-                    <p class="no-reviews">Chưa có đánh giá nào.</p>
-                {% endfor %}
-            </div>
+    <p>{{ review.comment }}</p>
+</div>
+{% endfor %}
+    {% endwith %}
+</div>
         </section>
 
     </div>
@@ -194,6 +194,14 @@
         {% endfor %}
     </div>
 </section>
+<!-- REVIEW MODAL -->
+<div id="review-modal" class="review-modal">
+    <div class="review-modal-content">
+        <button class="modal-close">&times;</button>
+        <h3>Tất cả bình luận</h3>
+        <div id="all-reviews-modal"></div>
+    </div>
+</div>
 
 {% endblock %}
 
