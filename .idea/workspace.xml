@@ -1,18 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="fb9eae8b-1aa3-40e4-93f9-b59802378419" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shops/ai_models/model_aspect.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/shops/ai_models/model_aspect.pkl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shops/ai_models/model_sentiment.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/shops/ai_models/model_sentiment.pkl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shops/ai_services/sentiment.py" beforeDir="false" afterPath="$PROJECT_DIR$/shops/ai_services/sentiment.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/css/shop_detail.css" beforeDir="false" afterPath="$PROJECT_DIR$/static/css/shop_detail.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/for_you.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/for_you.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/home.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/home.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/shop_detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/shop_detail.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/shop_list.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/shop_list.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/training_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/training_data.py" afterDir="false" />
-    </list>
+    <list default="true" id="fb9eae8b-1aa3-40e4-93f9-b59802378419" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -99,7 +88,7 @@
       <option name="presentableId" value="Default" />
       <updated>1766984618414</updated>
       <workItem from="1766984620307" duration="1024000" />
-      <workItem from="1766985670304" duration="3554000" />
+      <workItem from="1766985670304" duration="3635000" />
     </task>
     <servers />
   </component>
