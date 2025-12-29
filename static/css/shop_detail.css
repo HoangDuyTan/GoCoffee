@@ -66,6 +66,10 @@
     background: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0));
 }
 
+.overlay-inner {
+    padding-left: 40px;
+}
+
 .shop-info-overlay .container {
     max-width: var(--container-width);
     margin-left: auto;
@@ -95,7 +99,8 @@
 .shop-description-section,
 .shop-menu-section,
 .shop-review-section,
-.related-shops-section {
+.related-shops-section,
+.gallery-section {
     background-color: var(--color-white);
     padding: 25px;
     border-radius: var(--border-radius);
@@ -220,6 +225,7 @@
     flex-direction: row-reverse;
     gap: 6px;
 }
+
 .star-rating label i {
     font-size: 24px;
     color: #d1d5db;
@@ -232,6 +238,7 @@
 .star-rating input:checked ~ label i {
     color: #d9983c;
 }
+
 /* nút post */
 .btn-submit-review {
     background: #c07a1a !important;
@@ -264,6 +271,7 @@
     border-color: #9ca3af;
     box-shadow: none;
 }
+
 .review-card {
     padding: 20px 0;
     border-bottom: 1px solid #eee;
@@ -280,7 +288,7 @@
     display: none;
     justify-content: center;
     align-items: center;
-    background: rgba(0,0,0,0.65);
+    background: rgba(0, 0, 0, 0.65);
     z-index: 99999;
 }
 
@@ -347,64 +355,130 @@
 }
 
 .cafe-card {
-    background: #fff;
-    border-radius: 12px;
+    background-color: var(--color-white);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    text-align: left;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
     overflow: hidden;
-    border: 1px solid #e5e5e5;
-    transition: 0.2s ease;
+    height: 100%;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
 }
 
 .cafe-card:hover {
-    transform: translateY(-4px);
+    transform: translateY(-5px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
 }
 
-.card-image-placeholder {
+.card-image {
+    position: relative;
     width: 100%;
-    height: 180px;
-    overflow: hidden;
-    background: #f5f5f5;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    height: 200px;
+    flex-shrink: 0;
 }
 
-.card-image-placeholder img {
+.card-image img {
+    display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: transform 0.3s ease-in-out;
 }
 
-.card-content {
-    padding: 12px 14px;
+.card-image:hover img {
+    transform: scale(1.1);
 }
 
-.card-content h3 {
-    font-size: 17px;
-    margin: 0 0 6px 0;
-    font-weight: 600;
-}
-
-.card-content h3 a {
-    color: var(--color-dark);
-    text-decoration: none;
-}
-
-.card-content h3 a:hover {
-    color: var(--primary-color);
+.card-image.placeholder {
+    background-color: #eeeeee;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #bbbbbb;
 }
 
 .card-rating {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: var(--color-white);
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.card-rating .fa-star {
+    color: var(--color-star);
+    margin-right: 4px;
+}
+
+.card-content {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.card-content h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.card-info {
+    font-size: 14px;
+    color: var(--color-muted);
+    margin-bottom: 15px;
+}
+
+.card-info div {
     display: flex;
     align-items: center;
-    gap: 4px;
-    font-size: 15px;
-    color: #444;
+    gap: 8px;
 }
 
-.card-rating i {
-    color: #ffb400;
+.card-info div:first-child {
+    margin-bottom: 5px;
 }
 
+.card-info i {
+    width: 14px;
+    text-align: center;
+}
+
+.card-tags {
+    margin-bottom: 15px;
+}
+
+.tag {
+    display: inline-block;
+    background-color: #f1f3f5;
+    color: var(--color-light);
+    padding: 4px 10px;
+    border-radius: 15px;
+    font-size: 12px;
+    font-weight: 500;
+    margin-right: 5px;
+    margin-bottom: 5px;
+}
+
+.card-description {
+    margin-top: auto;
+    font-size: 14px;
+    color: var(--color-light);
+    line-height: 1.5em;
+    height: 4.5em;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
 
 /* --- Sidebar --- */
 .info-box {
@@ -419,6 +493,7 @@
     position: sticky;
     top: 20px;
 }
+
 .info-box h2 {
     color: var(--color-dark);
     font-size: 1.25em;
@@ -498,10 +573,6 @@ hr {
     border-color: var(--primary-color);
     color: var(--primary-color);
 }
-.fa-heart.saved {
-    color: #ef4444;
-    transition: color 0.2s ease;
-}
 
 /* --- Gallery --- */
 .gallery-section h2 {
@@ -529,12 +600,14 @@ hr {
     opacity: 0.95;
 }
 
+/* ẢNH LẤP ĐẦY KHUNG */
 .gallery-item img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     border-radius: var(--border-radius);
 }
+
 /* --- Responsive --- */
 @media (max-width: 992px) {
     .shop-content-container {
@@ -567,6 +640,7 @@ hr {
     .related-shops-grid {
         grid-template-columns: 1fr;
     }
+
     .shop-gallery-grid {
         grid-template-columns: 1fr;
     }

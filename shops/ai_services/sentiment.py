@@ -41,7 +41,13 @@ class SentimentEngine:
             return self._result()
 
         try:
-            sentences = re.split(r'[.,;\n!]|\bnhưng\b|\bvà\b', review.lower())
+            split_pattern = (
+                r'[.,;\n!+\-]|' 
+                r'\bnhưng\b|\btuy nhiên\b|\bsong\b|' 
+                r'\bvà\b|\bvới\b|\brồi\b|\bxong\b|\bthêm\b|\bcộng\b|\blẫn\b|\blại\b|'  
+                r'\bmà\b|\bcòn\b'
+            )
+            sentences = re.split(split_pattern, review.lower())
             final_scores = {'service': 0, 'ambiance': 0, 'drink': 0, 'price': 0}
 
             for sentence in sentences:

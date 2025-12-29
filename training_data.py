@@ -3,6 +3,7 @@ TRAIN_DATA = [
     # 1. DRINK
     # =================================================================
     # --- Khen (Positive) ---
+    ("Nước ngon thật", "drink", 1),
     ("cà phê ở đây rất thơm và đậm đà", "drink", 1),
     ("trà sữa trân châu ngon tuyệt vời", "drink", 1),
     ("menu đa dạng nhiều món ngon", "drink", 1),
@@ -78,6 +79,14 @@ TRAIN_DATA = [
     # 3. PRICE
     # =================================================================
     # --- Khen (Positive) ---
+    ("giá rẻ", "price", 1),
+    ("rẻ bất ngờ", "price", 1),
+    ("giá hạt rẻ", "price", 1),
+    ("không hề đắt", "price", 1),
+    ("rẻ vãi", "price", 1),
+    ("giá hạt dẻ", "price", 1),
+    ("nước rẻ", "price", 1),
+    ("Nước uống không những rẻ", "price", 1),
     ("giá cả rất hợp lý với sinh viên", "price", 1),
     ("giá rẻ bất ngờ", "price", 1),
     ("đáng đồng tiền bát gạo", "price", 1),

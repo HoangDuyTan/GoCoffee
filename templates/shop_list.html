@@ -341,7 +341,7 @@
                         </div>
                         {% endif %}
                         <div class="card-rating">
-                            <i class="fa-solid fa-star"></i> {{ shop.rating }}
+                            <i class="fa-solid fa-star"></i> {{ shop.rating|floatformat:1 }}
                         </div>
                     </div>
                     <div class="card-content">
