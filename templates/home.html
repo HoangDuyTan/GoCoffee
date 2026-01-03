@@ -10,6 +10,25 @@
 
 {% block content %}
     <section class="hero-section">
+        <div class="swiper hero-slider">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide">
+                    <div class="hero-bg-img"
+                         style="background-image: url('https://images.unsplash.com/photo-1509042239860-f550ce710b93?q=80&w=1920&auto=format&fit=crop');"></div>
+                </div>
+                <div class="swiper-slide">
+                    <div class="hero-bg-img"
+                         style="background-image: url('https://images.unsplash.com/photo-1497935586351-b67a49e012bf?q=80&w=1920&auto=format&fit=crop');"></div>
+                </div>
+                <div class="swiper-slide">
+                    <div class="hero-bg-img"
+                         style="background-image: url('https://images.unsplash.com/photo-1554118811-1e0d58224f24?q=80&w=1920&auto=format&fit=crop');"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="hero-overlay"></div>
+
         <div class="hero-content container">
             <h2>Khám phá quán cà phê tuyệt vời</h2>
             <p>Tìm kiếm và khám phá những quán cà phê tốt nhất tại TP.HCM với hệ thống đề xuất thông minh</p>
@@ -105,6 +124,89 @@
             <div class="swiper-button-prev"></div>
             <div class="swiper-button-next"></div>
 
+        </div>
+    </section>
+
+    <section class="content-section">
+        <div class="container split-layout">
+            <div class="left-col">
+                <div class="section-header">
+                    <div class="section-title">
+                        <h2>Tiêu điểm hôm nay</h2>
+                        <p>Thống kê những địa điểm hot nhất hệ thống</p>
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    {% if most_viewed_shop %}
+                        <a href="{% url 'shop_detail' most_viewed_shop.id %}" class="stats-card">
+                            <div class="stats-icon view">
+                                <i class="fa-solid fa-eye"></i>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-label">Lượt xem khủng nhất</span>
+                                <h4 class="stat-name">{{ most_viewed_shop.name }}</h4>
+                                <span class="stat-sub">
+                                    <i class="fa-solid fa-location-dot"></i>
+                                    {{ most_viewed_shop.district }}
+                                </span>
+                            </div>
+                        </a>
+                    {% endif %}
+
+                    {% if most_commented_shop %}
+                        <a href="{% url 'shop_detail' most_commented_shop.id %}" class="stats-card">
+                            <div class="stats-icon comment">
+                                <i class="fa-solid fa-comments"></i>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-label">Thảo luận sôi nổi</span>
+                                <h4 class="stat-name">{{ most_commented_shop.name }}</h4>
+                                <span class="stat-sub">{{ most_commented_shop.reviews.count }} đánh giá</span>
+                            </div>
+                        </a>
+                    {% endif %}
+
+                    {% if top_rated_shop %}
+                        <a href="{% url 'shop_detail' top_rated_shop.id %}" class="stats-card">
+                            <div class="stats-icon rating">
+                                <i class="fa-solid fa-trophy"></i>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-label">Top Rating</span>
+                                <h4 class="stat-name">{{ top_rated_shop.name }}</h4>
+                                <span class="stat-sub">
+                                    {{ top_rated_shop.rating }}/5.0
+                                    <i class="fa-solid fa-star" style="color: gold;"></i>
+                                </span>
+                            </div>
+                        </a>
+                    {% endif %}
+
+                    {% if random_shop %}
+                        <a href="{% url 'shop_detail' random_shop.id %}" class="stats-card random-card">
+                            <div class="stats-icon random">
+                                <i class="fa-solid fa-eye"></i>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-label">Thử các quán mới</span>
+                                <h4 class="stat-name">{{ random_shop.name }}</h4>
+                                <span class="stat-sub">Gợi ý dành riêng cho bạn</span>
+                            </div>
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="right-col">
+                <div class="video-wrapper">
+                    <video autoplay muted loop playsinline
+                           poster="https://cdn.pixabay.com/photo/2017/05/19/07/34/teacup-2325722_1280.jpg">
+                        <source src="{% static 'videos/video.mp4' %}"
+                                type="video/mp4">
+                    </video>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -221,5 +323,21 @@
         <p>Sử dụng bộ lọc chi tiết để tìm quán cà phê phù hợp với sở thích của bạn</p>
         <a href="{% url 'shop_list' %}" class="btn btn-dark">Xem tất cả quán</a>
     </section>
+
+    <script>
+    // Swiper cho hero-section
+    document.addEventListener('DOMContentLoaded', function () {
+        var heroSwiper = new Swiper('.hero-slider', {
+            loop: true,
+            effect: 'fade',
+            speed: 1000,
+            autoplay: {
+                delay: 2500,
+                disableOnInteraction: false,
+            },
+            allowTouchMove: false,
+        });
+    });
+</script>
 
 {% endblock %}

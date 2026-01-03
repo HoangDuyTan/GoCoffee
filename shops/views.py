@@ -17,10 +17,22 @@ def home_view(request):
     hot_shops = CafeShop.objects.filter(rating__gte=4.0).order_by('-rating')[:10]
     new_shops = CafeShop.objects.all().order_by('-id')[:10]
     popular_shops = CafeShop.objects.annotate(review_count=Count('reviews')).order_by('-review_count')[:10]
+
+    most_viewed_data = ShopViewLog.objects.values('shop').annotate(total=Count('id')).order_by('-total').first()
+    most_viewed_shop = CafeShop.objects.get(pk=most_viewed_data['shop']) if most_viewed_data else None
+    most_commented_shop = CafeShop.objects.annotate(total_reviews=Count('reviews')).order_by('-total_reviews').first()
+    top_rated_shop = hot_shops.first()
+    random_shop = CafeShop.objects.order_by('?').first()
+
     context = {
         'new_shop': new_shops,
         'hot_shop': hot_shops,
-        'popular_shop': popular_shops
+        'popular_shop': popular_shops,
+
+        'most_viewed_shop': most_viewed_shop,
+        'most_commented_shop': most_commented_shop,
+        'top_rated_shop': top_rated_shop,
+        'random_shop': random_shop,
     }
     return render(request, 'home.html', context)
 
