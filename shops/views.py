@@ -4,11 +4,12 @@ from django.db.models import Q
 from django.http import JsonResponse
 from django.contrib import messages
 from .models import CafeShop, Contact, ShopViewLog, Review
-from django.db.models import Avg, Count, F, Count
+from django.db.models import Avg, F, Count
 from django.core.paginator import Paginator
-from .ai_utils import analyze_review_sentiment, analyze_collaboration_recommendation
-import random
 from collections import Counter
+from .ai_utils import analyze_review_sentiment, analyze_collaboration_recommendation
+from collections import Counter
+from .models import SavedShop
 
 
 # Create your views here.
@@ -16,10 +17,22 @@ def home_view(request):
     hot_shops = CafeShop.objects.filter(rating__gte=4.0).order_by('-rating')[:10]
     new_shops = CafeShop.objects.all().order_by('-id')[:10]
     popular_shops = CafeShop.objects.annotate(review_count=Count('reviews')).order_by('-review_count')[:10]
+
+    most_viewed_data = ShopViewLog.objects.values('shop').annotate(total=Count('id')).order_by('-total').first()
+    most_viewed_shop = CafeShop.objects.get(pk=most_viewed_data['shop']) if most_viewed_data else None
+    most_commented_shop = CafeShop.objects.annotate(total_reviews=Count('reviews')).order_by('-total_reviews').first()
+    top_rated_shop = hot_shops.first()
+    random_shop = CafeShop.objects.order_by('?').first()
+
     context = {
         'new_shop': new_shops,
         'hot_shop': hot_shops,
-        'popular_shop': popular_shops
+        'popular_shop': popular_shops,
+
+        'most_viewed_shop': most_viewed_shop,
+        'most_commented_shop': most_commented_shop,
+        'top_rated_shop': top_rated_shop,
+        'random_shop': random_shop,
     }
     return render(request, 'home.html', context)
 
@@ -27,6 +40,9 @@ def home_view(request):
 @login_required(login_url='/login/')
 def for_you_view(request):
     user = request.user
+    favorite_shops = CafeShop.objects.filter(
+        savedshop__user=user
+    ).distinct()
 
     # 1. LẤY DỮ LIỆU LỊCH SỬ
     viewed_shop_ids = ShopViewLog.objects.filter(user=user).values_list('shop_id', flat=True)
@@ -145,6 +161,7 @@ def for_you_view(request):
     similar_shops = CafeShop.objects.filter(rating__gte=4.0).exclude(id__in=[s.id for s in ai_shops]).order_by('?')[:6]
 
     context = {
+        'favorite_shops': favorite_shops,
         'ai_shops': ai_shops,
         'similar_shops': similar_shops,
         'top_service_shops': top_service_shops,
@@ -220,14 +237,13 @@ def shop_list_view(request):
     shops, district, rating, tags, price_range, amenities = filtered_shops(request)
     paginator = Paginator(shops, 8)
     page_number = request.GET.get('page')
-    context = {
-        'shops': paginator.get_page(page_number),
-        'selected_district': district,
-        'rating': rating,
-        'selected_tags': tags,
-        'selected_price_range': price_range,
-        'selected_amenities': amenities
-    }
+    context = {'shops': paginator.get_page(page_number),
+               'selected_district': district,
+               'rating': rating,
+               'selected_tags': tags,
+               'selected_price_range': price_range,
+               'selected_amenities': amenities
+               }
     return render(request, 'shop_list.html', context)
 
 
@@ -274,7 +290,6 @@ def contact_view(request):
 
 
 def shop_detail_view(request, shop_id):
-    # 1. Query Shop & Annotate dữ liệu thống kê
     shop = get_object_or_404(
         CafeShop.objects.annotate(
             rating_avg=Avg('reviews__rating'),
@@ -283,76 +298,105 @@ def shop_detail_view(request, shop_id):
         pk=shop_id
     )
 
-    # 2. GHI NHẬN LƯỢT XEM (Recommendation Data)
+    # ====== Log lượt xem ======
     if request.user.is_authenticated:
         obj, created = ShopViewLog.objects.get_or_create(
             user=request.user,
             shop=shop
         )
         if not created:
-            # Dùng F() expression để tránh race condition
             obj.view_count = F('view_count') + 1
             obj.save()
 
-    # 3. Xử lý Menu
+    # ====== MENU ======
     menu_items = shop.menu_items.all().order_by('category', 'id')
-
     grouped_menu = {}
     for item in menu_items:
-        category = item.category if item.category else "Menu chung"
-        if category not in grouped_menu:
-            grouped_menu[category] = []
-
-        # Format giá tiền
+        category = item.category or "Menu chung"
+        grouped_menu.setdefault(category, [])
         price_formatted = f"{item.price:,.0f}₫".replace(",", "tmp").replace(".", ",").replace("tmp", ".")
-        grouped_menu[category].append({'name': item.name, 'price': price_formatted})
+        grouped_menu[category].append({
+            'name': item.name,
+            'price': price_formatted
+        })
 
-    # 4. Lấy reviews
-    reviews = shop.reviews.all().select_related('user').order_by('-created_at')
+    reviews = shop.reviews.select_related('user').order_by('-created_at')
 
-    # 5. Lấy quán liên quan (cùng quận)
-    related_shops = CafeShop.objects.filter(district=shop.district).exclude(pk=shop_id)[:3]
+    related_shops = CafeShop.objects.filter(
+        district=shop.district
+    ).exclude(id=shop.id)[:4]
 
-    # 5. Kiểm tra xem người dùng đã lưu quán này chưa
-    # Phải import SavedShop nếu bạn muốn kiểm tra (tạm thời không cần vì không hiển thị)
+    is_saved = False
+    if request.user.is_authenticated:
+        is_saved = SavedShop.objects.filter(
+            user=request.user,
+            shop=shop
+        ).exists()
 
-    context = {
+    return render(request, 'shop_detail.html', {
         'shop': shop,
         'grouped_menu': grouped_menu,
         'reviews': reviews,
         'related_shops': related_shops,
-    }
-    return render(request, 'shop_detail.html', context)
+        'is_saved': is_saved,
+    })
 
 
 # =============== AI ===============
-@login_required(login_url='/login/')
+@login_required
 def submit_review(request, shop_id):
-    shop = get_object_or_404(CafeShop, pk=shop_id)
-    if request.method == 'POST':
-        comment_text = request.POST.get('comment', '').strip()
-        rating_value = request.POST.get('rating')
+    if request.method == "POST":
+        shop = get_object_or_404(CafeShop, id=shop_id)
 
-        if not rating_value or not comment_text:
-            messages.error(request, "Vui lòng nhập nội dung và chọn số sao!")
-            return redirect('shop_detail', shop_id=shop_id)
+        rating = int(request.POST.get("rating", 0))
+        comment = request.POST.get("comment", "").strip()
 
-        ai_scores = analyze_review_sentiment(comment_text)
-        try:
-            Review.objects.create(
-                shop=shop,
-                user=request.user,
-                comment=comment_text,
-                rating=int(rating_value),
+        if rating == 0 or not comment:
+            return JsonResponse({
+                'success': False,
+                'message': 'Vui lòng nhập đủ số sao và bình luận'
+            })
+
+        ai_scores = analyze_review_sentiment(comment)
+
+        review, created = Review.objects.get_or_create(
+            shop=shop,
+            user=request.user,
+            defaults={
+                "rating": rating,
+                "comment": comment,
                 **ai_scores
-            )
-            messages.success(request, "Cảm ơn bạn đã đánh giá!")
-            update_shop_stats(shop)
-        except Exception as e:
-            print(e)
-            messages.error(request, "Có lỗi xảy ra, vui lòng thử lại.")
+            }
+        )
 
-    return redirect('shop_detail', shop_id=shop_id)
+        if not created:
+            review.rating = rating
+            review.comment = comment
+            for k, v in ai_scores.items():
+                setattr(review, k, v)
+            review.save()
+
+        update_shop_stats(shop)
+
+        # rating chung
+        shop.rating = Review.objects.filter(shop=shop).aggregate(
+            avg=Avg("rating")
+        )["avg"] or 0
+        shop.save()
+
+        return JsonResponse({
+            'success': True,
+            'review': {
+                'username': request.user.username,
+                'rating': review.rating,
+                'comment': review.comment,
+                'created_at': review.created_at.strftime("%d/%m/%Y") if hasattr(review,
+                                                                                      'created_at') else "Vừa xong",
+            },
+            'message': 'Cảm ơn bạn đã đánh giá!'
+        })
+
+    return JsonResponse({'success': False, 'message': 'Yêu cầu không hợp lệ'})
 
 
 def update_shop_stats(shop):
@@ -368,3 +412,43 @@ def update_shop_stats(shop):
     shop.avg_drink = aggs['avg_drink'] or 0
     shop.avg_price = aggs['avg_price'] or 0
     shop.save()
+
+
+def exclude_saved_shops(queryset, user):
+    if user.is_authenticated:
+        saved_ids = SavedShop.objects.filter(
+            user=user
+        ).values_list('shop_id', flat=True)
+        return queryset.exclude(id__in=saved_ids)
+    return queryset
+
+
+# Luu quan
+def toggle_save_shop(request):
+    if request.method != "POST":
+        return JsonResponse({"error": "Invalid request"}, status=400)
+
+    shop_id = request.POST.get("shop_id")
+    shop = get_object_or_404(CafeShop, id=shop_id)
+
+    # CHƯA LOGIN
+    if not request.user.is_authenticated:
+        return JsonResponse(
+            {"require_login": True},
+            status=401
+        )
+
+    saved = SavedShop.objects.filter(
+        user=request.user,
+        shop=shop
+    )
+
+    if saved.exists():
+        saved.delete()
+        return JsonResponse({"saved": False})
+    else:
+        SavedShop.objects.create(
+            user=request.user,
+            shop=shop
+        )
+        return JsonResponse({"saved": True})

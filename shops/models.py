@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.conf import settings
 from django.core.validators import MinValueValidator, MaxValueValidator
 
 def normalize_comma_separated_string(value):
@@ -150,7 +150,7 @@ class ShopImage(models.Model):
 #Model cho Đánh giá - Bình luận
 class Review(models.Model):
     shop = models.ForeignKey(CafeShop, on_delete = models.CASCADE, related_name = 'reviews')
-    user = models.ForeignKey(User, on_delete = models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     rating = models.IntegerField(default = 1)
     comment = models.TextField(blank = True)
     created_at = models.DateTimeField(auto_now_add = True)
@@ -166,14 +166,14 @@ class Review(models.Model):
 
 #Model cho nút lưu vào yêu thích
 class SavedShop(models.Model):
-    shop = models.ForeignKey(CafeShop, on_delete = models.CASCADE)
-    user = models.ForeignKey(User, on_delete = models.CASCADE)
+    shop = models.ForeignKey(CafeShop, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     class Meta:
-        unique_together = ('shop', 'user') #Đảm bảo 1 user không thể lưu 1 quán 2 lần
+        unique_together = ('shop', 'user')
 
     def __str__(self):
-        return f'{self.user.username} đã lưu {self.shop.name}'
+        return f'{self.user} đã lưu {self.shop.name}'
 
 #Model cho Liên hệ
 class Contact (models.Model):
@@ -183,14 +183,15 @@ class Contact (models.Model):
     content = models.TextField()
 
 # Recommendation System
-class ShopViewLog (models.Model):
-    user = models.ForeignKey(User, on_delete = models.CASCADE)
-    shop = models.ForeignKey(CafeShop, on_delete = models.CASCADE)
-    view_count = models.IntegerField(default = 1)
-    last_viewed = models.DateTimeField(auto_now = True)
+class ShopViewLog(models.Model):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE
+    )
+    shop = models.ForeignKey(CafeShop, on_delete=models.CASCADE)
+    view_count = models.IntegerField(default=1)
+    last_viewed = models.DateTimeField(auto_now=True)
 
     class Meta:
         unique_together = ('shop', 'user')
 
-    def __str__(self):
-        return f'{self.user.username} viewed {self.shop.name} {self.view_count}'
