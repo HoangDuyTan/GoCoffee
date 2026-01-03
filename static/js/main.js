@@ -1,15 +1,16 @@
-// ================== LOGIN/ REGISTER ==================
 document.addEventListener('DOMContentLoaded', function () {
+    // ================== XỬ LÝ MODAL LOGIN/REGISTER ==================
     const authModal = document.getElementById('authModal');
     const closeBtn = document.querySelector('.close-button');
-
     const loginBtn = document.getElementById('login-button');
+
+    // Tab chuyển đổi
     const loginTabBtn = document.getElementById('login-tab');
     const loginForm = document.getElementById('login-form');
-
     const registerTabBtn = document.getElementById('register-tab');
     const registerForm = document.getElementById('register-form');
 
+    // Mở modal
     if (loginBtn) {
         loginBtn.addEventListener('click', function (e) {
             e.preventDefault();
@@ -17,18 +18,21 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    // Đóng modal
     if (closeBtn) {
         closeBtn.addEventListener('click', function () {
             authModal.style.display = 'none';
         });
     }
 
+    // Click ra ngoài thì đóng
     window.addEventListener('click', function (event) {
         if (event.target == authModal) {
             authModal.style.display = 'none';
         }
     });
 
+    // Chuyển Tab Đăng nhập / Đăng ký
     if (loginTabBtn && registerTabBtn) {
         loginTabBtn.addEventListener('click', function () {
             loginTabBtn.classList.add('active');
@@ -43,6 +47,54 @@ document.addEventListener('DOMContentLoaded', function () {
             loginForm.classList.remove('active');
         });
     }
+
+    // ================== KIỂM TRA MẬT KHẨU ==================
+    const regFormElement = document.getElementById('registerFormElement');
+    const passInput = document.getElementById('reg_password');
+    const confirmInput = document.getElementById('reg_confirm_password');
+    const errorText = document.getElementById('passError');
+
+    if (regFormElement && passInput && confirmInput) {
+        regFormElement.addEventListener('submit', function (e) {
+            errorText.style.display = 'none';
+            confirmInput.style.borderColor = '#e0e0e0';
+
+            if (passInput.value !== confirmInput.value) {
+                e.preventDefault();
+
+                errorText.style.display = 'block';
+                confirmInput.style.borderColor = '#e74c3c';
+
+                confirmInput.animate([
+                    {transform: 'translateX(0)'},
+                    {transform: 'translateX(-5px)'},
+                    {transform: 'translateX(5px)'},
+                    {transform: 'translateX(0)'}
+                ], {duration: 300});
+            }
+        });
+    }
+
+    const alerts = document.querySelectorAll('.alert');
+    if (alerts.length > 0) {
+        setTimeout(() => {
+            alerts.forEach(alert => {
+                alert.classList.add('hide-me');
+                setTimeout(() => {
+                    alert.remove();
+                }, 500);
+            });
+        }, 3000);
+    }
+
+    const closeBtns = document.querySelectorAll('.close-msg');
+    closeBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const parent = this.closest('.alert');
+            parent.classList.add('hide-me');
+            setTimeout(() => parent.remove(), 500);
+        });
+    });
 });
 
 // ================== SWIPER ==================
@@ -69,6 +121,8 @@ document.querySelectorAll('.carousel-container').forEach(function (container) {
         },
     });
 });
+
+
 document.addEventListener("DOMContentLoaded", function () {
 
     window.submitFilters = function () {

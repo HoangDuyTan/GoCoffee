@@ -17,6 +17,27 @@
 <body>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
+{% if messages %}
+    <div class="messages-container">
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+            <span>
+                {% if 'success' in message.tags %}
+                    <i class="fa-solid fa-check-circle"></i>
+                {% elif 'error' in message.tags or 'warning' in message.tags %}
+                    <i class="fa-solid fa-circle-exclamation"></i>
+                {% else %}
+                    <i class="fa-solid fa-info-circle"></i>
+                {% endif %}
+
+                {{ message }}
+            </span>
+                <span class="close-msg">&times;</span>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+
 <header class="header">
     <nav class="navbar container">
         <div class="logo-container">
@@ -29,9 +50,9 @@
                    class="{% if request.resolver_match.url_name == 'home' %}active{% endif %}"><i
                     class="fa-solid fa-house"></i> Trang chủ</a></li>
             {% if request.user.is_authenticated %}
-            <li><a href="{% url 'for_you' %}"
-                   class="{% if request.resolver_match.url_name == 'for_you' %}active{% endif %}"><i
-                    class="fa-solid fa-heart"></i>Dành cho bạn</a></li>
+                <li><a href="{% url 'for_you' %}"
+                       class="{% if request.resolver_match.url_name == 'for_you' %}active{% endif %}"><i
+                        class="fa-solid fa-heart"></i>Dành cho bạn</a></li>
             {% endif %}
             <li><a href="{% url 'shop_list' %}"
                    class="{% if request.resolver_match.url_name == 'shop_list' %}active{% endif %}"><i
@@ -43,10 +64,10 @@
 
         <div class="nav-actions">
             {% if request.user.is_authenticated %}
-            <span>Chào, {{ user.username }}</span>
-            <a href="{% url 'logout' %}" class="btn logout-btn">Đăng xuất</a>
+                <span>Chào, {{ user.username }}</span>
+                <a href="{% url 'logout' %}" class="btn logout-btn">Đăng xuất</a>
             {% else %}
-            <a href="#" class="btn btn-primary" id="login-button">Đăng nhập</a>
+                <a href="#" class="btn btn-primary" id="login-button">Đăng nhập</a>
             {% endif %}
         </div>
     </nav>
@@ -77,25 +98,40 @@
         <div id="login-form" class="tab-pane active">
             <form action="{% url 'login' %}" method="POST">
                 {% csrf_token %}
-                <label>Email hoặc Tên đăng nhập</label>
-                <input type="text" name="username" placeholder="Nhập email hoặc username" required>
-                <label>Mật khẩu</label>
-                <input type="password" name="password" placeholder="Nhập mật khẩu" required>
+                <div class="form-group">
+                    <label>Email hoặc Tên đăng nhập</label>
+                    <input type="text" name="username" placeholder="Nhập email hoặc username" required>
+                </div>
+                <div class="form-group">
+                    <label>Mật khẩu</label>
+                    <input type="password" name="password" placeholder="Nhập mật khẩu" required>
+                </div>
                 <button type="submit" class="btn btn-dark">Đăng nhập</button>
             </form>
         </div>
 
         <div id="register-form" class="tab-pane">
-            <form action="{% url 'register' %}" method="POST">
+            <form action="{% url 'register' %}" method="POST" id="registerFormElement">
                 {% csrf_token %}
-                <label>Tên đăng nhập</label>
-                <input type="text" name="username" placeholder="Nhập họ và tên" required>
-                <label>Email</label>
-                <input type="email" name="email" placeholder="email@example.com" required>
-                <label>Mật khẩu</label>
-                <input type="password" name="password" placeholder="••••••••" required>
-                <label>Nhập lại mật khẩu</label>
-                <input type="password" name="confirm_password" placeholder="••••••••" required>
+                <div class="form-group">
+                    <label>Tên đăng nhập</label>
+                    <input type="text" name="username" placeholder="Nhập họ và tên" required minlength="3">
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" name="email" placeholder="email@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Mật khẩu</label>
+                    <input type="password" name="password" id="reg_password" placeholder="••••••••" required
+                           minlength="6">
+                </div>
+                <div class="form-group">
+                    <label>Nhập lại mật khẩu</label>
+                    <input type="password" name="confirm_password" id="reg_confirm_password" placeholder="••••••••"
+                           required>
+                    <p class="error-text" id="passError">Mật khẩu nhập lại không khớp!</p>
+                </div>
                 <button type="submit" class="btn btn-dark">Đăng ký</button>
             </form>
         </div>

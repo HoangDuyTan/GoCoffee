@@ -277,8 +277,20 @@
     border-bottom: 1px solid #eee;
 }
 
+.review-rating {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
 .review-rating i.rated {
     color: #ffb400;
+}
+
+.review-card{
+    padding-left: 15px;
 }
 
 /* ===== MODAL OVERLAY ===== */

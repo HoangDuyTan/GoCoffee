@@ -11,6 +11,7 @@ from .ai_utils import analyze_review_sentiment, analyze_collaboration_recommenda
 from collections import Counter
 from .models import SavedShop
 
+
 # Create your views here.
 def home_view(request):
     hot_shops = CafeShop.objects.filter(rating__gte=4.0).order_by('-rating')[:10]
@@ -26,7 +27,6 @@ def home_view(request):
 
 @login_required(login_url='/login/')
 def for_you_view(request):
-
     user = request.user
     favorite_shops = CafeShop.objects.filter(
         savedshop__user=user
@@ -225,13 +225,13 @@ def shop_list_view(request):
     shops, district, rating, tags, price_range, amenities = filtered_shops(request)
     paginator = Paginator(shops, 8)
     page_number = request.GET.get('page')
-    context = { 'shops': paginator.get_page(page_number),
-        'selected_district': district,
-        'rating': rating,
-        'selected_tags': tags,
-        'selected_price_range': price_range,
-        'selected_amenities': amenities
-    }
+    context = {'shops': paginator.get_page(page_number),
+               'selected_district': district,
+               'rating': rating,
+               'selected_tags': tags,
+               'selected_price_range': price_range,
+               'selected_amenities': amenities
+               }
     return render(request, 'shop_list.html', context)
 
 
@@ -251,6 +251,7 @@ def shop_map_api(request):
     ]
 
     return JsonResponse(data, safe=False)
+
 
 def contact_view(request):
     if request.method == 'POST':
@@ -274,6 +275,7 @@ def contact_view(request):
             pass
 
     return render(request, 'contact.html')
+
 
 def shop_detail_view(request, shop_id):
     shop = get_object_or_404(
@@ -331,15 +333,17 @@ def shop_detail_view(request, shop_id):
 # =============== AI ===============
 @login_required
 def submit_review(request, shop_id):
-    shop = get_object_or_404(CafeShop, id=shop_id)
-
     if request.method == "POST":
+        shop = get_object_or_404(CafeShop, id=shop_id)
+
         rating = int(request.POST.get("rating", 0))
         comment = request.POST.get("comment", "").strip()
 
         if rating == 0 or not comment:
-            messages.error(request, "Vui lòng nhập đánh giá và nội dung.")
-            return redirect("shop_detail", shop.id)
+            return JsonResponse({
+                'success': False,
+                'message': 'Vui lòng nhập đủ số sao và bình luận'
+            })
 
         ai_scores = analyze_review_sentiment(comment)
 
@@ -368,24 +372,35 @@ def submit_review(request, shop_id):
         )["avg"] or 0
         shop.save()
 
-        messages.success(request, "Cảm ơn bạn đã đánh giá!")
+        return JsonResponse({
+            'success': True,
+            'review': {
+                'username': request.user.username,
+                'rating': review.rating,
+                'comment': review.comment,
+                'created_at': review.created_at.strftime("%d/%m/%Y") if hasattr(review,
+                                                                                      'created_at') else "Vừa xong",
+            },
+            'message': 'Cảm ơn bạn đã đánh giá!'
+        })
 
-    return redirect("shop_detail", shop.id)
+    return JsonResponse({'success': False, 'message': 'Yêu cầu không hợp lệ'})
 
 
 def update_shop_stats(shop):
-            aggs = shop.reviews.aggregate(
-                avg_service=Avg('sentiment_service'),
-                avg_ambiance=Avg('sentiment_ambiance'),
-                avg_drink=Avg('sentiment_drink'),
-                avg_price=Avg('sentiment_price')
-            )
+    aggs = shop.reviews.aggregate(
+        avg_service=Avg('sentiment_service'),
+        avg_ambiance=Avg('sentiment_ambiance'),
+        avg_drink=Avg('sentiment_drink'),
+        avg_price=Avg('sentiment_price')
+    )
 
-            shop.avg_service = aggs['avg_service'] or 0
-            shop.avg_ambiance = aggs['avg_ambiance'] or 0
-            shop.avg_drink = aggs['avg_drink'] or 0
-            shop.avg_price = aggs['avg_price'] or 0
-            shop.save()
+    shop.avg_service = aggs['avg_service'] or 0
+    shop.avg_ambiance = aggs['avg_ambiance'] or 0
+    shop.avg_drink = aggs['avg_drink'] or 0
+    shop.avg_price = aggs['avg_price'] or 0
+    shop.save()
+
 
 def exclude_saved_shops(queryset, user):
     if user.is_authenticated:
@@ -394,6 +409,7 @@ def exclude_saved_shops(queryset, user):
         ).values_list('shop_id', flat=True)
         return queryset.exclude(id__in=saved_ids)
     return queryset
+
 
 # Luu quan
 def toggle_save_shop(request):
@@ -424,4 +440,3 @@ def toggle_save_shop(request):
             shop=shop
         )
         return JsonResponse({"saved": True})
-
