@@ -2,7 +2,7 @@ TRAIN_DATA = [
     # =================================================================
     # 1. DRINK
     # =================================================================
-    # --- Khen (Positive) ---
+    # --- Positive ---
     ("Nước ngon thật", "drink", 1),
     ("cà phê ở đây rất thơm và đậm đà", "drink", 1),
     ("trà sữa trân châu ngon tuyệt vời", "drink", 1),
@@ -40,8 +40,9 @@ TRAIN_DATA = [
     ("trân châu dai ngon", "drink", 1),
     ("must try món trà vải", "drink", 1),
     ("nước đa dạng", "drink", 1),
+    ("quán có món signature đỉnh", "drink", 1),
 
-    # --- Chê (Negative) ---
+    # --- Negative ---
     ("nước uống nhạt nhẽo như nước lã", "drink", -1),
     ("sinh tố bơ hơi bị đắng", "drink", -1),
     ("bạc xỉu quá ngọt uống gắt cổ", "drink", -1),
@@ -73,11 +74,23 @@ TRAIN_DATA = [
     ("trân châu bị cứng ngắc", "drink", -1),
     ("sinh tố không tươi", "drink", -1),
     ("uống dở tệ", "drink", -1),
+    ("menu ít món", "drink", -1),
+    ("menu quá ít món", "drink", -1),
+    ("không đa dạng", "drink", -1),
+    ("thực đơn nghèo nàn", "drink", -1),
+    ("ít sự lựa chọn", "drink", -1),
+    ("quanh đi quẩn lại có vài món cũ", "drink", -1),
+    ("không có gì mới lạ", "drink", -1),
+    ("menu sơ sài", "drink", -1),
+    ("trang trí ly nước cẩu thả", "drink", -1),
+    ("nhìn ly nước mất cảm tình", "drink", -1),
+    ("hình thức xấu, không giống ảnh menu", "drink", -1),
+    ("decor quê mùa", "drink", -1),
 
     # =================================================================
     # 2. SERVICE
     # =================================================================
-    # --- Khen (Positive) ---
+    # --- Positive ---
     ("nhân viên phục vụ rất nhiệt tình", "service", 1),
     ("các bạn nhân viên dễ thương lắm", "service", 1),
     ("bác bảo vệ dắt xe thân thiện", "service", 1),
@@ -98,11 +111,6 @@ TRAIN_DATA = [
     ("tuy đông nhưng phục vụ không bị rối", "service", 1),
     ("thái độ nhân viên chừng mực, lịch sự", "service", 1),
     ("wifi hỏng nhân viên reset nhiệt tình", "service", 1),
-    ("giá hơi cao nhưng xứng đáng", "price", 1),
-    ("tiền nào của nấy", "price", 1),
-    ("mức giá chấp nhận được ở khu vực này", "price", 1),
-    ("giá tầm trung, học sinh uống được", "price", 1),
-    ("combo nước và bánh giá hời", "price", 1),
     ("nhân viên nhiệt tình", "service", 1),
     ("phục vụ dễ thương", "service", 1),
     ("lên nước nhanh", "service", 1),
@@ -110,7 +118,7 @@ TRAIN_DATA = [
     ("nhân viên thân thiện", "service", 1),
     ("duyệt thái độ nhân viên", "service", 1),
 
-    # --- Chê (Negative) ---
+    # --- Negative ---
     ("gọi món mà chờ dài cả cổ", "service", -1),
     ("thái độ phục vụ lồi lõm", "service", -1),
     ("nhân viên order nhầm món", "service", -1),
@@ -141,11 +149,18 @@ TRAIN_DATA = [
     ("phục vụ chậm chạp", "service", -1),
     ("nhân viên coi thường khách", "service", -1),
     ("bảo vệ khó chịu", "service", -1),
+    ("nhân viên thái độ lồi lõm với khách", "service", -1),
+    ("ưu tiên người quen, để khách chờ", "service", -1),
+    ("nhân viên tụ tập nói xấu khách", "service", -1),
+    ("quy trình order rắc rối", "service", -1),
+    ("không cho thanh toán thẻ/chuyển khoản", "service", -1),
+    ("nhân viên dọn bàn khi khách chưa uống xong", "service", -1),
+    ("đuổi khách khéo", "service", -1),
 
     # =================================================================
     # 3. PRICE
     # =================================================================
-    # --- Khen (Positive) ---
+    # --- Positive ---
     ("giá rẻ", "price", 1),
     ("rẻ bất ngờ", "price", 1),
     ("giá hạt rẻ", "price", 1),
@@ -175,7 +190,7 @@ TRAIN_DATA = [
     ("giá cả hợp lý", "price", 1),
     ("đáng đồng tiền", "price", 1),
 
-    # --- Chê (Negative) ---
+    # --- Negative ---
     ("nước quá đắt so với chất lượng", "price", -1),
     ("một ly nước 80k là quá mắc", "price", -1),
     ("tính tiền sai bill", "price", -1),
@@ -199,11 +214,18 @@ TRAIN_DATA = [
     ("quá đắt so với chất lượng", "price", -1),
     ("ly bé tí mà 60k", "price", -1),
     ("hút máu khách hàng", "price", -1),
+    ("đắt", "price", -1),
+    ("mắc quá", "price", -1),
+    ("giá cao", "price", -1),
+    ("hơi đắt", "price", -1),
+    ("giá cả không hợp lý", "price", -1),
+    ("đắt vãi", "price", -1),
+    ("giá chát", "price", -1),
 
     # =================================================================
     # 4. AMBIANCE
     # =================================================================
-    # --- Khen (Positive) ---
+    # --- Positive ---
     ("không gian quán decor rất đẹp", "ambiance", 1),
     ("view sống ảo cực chill", "ambiance", 1),
     ("máy lạnh mát mẻ dễ chịu", "ambiance", 1),
@@ -248,8 +270,10 @@ TRAIN_DATA = [
     ("nhạc mở vừa phải, không ồn", "ambiance", 1),
     ("máy lạnh chạy ro ro mát rượi", "ambiance", 1),
     ("có chỗ gửi xe rộng", "ambiance", 1),
+    ("nhiều ổ cắm, rất tiện làm việc", "ambiance", 1),
+    ("ghế ngồi êm, ngồi lâu không mỏi", "ambiance", 1),
 
-    # --- Chê (Negative) ---
+    # --- Negative ---
     ("quán ồn ào quá không làm việc được", "ambiance", -1),
     ("nhà vệ sinh bẩn và hôi", "ambiance", -1),
     ("quán nóng nực, bí bách", "ambiance", -1),
@@ -278,6 +302,42 @@ TRAIN_DATA = [
     ("tối thui không thấy đường", "ambiance", -1),
     ("wifi yếu nhớt", "ambiance", -1),
     ("không gian bí bách", "ambiance", -1),
+    ("quán không có ổ cắm điện", "ambiance", -1),
+    ("tìm mãi không thấy chỗ sạc laptop", "ambiance", -1),
+    ("bàn quá thấp không ngồi làm việc được", "ambiance", -1),
+    ("ghế ngồi đau lưng không dựa được", "ambiance", -1),
+    ("nhạc bật to như quán bar, không học bài được", "ambiance", -1),
+    ("hết bàn liên tục", "ambiance", -1),
+    ("phải ghép bàn với người lạ, bất tiện", "ambiance", -1),
+
+    # =================================================================
+    # 5. TEENCODE & VIẾT TẮT
+    # =================================================================
+    # --- Service ---
+    ("nv thái độ lồi lõm", "service", -1),
+    ("ko bao gio quay lai", "service", -1),
+    ("phuc vu wa te", "service", -1),
+    ("doi mon lau kinh khung", "service", -1),
+    ("nv coi thuong khach", "service", -1),
+    ("pv cham nhu rua", "service", -1),
+    # --- Drink ---
+    ("nuoc nhu nuoc la", "drink", -1),
+    ("k ngon", "drink", -1),
+    ("nuoc do te", "drink", -1),
+    ("trà sữa quá ngọt", "drink", -1),
+    ("uong ko ra gi", "drink", -1),
+    ("chê nước nha", "drink", -1),
+    # --- Price ---
+    ("gia wa mac", "price", -1),
+    ("gia chat", "price", -1),
+    ("dat cat co", "price", -1),
+    # --- Ambiance ---
+    ("wifi lag tung chao", "ambiance", -1),
+    ("view xau", "ambiance", -1),
+    ("quan on ao vl", "ambiance", -1),
+    ("nha ve sinh hoi rinh", "ambiance", -1),
+    ("nong chay mo", "ambiance", -1),
+    ("xu ca na", "ambiance", -1),
 ]
 
 TRAIN_DATA = TRAIN_DATA * 3
