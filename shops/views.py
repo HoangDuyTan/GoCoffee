@@ -171,7 +171,6 @@ def for_you_view(request):
     }
     return render(request, 'for_you.html', context)
 
-
 def filtered_shops(request):
     shops = CafeShop.objects.all().order_by('-id')
 
@@ -190,7 +189,6 @@ def filtered_shops(request):
         shops = shops.filter(district=district)
 
     rating = request.GET.get('rating', '0')
-
     if rating:
         try:
             rating = float(rating)
@@ -232,20 +230,18 @@ def filtered_shops(request):
 
     return shops, district, rating, tags, price_range, amenities
 
-
 def shop_list_view(request):
     shops, district, rating, tags, price_range, amenities = filtered_shops(request)
     paginator = Paginator(shops, 8)
     page_number = request.GET.get('page')
     context = {'shops': paginator.get_page(page_number),
                'selected_district': district,
-               'rating': rating,
+               'rating': round(rating, 1),
                'selected_tags': tags,
                'selected_price_range': price_range,
                'selected_amenities': amenities
                }
     return render(request, 'shop_list.html', context)
-
 
 def shop_map_api(request):
     shops, _, _, _, _, _ = filtered_shops(request)
@@ -254,7 +250,7 @@ def shop_map_api(request):
             'name': shop.name,
             'lat': shop.latitude,
             'lng': shop.longitude,
-            'rating': shop.rating,
+            'rating': round(shop.rating, 1),
             'address': shop.address,
             'cover_image': shop.cover_image.url if shop.cover_image else '',
         }
