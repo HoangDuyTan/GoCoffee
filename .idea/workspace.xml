@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="fb9eae8b-1aa3-40e4-93f9-b59802378419" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -42,10 +45,17 @@
     "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
     "ai.playground.ignore.import.keys.banner.in.settings": "true",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
     "django.template.preview.state": "SHOW_EDITOR",
     "git-widget-placeholder": "nmh2410",
     "ignore.virus.scanning.warn.message": "true",
+    "junie.onboarding.icon.badge.shown": "true",
     "last_opened_file_path": "D:/DH Nam 3/Lap trinh Python/GoCoffee/static/videos",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "to.speed.mode.migration.done": "true",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -101,6 +111,7 @@
       <workItem from="1767441763269" duration="11337000" />
       <workItem from="1767509413092" duration="1246000" />
       <workItem from="1767678933472" duration="208000" />
+      <workItem from="1767679160077" duration="979000" />
     </task>
     <servers />
   </component>
