@@ -78,6 +78,7 @@ ul {
     background-color: var(--color-dark);
     color: var(--color-white);
 }
+
 .btn-dark:hover {
     background-color: #444;
 }
@@ -168,17 +169,23 @@ ul {
     width: 90%;
     max-width: 450px;
     position: relative;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
     animation: slideDown 0.3s ease-out;
 }
 
 @keyframes slideDown {
-    from { transform: translateY(-30px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
+    from {
+        transform: translateY(-30px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
 
 .logout-btn {
-    border: 2px solid ;
+    border: 2px solid;
     color: var(--color-dark);
 }
 
@@ -250,8 +257,12 @@ ul {
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
 
 .modal-content form {
@@ -286,6 +297,79 @@ ul {
     padding: 12px;
     font-size: 16px;
     width: 100%;
+}
+
+/* ======== THÔNG BÁO ======== */
+.messages-container {
+    position: fixed;
+    top: 50px;
+    right: 20px;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    pointer-events: none;
+}
+
+.alert {
+    pointer-events: auto;
+    padding: 15px 20px;
+    border-radius: 8px;
+    color: white;
+    font-weight: 500;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    animation: slideIn 0.5s ease-out forwards;
+    min-width: 250px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.alert-success {
+    background-color: #2ecc71;
+}
+
+.alert-error, .alert-danger {
+    background-color: #e74c3c;
+}
+
+.alert-warning {
+    background-color: #f1c40f;
+    color: #333;
+}
+
+.alert-info {
+    background-color: #3498db;
+}
+
+.close-msg {
+    margin-left: 15px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    opacity: 0.7;
+}
+
+.close-msg:hover {
+    opacity: 1;
+}
+
+.error-text {
+    color: #e74c3c;
+    font-size: 0.85rem;
+    margin-top: 5px;
+    display: none;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
 }
 
 /* ======== SWIPER ======== */

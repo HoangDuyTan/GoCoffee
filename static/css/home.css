@@ -1,13 +1,45 @@
 /* ======== HERO SECTION ======== */
 .hero-section {
     position: relative;
-    padding: 150px 0;
+    margin-top: -75px;
+    padding-top: 235px;
+    padding-bottom: 150px;
     text-align: center;
     color: var(--color-white);
+    margin-bottom: 80px;
+    overflow: hidden;
+}
+
+.hero-slider {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+
+.hero-bg-img {
+    width: 100%;
+    height: 100%;
     background-size: cover;
     background-position: center;
-    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(86, 54, 23, 0.8)), url('../images/hero-bg.webp');
-    margin-bottom: 80px;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(86, 54, 23, 0.9));
+    z-index: 1;
+    pointer-events: none;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
 }
 
 .hero-content h2 {
@@ -25,6 +57,7 @@
     margin-right: auto;
 }
 
+/* ======== SEARCH ======== */
 .search-bar {
     display: flex;
     background-color: var(--color-white);
@@ -65,7 +98,6 @@
     font-size: 16px;
     width: 100%;
     color: var(--color-dark);
-    font-family: var(--font-primary);
     padding: 12px 0;
 }
 
@@ -119,24 +151,36 @@
     display: flex;
     align-items: center;
     gap: 15px;
-    margin-bottom: 20px;
+    margin-bottom: 40px;
+    padding-left: 20px;
+    border-left: 5px solid #d97706;
+    position: relative;
 }
 
 .section-header i {
-    font-size: 25px;
-    color: var(--color-accent);
+    font-size: 1.8rem;
+    background: #fff;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    color: #d97706;
 }
 
 .section-title h2 {
-    font-size: 25px;
-    font-weight: 600;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1e293b;
     margin: 0;
 }
 
 .section-title p {
-    font-size: 18px;
-    color: var(--color-muted);
-    margin: 0;
+    margin: 5px 0 0;
+    color: #64748b;
+    font-size: 0.95rem;
 }
 
 /* ======== CARD GRID ======== */
@@ -279,19 +323,210 @@
 
 /* ======== CTA SECTION ======== */
 .cta-section {
-    background-color: #fffaf0;
-    padding: 40px;
-    border-radius: var(--border-radius);
+    background: linear-gradient(135deg, #0f172a 0%, #334155 100%) !important;
+    color: white;
+    position: relative;
+    overflow: hidden;
+    border-radius: 30px !important;
+    padding: 60px 20px !important;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
     text-align: center;
-    margin-top: 20px;
+}
+
+.cta-section::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(245, 158, 11, 0.15) 0%, transparent 60%);
+    pointer-events: none;
 }
 
 .cta-section h2 {
-    font-size: 32px;
-    margin-bottom: 10px;
+    color: white;
+    font-weight: 800;
 }
 
 .cta-section p {
+    color: rgba(255, 255, 255, 0.7) !important;
+    font-size: 1.1rem;
+}
+
+.cta-section .btn {
+    background: white;
+    color: #0f172a;
+    font-weight: 700;
+    border: none;
+    padding: 15px 40px;
+    margin-top: 30px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.cta-section .btn:hover {
+    background: #f1f5f9;
+    transform: translateY(-3px);
+}
+
+/* ======== SPLIT LAYOUT ======== */
+.split-layout {
+    display: grid;
+    grid-template-columns: 0.3fr 1.7fr;
+    gap: 0;
+    align-items: center;
+    background: linear-gradient(135deg, #0f172a 0%, #334155 100%);
+    overflow: visible;
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    padding: 0;
+}
+
+.split-layout .section-header {
+    border-left-color: var(--color-star);
+}
+
+.split-layout h2 {
+    color: white;
+}
+
+.split-layout p {
+    color: var(--color-border);
+}
+
+/* Trái */
+.left-col {
+    padding: 20px 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.stats-card {
+    background: rgba(255, 255, 255, 0.85);
+    padding: 20px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: 1px solid var(--color-border);
+}
+
+.stats-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    border-color: var(--primary-color);
+}
+
+.stats-icon {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 25px;
+    flex-shrink: 0;
+}
+
+.stats-icon.view {
+    background: #e0f2fe;
+    color: #0284c7;
+}
+
+.stats-icon.comment {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+.stats-icon.rating {
+    background: #fef9c3;
+    color: #ca8a04;
+}
+
+.stats-icon.random {
+    background: #f3e8ff;
+    color: #9333ea;
+}
+
+.stat-info {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.stat-label {
+    font-size: 13px;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 3px;
+    color: var(--color-accent);
+}
+
+.stat-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--color-dark);
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.stat-sub {
+    font-size: 12px;
     color: var(--color-muted);
-    margin-bottom: 25px;
+}
+
+.stats-card.random-card {
+    background: linear-gradient(135deg, var(--color-accent), var(--color-star));
+    border: none;
+}
+
+.stats-card.random-card .stat-name,
+.stats-card.random-card .stat-label,
+.stats-card.random-card .stat-sub {
+    color: white;
+}
+
+.stats-card.random-card .stat-icon {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+}
+
+/* Phải */
+.right-col {
+    position: relative;
+    width: 100%;
+    min-height: 500px;
+}
+
+.video-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transform: scale(1.1);
+    transform-origin: left center;
+    border-radius: 20px;
+    box-shadow: 20px 20px 50px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    z-index: 3;
+}
+
+.video-wrapper video {
+    object-fit: cover;
+    display: block;
+    width: 100%;
+    height: 100%;
 }
