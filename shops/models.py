@@ -149,17 +149,16 @@ class ShopImage(models.Model):
 
 #Model cho Đánh giá - Bình luận
 class Review(models.Model):
-    shop = models.ForeignKey(CafeShop, on_delete = models.CASCADE, related_name = 'reviews')
+    shop = models.ForeignKey(CafeShop, on_delete=models.CASCADE, related_name='reviews')
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    rating = models.IntegerField(default = 1)
-    comment = models.TextField(blank = True)
-    created_at = models.DateTimeField(auto_now_add = True)
+    rating = models.IntegerField(default=1)
+    comment = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
-    # SEGMENT OF ASPECT
-    sentiment_service = models.IntegerField(default = 0)
-    sentiment_ambiance = models.IntegerField(default = 0)
-    sentiment_drink = models.IntegerField(default = 0)
-    sentiment_price = models.IntegerField(default = 0)
+    sentiment_service = models.IntegerField(default=0)
+    sentiment_ambiance = models.IntegerField(default=0)
+    sentiment_drink = models.IntegerField(default=0)
+    sentiment_price = models.IntegerField(default=0)
 
     def __str__(self):
         return f'Review {self.shop.name} bởi {self.user.username}'
