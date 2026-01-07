@@ -288,7 +288,6 @@ def contact_view(request):
 def shop_detail_view(request, shop_id):
     shop = get_object_or_404(
         CafeShop.objects.annotate(
-            rating_avg=Avg('reviews__rating'),
             review_count=Count('reviews')
         ),
         pk=shop_id
@@ -355,7 +354,7 @@ def submit_review(request, shop_id):
 
         ai_scores = analyze_review_sentiment(comment)
 
-        review, created = Review.objects.get_or_create(
+        review, created = Review.objects.update_or_create(
             shop=shop,
             user=request.user,
             defaults={
@@ -365,20 +364,7 @@ def submit_review(request, shop_id):
             }
         )
 
-        if not created:
-            review.rating = rating
-            review.comment = comment
-            for k, v in ai_scores.items():
-                setattr(review, k, v)
-            review.save()
-
-        update_shop_stats(shop)
-
-        # rating chung
-        shop.rating = Review.objects.filter(shop=shop).aggregate(
-            avg=Avg("rating")
-        )["avg"] or 0
-        shop.save()
+        shop.refresh_from_db()
 
         return JsonResponse({
             'success': True,
@@ -389,26 +375,11 @@ def submit_review(request, shop_id):
                 'created_at': review.created_at.strftime("%d/%m/%Y") if hasattr(review,
                                                                                       'created_at') else "Vừa xong",
             },
+            'new_shop_rating': shop.rating,
             'message': 'Cảm ơn bạn đã đánh giá!'
         })
 
     return JsonResponse({'success': False, 'message': 'Yêu cầu không hợp lệ'})
-
-
-def update_shop_stats(shop):
-    aggs = shop.reviews.aggregate(
-        avg_service=Avg('sentiment_service'),
-        avg_ambiance=Avg('sentiment_ambiance'),
-        avg_drink=Avg('sentiment_drink'),
-        avg_price=Avg('sentiment_price')
-    )
-
-    shop.avg_service = aggs['avg_service'] or 0
-    shop.avg_ambiance = aggs['avg_ambiance'] or 0
-    shop.avg_drink = aggs['avg_drink'] or 0
-    shop.avg_price = aggs['avg_price'] or 0
-    shop.save()
-
 
 def exclude_saved_shops(queryset, user):
     if user.is_authenticated:

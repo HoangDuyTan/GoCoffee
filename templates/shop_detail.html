@@ -30,7 +30,7 @@
                 <div class="shop-meta">
                 <span>
                     <i class="fa-solid fa-star"></i>
-                    {{ shop.rating_avg|default:"0"|floatformat:1 }}
+                    {{ shop.rating|default:"0"|floatformat:1 }}
                     ({{ shop.review_count|default:"0" }} đánh giá)
                 </span>
                     <span><i class="fa-solid fa-map-pin"></i> {{ shop.district }}</span>

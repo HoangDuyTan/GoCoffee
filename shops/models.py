@@ -1,6 +1,10 @@
 from django.db import models
 from django.conf import settings
 from django.core.validators import MinValueValidator, MaxValueValidator
+from django.db.models import Avg
+from django.db.models.signals import post_save, post_delete
+from django.dispatch import receiver
+import requests
 
 def normalize_comma_separated_string(value):
     if not value:
@@ -85,7 +89,7 @@ class CafeShop(models.Model):
         self.description = normalize_comma_separated_string(self.description)
 
         if self.address and (self.latitude is None or self.longitude is None):
-            self.geocode()
+            self.geocode_address()
         super().save(*args, **kwargs)
 
     def __str__(self):
@@ -127,6 +131,32 @@ class CafeShop(models.Model):
                 self.longitude = location["lng"]
         except Exception as e:
             print(f"Error geocoding: {e}")
+
+    def update_rating_stats(self):
+        reviews = self.reviews.all()
+
+        if reviews.exists():
+            aggs = reviews.aggregate(
+                avg_svc=Avg('sentiment_service'),
+                avg_amb=Avg('sentiment_ambiance'),
+                avg_drk=Avg('sentiment_drink'),
+                avg_prc=Avg('sentiment_price'),
+                avg_star=Avg('rating')
+            )
+
+            self.avg_service = aggs['avg_svc'] or 0
+            self.avg_ambiance = aggs['avg_amb'] or 0
+            self.avg_drink = aggs['avg_drk'] or 0
+            self.avg_price = aggs['avg_prc'] or 0
+            self.rating = round(aggs['avg_star'] or 0, 1)
+        else:
+            self.avg_service = 0
+            self.avg_ambiance = 0
+            self.avg_drink = 0
+            self.avg_price = 0
+            self.rating = 0
+
+        self.save(update_fields=['avg_service', 'avg_ambiance', 'avg_drink', 'avg_price', 'rating'])
 
 #Model cho Menu
 class MenuItem(models.Model):
@@ -194,3 +224,6 @@ class ShopViewLog(models.Model):
     class Meta:
         unique_together = ('shop', 'user')
 
+@receiver([post_save, post_delete], sender=Review)
+def update_shop_stats(sender, instance, **kwargs):
+    instance.shop.update_rating_stats()

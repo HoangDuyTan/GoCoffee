@@ -10,7 +10,8 @@ class SentimentEngine:
     ASPECT_PATH = os.path.join(MODEL_PATH, 'model_aspect.pkl')
     SENTIMENT_PATH = os.path.join(MODEL_PATH, 'model_sentiment.pkl')
 
-    # Tiết kiệm RAM
+    BOOST_WORDS = {"rất":1.2, "cực kỳ":1.3, "siêu":1.3, "hơi":0.8, "khá":0.9}
+
     @classmethod
     def get_instance(cls):
         if cls._instance is None:
@@ -42,9 +43,9 @@ class SentimentEngine:
 
         try:
             split_pattern = (
-                r'[.,;\n!+\-]|' 
-                r'\bnhưng\b|\btuy nhiên\b|\bsong\b|' 
-                r'\bvà\b|\bvới\b|\brồi\b|\bxong\b|\bthêm\b|\bcộng\b|\blẫn\b|\blại\b|'  
+                r'[.,;\n!+\-]|'
+                r'\bnhưng\b|\btuy nhiên\b|\bsong\b|'
+                r'\bvà\b|\bvới\b|\brồi\b|\bxong\b|\bthêm\b|\bcộng\b|\blẫn\b|\blại\b|'
                 r'\bmà\b|\bcòn\b'
             )
             sentences = re.split(split_pattern, review.lower())
@@ -57,15 +58,35 @@ class SentimentEngine:
                 processed_sentence = word_tokenize(sentence.strip(), format="text")
                 input_data = [processed_sentence]
 
-                probs = self.model_aspect.predict_proba(input_data)[0]
-                if max(probs) < 0.3:
+                # Dự đoán aspect
+                aspect_probs = self.model_aspect.predict_proba(input_data)[0]
+                predicted_aspect = self.model_aspect.predict(input_data)[0]
+                if max(aspect_probs) < 0.6:
                     continue
 
-                predicted_aspect = self.model_aspect.predict(input_data)[0]
+                # Dự đoán sentiment
+                sentiment_probs = self.model_sentiment.predict_proba(input_data)[0]
                 predicted_sentiment = int(self.model_sentiment.predict(input_data)[0])
+                confidence = max(sentiment_probs)
+
+                # Tính weighted score
+                weighted_score = predicted_sentiment * confidence
+
+                # Boost từ khóa
+                for word, factor in self.BOOST_WORDS.items():
+                    if word in processed_sentence:
+                        weighted_score *= factor
 
                 if predicted_aspect in final_scores:
-                    final_scores[predicted_aspect] += predicted_sentiment
+                    final_scores[predicted_aspect] += weighted_score
+
+            for key in final_scores:
+                if final_scores[key] > 0.5:
+                    final_scores[key] = 1
+                elif final_scores[key] < -0.5:
+                    final_scores[key] = -1
+                else:
+                    final_scores[key] = 0
 
             return {f'sentiment_{k}': v for k, v in final_scores.items()}
 
