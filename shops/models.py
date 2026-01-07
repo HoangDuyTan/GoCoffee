@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from django.core.validators import MinValueValidator, MaxValueValidator
+import requests
 
 def normalize_comma_separated_string(value):
     if not value:
@@ -85,7 +86,7 @@ class CafeShop(models.Model):
         self.description = normalize_comma_separated_string(self.description)
 
         if self.address and (self.latitude is None or self.longitude is None):
-            self.geocode()
+            self.geocode_address()
         super().save(*args, **kwargs)
 
     def __str__(self):
@@ -193,4 +194,3 @@ class ShopViewLog(models.Model):
 
     class Meta:
         unique_together = ('shop', 'user')
-

@@ -21,15 +21,15 @@ def train_and_save():
     sentiment_labels = [item[2] for item in TRAIN_DATA]
 
     model_aspect = make_pipeline(
-        TfidfVectorizer(ngram_range=(1, 3), min_df=1, max_df=0.9),
-        SVC(kernel='linear', probability=True, class_weight='balanced'),
+        TfidfVectorizer(ngram_range=(1, 3), min_df=2, max_df=0.85, sublinear_tf=True),
+        SVC(kernel='linear', probability=True, C=2.0, class_weight='balanced'),
     )
     model_aspect.fit(processed_texts, aspect_label)
     print("Đã học xong phần chủ đề (Aspect)")
 
     model_sentiment = make_pipeline(
-        TfidfVectorizer(ngram_range=(1, 3), min_df=1, max_df=0.9),
-        SVC(kernel='linear', probability=True, class_weight='balanced'),
+        TfidfVectorizer(ngram_range=(1, 3), min_df=2, max_df=0.85, sublinear_tf=True),
+        SVC(kernel='linear', probability=True, C=2.0, class_weight='balanced'),
     )
     model_sentiment.fit(processed_texts, sentiment_labels)
     print("Đã học xong phần cảm xúc (Sentiment)")
