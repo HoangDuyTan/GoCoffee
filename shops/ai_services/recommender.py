@@ -4,7 +4,6 @@ from shops.models import CafeShop, Review, ShopViewLog
 
 class RecommenderEngine:
     def __init__(self):
-        self.top_k_users = 10
         self.top_n_items = 8
         self.threshold = 0.3
 
@@ -19,9 +18,9 @@ class RecommenderEngine:
         user_similar_df = pd.DataFrame(user_similar_matrix, index=user_item_matrix.index,
                                        columns=user_item_matrix.index)
 
-        # 3. Tìm 5 user khác có cùng độ tương đồng cao nhất
+        # 3. Tìm user khác có cùng độ tương đồng cao nhất
         similar_users = user_similar_df[user_id].drop(user_id)
-        similar_users = similar_users[similar_users >= self.threshold].sort_values(ascending=False).head(self.top_k_users)
+        similar_users = similar_users[similar_users >= self.threshold].sort_values(ascending=False)
         if similar_users.empty:
             return []
 
