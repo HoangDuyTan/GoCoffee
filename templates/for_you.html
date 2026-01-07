@@ -31,7 +31,7 @@
                             <div class="stat-value">
                                 {% for style in user_prefs.style|slice:":2" %}
                                     {{ style }}{% if not forloop.last %}, {% endif %}
-                                {% empty %}
+                                    {% empty %}
                                 {% endfor %}
                             </div>
                             <div class="stat-label">Gu Chính</div>
@@ -86,7 +86,8 @@
                                     <span><i
                                             class="fa-solid fa-location-dot text-danger me-1"></i> {{ best_shop.district }}</span>
                                     <span><i
-                                            class="fa-solid fa-star text-warning me-1"></i> {{ best_shop.rating|floatformat:1 }}</span>
+                                            class="fa-solid fa-star text-warning me-1"></i>
+                                        {{ best_shop.rating|floatformat:1 }}</span>
                                 </div>
 
                                 <div class="ai-insight">
@@ -158,7 +159,7 @@
                                     <p class="card-description">{{ shop.description|truncatewords:20 }}</p>
                                 </div>
                             </a>
-                        {% empty %}
+                            {% empty %}
                             <div class="p-4 w-100 text-center text-muted">Hết gợi ý.</div>
                         {% endfor %}
                     </div>
@@ -187,7 +188,8 @@
                                     <a href="{% url 'shop_detail' shop.id %}" class="cafe-card swiper-slide">
                                         <div class="card-image">
                                             <div class="ai-match-badge" style="background-color: #dc3545; color: white">
-                                                <i class="fa-solid fa-user-check"></i> {{ shop.avg_service|floatformat:1 }}/1.0
+                                                <i class="fa-solid fa-user-check"></i> {% widthratio shop.avg_service 1 100 %}%
+                                                đề xuất
                                             </div>
 
                                             {% if shop.cover_image %}
@@ -242,7 +244,8 @@
                                     <a href="{% url 'shop_detail' shop.id %}" class="cafe-card swiper-slide">
                                         <div class="card-image">
                                             <div class="ai-match-badge" style="background-color: #198754;color: white">
-                                                <i class="fa-solid fa-tree"></i> {{ shop.avg_ambiance|floatformat:1 }}/1.0
+                                                <i class="fa-solid fa-tree"></i> {% widthratio shop.avg_ambiance 1 100 %}%
+                                                đề xuất
                                             </div>
 
                                             {% if shop.cover_image %}
@@ -302,7 +305,8 @@
                                     <a href="{% url 'shop_detail' shop.id %}" class="cafe-card swiper-slide">
                                         <div class="card-image">
                                             <div class="ai-match-badge" style="background-color: #f59e0b; color: white">
-                                                <i class="fa-solid fa-coffee"></i> {{ shop.avg_drink|floatformat:1 }}/1.0
+                                                <i class="fa-solid fa-coffee"></i> {% widthratio shop.avg_drink 1 100 %}%
+                                                đề xuất
                                             </div>
 
                                             {% if shop.cover_image %}
@@ -388,6 +392,66 @@
                     <div class="swiper-button-next"></div>
                 </div>
             </div>
+
+            {% if favorite_shops %}
+                <section class="content-section mb-5 fade-in-up">
+                    <div class="section-header">
+                        <i class="fa-solid fa-bookmark" style="color: #e11d48;"></i>
+                        <div class="section-title">
+                            <h2>Bộ sưu tập đã lưu</h2>
+                            <p>Danh sách các quán bạn đang quan tâm</p>
+                        </div>
+                    </div>
+
+                    <div class="carousel-container">
+                        <div class="card-list swiper mySwiper">
+                            <div class="card-grid swiper-wrapper">
+                                {% for shop in favorite_shops %}
+                                    <a href="{% url 'shop_detail' shop.id %}" class="cafe-card swiper-slide">
+                                        <div class="card-image">
+                                            <div class="ai-match-badge" style="background-color: #e11d48; color: white">
+                                                <i class="fa-solid fa-heart"></i> Đã thích
+                                            </div>
+
+                                            {% if shop.cover_image %}
+                                                <img src="{{ shop.cover_image.url }}" alt="{{ shop.name }}">
+                                            {% else %}
+                                                <div class="card-image placeholder">
+                                                    <i class="fa-solid fa-image fa-3x"></i>
+                                                </div>
+                                            {% endif %}
+
+                                            <div class="card-rating">
+                                                <i class="fa-solid fa-star"></i> {{ shop.rating|floatformat:1 }}
+                                            </div>
+                                        </div>
+
+                                        <div class="card-content">
+                                            <h3>{{ shop.name }}</h3>
+
+                                            <div class="card-info">
+                                                <div><i class="fa-solid fa-location-dot"></i>{{ shop.district }}</div>
+                                                <div><i class="fa-solid fa-wallet"></i>{{ shop.price_range }}</div>
+                                            </div>
+
+                                            <div class="card-tags">
+                                                {% for tag in shop.get_tag_list|slice:":2" %}
+                                                    <span class="tag">{{ tag }}</span>
+                                                {% endfor %}
+                                            </div>
+
+                                            <p class="card-description">{{ shop.description|truncatewords:15 }}</p>
+                                        </div>
+                                    </a>
+                                {% endfor %}
+                            </div>
+                            <div class="swiper-pagination"></div>
+                            <div class="swiper-button-prev"></div>
+                            <div class="swiper-button-next"></div>
+                        </div>
+                    </div>
+                </section>
+            {% endif %}
         </section>
     </div>
 
