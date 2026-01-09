@@ -2,7 +2,8 @@ import os
 import re
 import joblib
 from django.conf import settings
-from underthesea import word_tokenize
+from underthesea import word_tokenize, pos_tag
+
 
 class SentimentEngine:
     _instance = None
@@ -10,7 +11,7 @@ class SentimentEngine:
     ASPECT_PATH = os.path.join(MODEL_PATH, 'model_aspect.pkl')
     SENTIMENT_PATH = os.path.join(MODEL_PATH, 'model_sentiment.pkl')
 
-    BOOST_WORDS = {"rất":1.2, "cực kỳ":1.3, "siêu":1.3, "hơi":0.8, "khá":0.9}
+    BOOST_WORDS = {"rất": 1.2, "cực kỳ": 1.3, "siêu": 1.3, "hơi": 0.8, "khá": 0.9}
 
     @classmethod
     def get_instance(cls):
@@ -42,13 +43,7 @@ class SentimentEngine:
             return self._result()
 
         try:
-            split_pattern = (
-                r'[.,;\n!+\-]|'
-                r'\bnhưng\b|\btuy nhiên\b|\bsong\b|'
-                r'\bvà\b|\bvới\b|\brồi\b|\bxong\b|\bthêm\b|\bcộng\b|\blẫn\b|\blại\b|'
-                r'\bmà\b|\bcòn\b'
-            )
-            sentences = re.split(split_pattern, review.lower())
+            sentences = self._smart_split(review)
             final_scores = {'service': 0, 'ambiance': 0, 'drink': 0, 'price': 0}
 
             for sentence in sentences:
@@ -74,7 +69,7 @@ class SentimentEngine:
 
                 # Boost từ khóa
                 for word, factor in self.BOOST_WORDS.items():
-                    if word in processed_sentence:
+                    if word in sentence.lower():
                         weighted_score *= factor
 
                 if predicted_aspect in final_scores:
@@ -93,6 +88,46 @@ class SentimentEngine:
         except Exception as e:
             print(f"Lỗi: {e}")
             return self._result()
+
+    def _smart_split(self, review):
+        split_pattern = (
+            r'[.,;\n!+\-]|'
+            r'\bnhưng\b|\btuy nhiên\b|\bsong\b|'
+            r'\bvà\b|\bvới\b|\brồi\b|\bxong\b|\bthêm\b|\bcộng\b|\blẫn\b|\blại\b|'
+            r'\bmà\b|\bcòn\b'
+        )
+
+        basic_segments = re.split(split_pattern, review.lower())
+        final_segments = []
+        for segment in basic_segments:
+            segment = segment.strip()
+            if not segment: continue
+
+            if len(segment) < 3:
+                final_segments.append(segment)
+                continue
+
+            try:
+                tags = pos_tag(segment)
+                buffer = []
+
+                for i, (word, tag) in enumerate(tags):
+                    buffer.append(word)
+                    if i < len(tags) - 1:
+                        current_tag = tag
+                        next_tag = tags[i + 1][1]
+
+                        if current_tag == 'A' and next_tag in ['N', 'Np', 'M']:
+                            final_segments.append(" ".join(buffer))
+                            buffer = []
+
+                if buffer:
+                    final_segments.append(" ".join(buffer))
+
+            except:
+                final_segments.append(segment)
+
+        return final_segments
 
     def _result(self):
         return {'sentiment_service': 0,

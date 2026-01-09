@@ -1,0 +1,89 @@
+<input type="hidden" id="title-section" value="{{ title_section }}">
+{% for shop in page_obj %}
+    <a href="{% url 'shop_detail' shop.id %}" class="cafe-card">
+        <div class="card-image">
+            <div class="ai-match-badge"
+                 style="{% if current_filter == 'service' %}color: #dc3545{% elif current_filter == 'ambiance' %}color: #198754{% elif current_filter == 'price' %}color: #0d6efd{% else %}color: #d97706{% endif %}">
+                {% if current_filter == 'service' %}
+                    <i class="fa-solid fa-user-check"></i> {% widthratio shop.avg_service 1 100 %}%
+                    đề xuất
+                {% elif current_filter == 'ambiance' %}
+                    <i class="fa-solid fa-tree"></i> {% widthratio shop.avg_ambiance 1 100 %}%
+                    đề xuất
+                {% elif current_filter == 'drink' %}
+                    <i class="fa-solid fa-coffee"></i> {% widthratio shop.avg_drink 1 100 %}%
+                    đề xuất
+                {% elif current_filter == 'price' %}
+                    <i class="fa-solid fa-price"></i> {% widthratio shop.avg_price 1 100 %}%
+                    đề xuất
+                {% else %}
+                    <i class="fa-solid fa-fire"></i> Đang hot
+                {% endif %}
+            </div>
+
+            {% if shop.cover_image %}
+                <img src="{{ shop.cover_image.url }}" alt="{{ shop.name }}">
+            {% else %}
+                <div class="card-image placeholder">
+                    <i class="fa-solid fa-image fa-3x"></i>
+                </div>
+            {% endif %}
+            <div class="card-rating">
+                <i class="fa-solid fa-star"></i> {{ shop.rating|floatformat:1 }}
+            </div>
+        </div>
+        <div class="card-content">
+            <h3>{{ shop.name }}</h3>
+            <div class="card-info">
+                <div><i class="fa-solid fa-location-dot"></i>{{ shop.district }}</div>
+                <div><i class="fa-solid fa-wallet"></i>{{ shop.price_range }}</div>
+            </div>
+            <div class="card-tags">
+                {% for tag in shop.get_tag_list|slice:":2" %}
+                    <span class="tag">{{ tag }}</span>
+                {% endfor %}
+            </div>
+            <p class="card-description">{{ shop.description|truncatewords:15 }}</p>
+        </div>
+    </a>
+    {% empty %}
+    <p style="align-items: center">Không tìm thấy quán</p>
+{% endfor %}
+
+
+{% if page_obj.has_other_pages %}
+    <div class="pagination-container">
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <button class="page-link ajax-pagination" data-page="{{ page_obj.previous_page_number }}">
+                            &laquo;
+                            Trước
+                        </button>
+                    </li>
+                {% endif %}
+
+                {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                        <li class="page-item active">
+                            <span class="page-link">{{ num }}</span>
+                        </li>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                        <li class="page-item">
+                            <button class="page-link ajax-pagination" data-page="{{ num }}">{{ num }}</button>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <button class="page-link ajax-pagination" data-page="{{ page_obj.next_page_number }}">Sau
+                            &raquo;
+                        </button>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+{% endif %}

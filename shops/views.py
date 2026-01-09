@@ -130,26 +130,49 @@ def for_you_view(request):
             shop.ai_reason = "Gợi ý khám phá mới"
 
     # TOP SECTION
-    # service
+    filter_type = request.GET.get('filter', 'general')
     excluded_ids = [s.id for s in ai_shops]
-    top_service_shops = CafeShop.objects.filter(
-        rating__gte=4.0,
-        avg_service__gte=0.8
-    ).exclude(id__in=excluded_ids).order_by('-avg_service')[:5]
-    excluded_ids.extend(s.id for s in top_service_shops)
 
-    # ambiance
-    top_ambiance_shops = CafeShop.objects.filter(
-        rating__gte=4.0,
-        avg_ambiance__gte=0.8
-    ).exclude(id__in=excluded_ids).order_by('-avg_ambiance')[:5]
-    excluded_ids.extend([s.id for s in top_ambiance_shops])
+    top_shops = []
+    title_section = "Gợi ý tổng hợp"
 
-    # drink
-    top_drink_shops = CafeShop.objects.filter(
-        rating__gte=4.0,
-        avg_drink__gte=0.8
-    ).exclude(id__in=excluded_ids).order_by('-avg_drink')[:5]
+    if filter_type == 'service':
+        top_shops = CafeShop.objects.filter(
+            rating__gte=4.0,
+            avg_service__gte=0.8,
+        ).exclude(id__in=excluded_ids).order_by('-avg_service')
+        title_section = "Nhân viên thân thiện, service 5 sao"
+
+    elif filter_type == 'ambiance':
+        top_shops = CafeShop.objects.filter(
+            rating__gte=4.0,
+            avg_ambiance__gte=0.8,
+        ).exclude(id__in=excluded_ids).order_by('-avg_ambiance')
+        title_section = "View đẹp, check-in sống ảo hoặc làm việc"
+
+    elif filter_type == 'drink':
+        top_shops = CafeShop.objects.filter(
+            rating__gte=4.0,
+            avg_drink__gte=0.8,
+        ).exclude(id__in=excluded_ids).order_by('-avg_drink')
+        title_section = "Hương vị được cộng đồng đánh giá cao"
+
+    elif filter_type == 'price':
+        top_shops = CafeShop.objects.filter(
+            rating__gte=3.5,
+            avg_price__gte=0.7,
+        ).exclude(id__in=excluded_ids).order_by('-avg_price')
+        title_section = "Giá cả hợp lý"
+
+    else:
+        top_shops = CafeShop.objects.filter(
+            rating__gte=4.0,
+        ).exclude(id__in=excluded_ids).order_by('-rating')
+        title_section = "Gợi ý nổi bật"
+
+    paginator = Paginator(top_shops, 8)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
 
     # Dữ liệu trả về
     user_prefs = {
@@ -164,12 +187,17 @@ def for_you_view(request):
         'favorite_shops': favorite_shops,
         'ai_shops': ai_shops,
         'similar_shops': similar_shops,
-        'top_service_shops': top_service_shops,
-        'top_ambiance_shops': top_ambiance_shops,
-        'top_drink_shops': top_drink_shops,
+        'page_obj': page_obj,
+        'title_section': title_section,
+        'current_filter': filter_type,
         'user_prefs': user_prefs,
     }
+
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return render(request, 'includes/for_you_grid.html', context)
+
     return render(request, 'for_you.html', context)
+
 
 def filtered_shops(request):
     shops = CafeShop.objects.all().order_by('-id')
@@ -230,6 +258,7 @@ def filtered_shops(request):
 
     return shops, district, rating, tags, price_range, amenities
 
+
 def shop_list_view(request):
     shops, district, rating, tags, price_range, amenities = filtered_shops(request)
     paginator = Paginator(shops, 8)
@@ -242,6 +271,7 @@ def shop_list_view(request):
                'selected_amenities': amenities
                }
     return render(request, 'shop_list.html', context)
+
 
 def shop_map_api(request):
     shops, _, _, _, _, _ = filtered_shops(request)
@@ -373,13 +403,14 @@ def submit_review(request, shop_id):
                 'rating': review.rating,
                 'comment': review.comment,
                 'created_at': review.created_at.strftime("%d/%m/%Y") if hasattr(review,
-                                                                                      'created_at') else "Vừa xong",
+                                                                                'created_at') else "Vừa xong",
             },
             'new_shop_rating': shop.rating,
             'message': 'Cảm ơn bạn đã đánh giá!'
         })
 
     return JsonResponse({'success': False, 'message': 'Yêu cầu không hợp lệ'})
+
 
 def exclude_saved_shops(queryset, user):
     if user.is_authenticated:

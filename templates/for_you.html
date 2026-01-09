@@ -171,178 +171,49 @@
         </section>
 
         <div class="section-wrapper section-bg-light">
-            {% if top_service_shops %}
-                <section class="content-section mb-5 fade-in-up">
-                    <div class="section-header">
-                        <i class="fa-solid fa-heart" style="color: #dc3545;"></i>
+            <div class="container">
+                <div class="mb-5">
+                    <div class="header" style="background: none; border: none;">
                         <div class="section-title">
-                            <h2>Phục vụ tận tình</h2>
-                            <p>Nhân viên thân thiện, service 5 sao</p>
+                            <h1>Khám phá theo tiêu chí</h1>
                         </div>
                     </div>
 
-                    <div class="carousel-container">
-                        <div class="card-list swiper mySwiper">
-                            <div class="card-grid swiper-wrapper">
-                                {% for shop in top_service_shops %}
-                                    <a href="{% url 'shop_detail' shop.id %}" class="cafe-card swiper-slide">
-                                        <div class="card-image">
-                                            <div class="ai-match-badge" style="background-color: #dc3545; color: white">
-                                                <i class="fa-solid fa-user-check"></i> {% widthratio shop.avg_service 1 100 %}%
-                                                đề xuất
-                                            </div>
+                    <div class="filter-btn-container" id="filter-buttons-container">
+                        <button class="filter-btn btn active-filter" data-filter="general">
+                            <i class="fa-solid fa-fire"></i> Tổng hợp
+                        </button>
 
-                                            {% if shop.cover_image %}
-                                                <img src="{{ shop.cover_image.url }}" alt="{{ shop.name }}">
-                                            {% else %}
-                                                <div class="card-image placeholder">
-                                                    <i class="fa-solid fa-image fa-3x"></i>
-                                                </div>
-                                            {% endif %}
-                                            <div class="card-rating">
-                                                <i class="fa-solid fa-star"></i> {{ shop.rating|floatformat:1 }}
-                                            </div>
-                                        </div>
-                                        <div class="card-content">
-                                            <h3>{{ shop.name }}</h3>
-                                            <div class="card-info">
-                                                <div><i class="fa-solid fa-location-dot"></i>{{ shop.district }}</div>
-                                                <div><i class="fa-solid fa-wallet"></i>{{ shop.price_range }}</div>
-                                            </div>
-                                            <div class="card-tags">
-                                                {% for tag in shop.get_tag_list|slice:":2" %}
-                                                    <span class="tag">{{ tag }}</span>
-                                                {% endfor %}
-                                            </div>
-                                            <p class="card-description">{{ shop.description|truncatewords:15 }}</p>
-                                        </div>
-                                    </a>
-                                {% endfor %}
-                            </div>
-                            <div class="swiper-pagination"></div>
-                            <div class="swiper-button-prev"></div>
-                            <div class="swiper-button-next"></div>
+                        <button class="filter-btn btn" data-filter="drink">
+                            <i class="fa-solid fa-mug-hot"></i> Đồ uống ngon
+                        </button>
+
+                        <button class="filter-btn btn" data-filter="ambiance">
+                            <i class="fa-solid fa-camera"></i> View đẹp
+                        </button>
+
+                        <button class="filter-btn btn" data-filter="service">
+                            <i class="fa-solid fa-heart"></i> Phục vụ tốt
+                        </button>
+
+                        <button class="filter-btn btn" data-filter="price">
+                            <i class="fa-solid fa-tags"></i> Giá tốt
+                        </button>
+                    </div>
+                </div>
+
+                <section class="content-section fade-in-up visible">
+                    <div class="section-header">
+                        <div class="section-title">
+                            <h2 id="dynamic-title">{{ title_section }}</h2>
                         </div>
+                    </div>
+
+                    <div id="shop-grid-container">
+                        {% include 'includes/for_you_grid.html' %}
                     </div>
                 </section>
-            {% endif %}
-
-            {% if top_ambiance_shops %}
-                <section class="content-section mb-5 fade-in-up">
-                    <div class="section-header">
-                        <i class="fa-solid fa-camera" style="color: #198754;"></i>
-                        <div class="section-title">
-                            <h2>Không gian cực Chill</h2>
-                            <p>View đẹp, check-in sống ảo hoặc làm việc</p>
-                        </div>
-                    </div>
-
-                    <div class="carousel-container">
-                        <div class="card-list swiper mySwiper">
-                            <div class="card-grid swiper-wrapper">
-                                {% for shop in top_ambiance_shops %}
-                                    <a href="{% url 'shop_detail' shop.id %}" class="cafe-card swiper-slide">
-                                        <div class="card-image">
-                                            <div class="ai-match-badge" style="background-color: #198754;color: white">
-                                                <i class="fa-solid fa-tree"></i> {% widthratio shop.avg_ambiance 1 100 %}%
-                                                đề xuất
-                                            </div>
-
-                                            {% if shop.cover_image %}
-                                                <img src="{{ shop.cover_image.url }}" alt="{{ shop.name }}">
-                                            {% else %}
-                                                <div class="card-image placeholder">
-                                                    <i class="fa-solid fa-image fa-3x"></i>
-                                                </div>
-                                            {% endif %}
-                                            <div class="card-rating">
-                                                <i class="fa-solid fa-star"></i> {{ shop.rating|floatformat:1 }}
-                                            </div>
-                                        </div>
-                                        <div class="card-content">
-                                            <h3>{{ shop.name }}</h3>
-                                            <div class="card-info">
-                                                <div><i class="fa-solid fa-location-dot"></i>{{ shop.district }}</div>
-                                                <div><i class="fa-solid fa-wallet"></i>{{ shop.price_range }}</div>
-                                            </div>
-                                            <div class="card-tags">
-                                                {% if 'Sân vườn' in shop.amenities %}
-                                                    <span class="tag">Sân vườn</span>
-                                                {% elif 'View đẹp' in shop.amenities %}
-                                                    <span class="tag">View đẹp</span>
-                                                {% endif %}
-                                                {% for tag in shop.get_tag_list|slice:":1" %}
-                                                    <span class="tag">{{ tag }}</span>
-                                                {% endfor %}
-                                            </div>
-                                            <p class="card-description">{{ shop.description|truncatewords:15 }}</p>
-                                        </div>
-                                    </a>
-                                {% endfor %}
-                            </div>
-                            <div class="swiper-pagination"></div>
-                            <div class="swiper-button-prev"></div>
-                            <div class="swiper-button-next"></div>
-                        </div>
-                    </div>
-                </section>
-            {% endif %}
-
-            {% if top_drink_shops %}
-                <section class="content-section mb-5 fade-in-up">
-                    <div class="section-header">
-                        <i class="fa-solid fa-mug-hot" style="color: #f59e0b;"></i>
-                        <div class="section-title">
-                            <h2>Đồ uống ngon xỉu</h2>
-                            <p>Hương vị được cộng đồng đánh giá cao</p>
-                        </div>
-                    </div>
-
-                    <div class="carousel-container">
-                        <div class="card-list swiper mySwiper">
-                            <div class="card-grid swiper-wrapper">
-                                {% for shop in top_drink_shops %}
-                                    <a href="{% url 'shop_detail' shop.id %}" class="cafe-card swiper-slide">
-                                        <div class="card-image">
-                                            <div class="ai-match-badge" style="background-color: #f59e0b; color: white">
-                                                <i class="fa-solid fa-coffee"></i> {% widthratio shop.avg_drink 1 100 %}%
-                                                đề xuất
-                                            </div>
-
-                                            {% if shop.cover_image %}
-                                                <img src="{{ shop.cover_image.url }}" alt="{{ shop.name }}">
-                                            {% else %}
-                                                <div class="card-image placeholder">
-                                                    <i class="fa-solid fa-image fa-3x"></i>
-                                                </div>
-                                            {% endif %}
-                                            <div class="card-rating">
-                                                <i class="fa-solid fa-star"></i> {{ shop.rating| floatformat:1 }}
-                                            </div>
-                                        </div>
-                                        <div class="card-content">
-                                            <h3>{{ shop.name }}</h3>
-                                            <div class="card-info">
-                                                <div><i class="fa-solid fa-location-dot"></i>{{ shop.district }}</div>
-                                                <div><i class="fa-solid fa-wallet"></i>{{ shop.price_range }}</div>
-                                            </div>
-                                            <div class="card-tags">
-                                                {% for tag in shop.get_tag_list|slice:":2" %}
-                                                    <span class="tag">{{ tag }}</span>
-                                                {% endfor %}
-                                            </div>
-                                            <p class="card-description">{{ shop.description|truncatewords:15 }}</p>
-                                        </div>
-                                    </a>
-                                {% endfor %}
-                            </div>
-                            <div class="swiper-pagination"></div>
-                            <div class="swiper-button-prev"></div>
-                            <div class="swiper-button-next"></div>
-                        </div>
-                    </div>
-                </section>
-            {% endif %}
+            </div>
         </div>
 
         <section class="content-section mb-5 fade-in-up">
@@ -458,6 +329,7 @@
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
     <script>
+        // Hiệu ứng
         const observerOptions = {
             root: null,
             rootMargin: '0px',
@@ -475,6 +347,74 @@
 
         document.querySelectorAll('.fade-in-up').forEach((el) => {
             observer.observe(el);
+        });
+
+        //Filter & Paginator
+        document.addEventListener('DOMContentLoaded', function () {
+            let currentFilter = '{{ current_filter|default:"general" }}';
+            const gridContainer = document.getElementById('shop-grid-container');
+            const dynamicTitle = document.getElementById('dynamic-title');
+
+            const filterBtn = document.querySelectorAll('.filter-btn');
+
+            filterBtn.forEach(btn => {
+                btn.addEventListener('click', function (e) {
+                    e.preventDefault();
+
+                    if (this.classList.contains('active-filter')) return;
+
+                    filterBtn.forEach(b => {
+                        b.classList.remove('active-filter');
+                    });
+
+                    this.classList.add('active-filter');
+                    currentFilter = this.getAttribute('data-filter');
+                    loadShops(currentFilter, 1);
+                });
+            });
+
+            gridContainer.addEventListener('click', function (e) {
+                const pageBtn = e.target.closest('.ajax-pagination');
+                if (pageBtn) {
+                    e.preventDefault();
+                    const page = pageBtn.getAttribute('data-page');
+                    if (page) {
+                        loadShops(currentFilter, page);
+                        const sectionOffset = document.querySelector('.section-bg-light').offsetTop;
+                        window.scrollTo({top: sectionOffset - 80, behavior: 'smooth'});
+                    }
+                }
+            });
+
+            function loadShops(currentFilter, page) {
+                gridContainer.style.opacity = '0.4';
+                gridContainer.style.transition = 'opacity 0.3s ease';
+
+                const url = `?filter=${currentFilter}&page=${page}`;
+
+                fetch(url, {
+                    method: 'GET',
+                    headers: {'X-Requested-With': 'XMLHttpRequest'},
+                }).then(response => {
+                    if (!response.ok) throw new Error(response.statusText);
+                    return response.text();
+                }).then(html => {
+                    gridContainer.innerHTML = html;
+
+                    const titleSection = document.getElementById('title-section');
+                    if (titleSection && dynamicTitle) {
+                        dynamicTitle.style.opacity = '0';
+                        setTimeout(() => {
+                            dynamicTitle.textContent = titleSection.value;
+                            dynamicTitle.style.opacity = 1;
+                        }, 200);
+                    }
+                }).catch(error => {
+                    console.error("Lỗi tải dữ liệu: ", error);
+                }).finally(() => {
+                    gridContainer.style.opacity = '1';
+                });
+            }
         });
     </script>
 {% endblock %}
