@@ -118,17 +118,21 @@ class CafeShop(models.Model):
             return None
 
     def geocode_address(self):
-        url = "https://maps.googleapis.com/maps/api/geocode/json"
+        url = "https://nominatim.openstreetmap.org/search"
         params = {
-            "address": self.address,
-            "key": settings.GOOGLE_MAPS_API_KEY
+            "q": self.address,
+            "format": "json",
+            "limit": 1
         }
+        headers = {
+            "User-Agent": "CafeFinder/1.0 (contact@email.com)"
+        }
+
         try:
-            res = requests.get(url, params=params).json()
-            if res["status"] == "OK":
-                location = res["results"][0]["geometry"]["location"]
-                self.latitude = location["lat"]
-                self.longitude = location["lng"]
+            res = requests.get(url, params=params, headers=headers).json()
+            if res:
+                self.latitude = float(res[0]["lat"])
+                self.longitude = float(res[0]["lon"])
         except Exception as e:
             print(f"Error geocoding: {e}")
 
